@@ -1,0 +1,265 @@
+<main class="pt-20">
+  <!-- Hero Carousel Section -->
+  <section class="relative h-[85vh] overflow-hidden bg-surface-container-lowest">
+    <!-- Carousel Controls -->
+    <button 
+      (click)="moveSlide(-1)" 
+      class="absolute left-8 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full bg-surface-container-lowest/80 backdrop-blur-md ghost-border text-on-surface hover:bg-surface-container-lowest shadow-ambient transition-all active:scale-95 group">
+      <span class="material-symbols-outlined text-3xl group-hover:-translate-x-1 transition-transform">chevron_left</span>
+    </button>
+    <button 
+      (click)="moveSlide(1)" 
+      class="absolute right-8 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full bg-surface-container-lowest/80 backdrop-blur-md ghost-border text-on-surface hover:bg-surface-container-lowest shadow-ambient transition-all active:scale-95 group">
+      <span class="material-symbols-outlined text-3xl group-hover:translate-x-1 transition-transform">chevron_right</span>
+    </button>
+
+    <!-- Slides Track -->
+    <div class="flex h-full transition-transform duration-700 ease-in-out" [style.transform]="getTransform()">
+      <!-- Slide 1: Laptops -->
+      <div class="min-w-full h-full flex items-center bg-surface-container-lowest">
+        <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+          <div class="lg:col-span-5 z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-widest mb-8">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+              NEW ARRIVAL
+            </div>
+            <h1 class="text-[7rem] lg:text-[8rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">Zenith<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-400 to-slate-600">Pro M3.</span></h1>
+            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">Engineered for curators who demand atmospheric precision. 24-hour battery life encased in aerospace-grade titanium.</p>
+            <div class="flex flex-wrap gap-4">
+              <button class="bg-amber-700 text-white px-10 py-4 rounded-lg font-bold shadow-lg shadow-primary/25 hover:bg-blue-600 hover:-translate-y-0.5 transition-all active:scale-95">Shop Zenith</button>
+              <button class="bg-surface-container-high text-on-surface px-10 py-4 rounded-lg font-bold ghost-border hover:bg-surface-container-highest transition-all active:scale-95">Specifications</button>
+            </div>
+          </div>
+          <div class="lg:col-span-7 relative">
+            <div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl transform scale-150 -translate-y-12"></div>
+            <img class="relative z-10 w-full h-auto object-contain transform hover:scale-105 transition-transform duration-700" alt="Zenith Pro M3 Laptop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjuqlsOmGJt0FEsFz4DG3FjJPShIO2wMvyHCT4p9p3Zf7olaG3fmW6Z1soWWq2tWmoDrTWoBfVpEsbT-6j7X4a_p5k19NBxDjyH4yWShQQDwvbS_LyBQinaneF0ObuL3jbjvgE5wYye0dh3D6gmAdAIYmB8B3GZ1jQ9Ixl0sY0xiacs-yHB-MkhLep-kReTTL4_YLde3080iRWGhjQ_qMfinL7nhdqYvxlGaVh_zkk9pY7bFEcDedi_9HMNEwqLnA0G41_Ewq2vebo"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Audio -->
+      <div class="min-w-full h-full flex items-center bg-surface-container-low">
+        <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+          <div class="lg:col-span-5 z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-on-surface/10 text-on-surface text-[10px] font-bold tracking-widest mb-8">
+              PURE SOUND
+            </div>
+            <h2 class="text-[7rem] lg:text-[8rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">Sonic<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-500 to-slate-800">Ultra X.</span></h2>
+            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">Experience atmospheric silence with industry-leading active noise cancellation and spatial acoustic drivers.</p>
+            <div class="flex flex-wrap gap-4">
+              <button class="bg-amber-700 text-white px-10 py-4 rounded-lg font-bold shadow-lg shadow-primary/25 hover:bg-blue-600 hover:-translate-y-0.5 transition-all active:scale-95">Explore Sound</button>
+            </div>
+          </div>
+          <div class="lg:col-span-7 relative flex justify-center">
+            <img class="relative z-10 w-3/4 h-auto object-contain transform hover:scale-105 transition-transform duration-700" alt="Sonic Ultra X Headphones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt3IPDTQqfHyO0t8SNj1_2hWSKxIJx8ZqqKv0Oq0R2-xCrfnauh5Lg2Qi9o3WaAQn3Ld8XpFDel7LTiKudVnU1c2jwsieuJLPgT6IS3a75HW30nSUfb-1VbL1YbR_BfYleAERvRR7I49AkWS3tj0zx0jPz7a5ao1ytmpHy0jnjKXwSgPgdYvdcluLxOjTxDq-9Bi9Y21ZjGBd0NFxc66eZ4kS3fR7DYFu_B9f5Ck5O45dgdgT-bWE0p6D9LokvPjUQQP-QrRW-HwrZ"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Wearables -->
+      <div class="min-w-full h-full flex items-center bg-surface-container-lowest">
+        <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+          <div class="lg:col-span-5 z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-widest mb-8">
+              PRECISION TRACKING
+            </div>
+            <h2 class="text-[7rem] lg:text-[8rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">Curator<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Watch.</span></h2>
+            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">The ultimate companion for the modern professional. Seamlessly syncing your digital life with sapphire-glass elegance.</p>
+            <div class="flex flex-wrap gap-4">
+              <button class="bg-amber-700 text-white px-10 py-4 rounded-lg font-bold shadow-lg shadow-primary/25 hover:bg-blue-600 hover:-translate-y-0.5 transition-all active:scale-95">Pre-order Now</button>
+            </div>
+          </div>
+          <div class="lg:col-span-7 relative flex justify-center">
+            <img class="relative z-10 w-2/3 h-auto object-contain transform hover:scale-105 transition-transform duration-700" alt="Curator Watch II" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKjyV9zCxGA9bxRAHiS0FHb7cNju3XiTFQPPb2RzGujw5e0XB9C2tPAe3e4wUgSDSv8M-pL8NUJArvlhgmLpxthz5nNUSCyla-Yk67xjZgIFqEhbIexd4Bvx0zI9BWz0XgM-3aLQOg0H4bOhRkYi7_y_bVNl2lkCaZjPw6vRKD-mCwtuQG6bbZfwZU9ZKpcJgQh4cEk9N30F9lfAqH00Hh5A1Iczkxb6vk-QnNgWpJ1-r_Ef8FKhm2XDnBpeSnM8i64gAclFeLdX3g"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Dots -->
+    <div class="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex gap-3">
+      <button 
+        *ngFor="let slide of [0, 1, 2]; let i = index"
+        (click)="goToSlide(i)"
+        [class]="currentSlide === i ? 'w-6 h-2.5 rounded-full bg-primary transition-all duration-300' : 'w-2.5 h-2.5 rounded-full bg-outline-variant hover:bg-outline transition-all duration-300'">
+      </button>
+    </div>
+  </section>
+
+  <!-- Category Grid -->
+  <section class="py-24 bg-surface-container-low">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex flex-col items-center text-center mb-16">
+        <h2 class="text-title-lg text-on-surface mb-4">Curated Categories</h2>
+        <div class="h-1 w-12 bg-primary rounded-full"></div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        <a class="group bg-surface-container-lowest p-8 rounded-2xl flex flex-col items-center justify-center shadow-ambient hover:shadow-ambient-lg hover:-translate-y-2 transition-all duration-500" href="#">
+          <div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center group-hover:bg-primary transition-colors duration-500 mb-6">
+            <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors">laptop_mac</span>
+          </div>
+          <p class="label-md text-on-surface group-hover:text-primary transition-colors">Laptops</p>
+        </a>
+        <a class="group bg-surface-container-lowest p-8 rounded-2xl flex flex-col items-center justify-center shadow-ambient hover:shadow-ambient-lg hover:-translate-y-2 transition-all duration-500" href="#">
+          <div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center group-hover:bg-primary transition-colors duration-500 mb-6">
+            <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors">headphones</span>
+          </div>
+          <p class="label-md text-on-surface group-hover:text-primary transition-colors">Audio</p>
+        </a>
+        <a class="group bg-surface-container-lowest p-8 rounded-2xl flex flex-col items-center justify-center shadow-ambient hover:shadow-ambient-lg hover:-translate-y-2 transition-all duration-500" href="#">
+          <div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center group-hover:bg-primary transition-colors duration-500 mb-6">
+            <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors">watch</span>
+          </div>
+          <p class="label-md text-on-surface group-hover:text-primary transition-colors">Wearables</p>
+        </a>
+        <a class="group bg-surface-container-lowest p-8 rounded-2xl flex flex-col items-center justify-center shadow-ambient hover:shadow-ambient-lg hover:-translate-y-2 transition-all duration-500" href="#">
+          <div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center group-hover:bg-primary transition-colors duration-500 mb-6">
+            <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors">keyboard</span>
+          </div>
+          <p class="label-md text-on-surface group-hover:text-primary transition-colors">Input</p>
+        </a>
+        <a class="group bg-surface-container-lowest p-8 rounded-2xl flex flex-col items-center justify-center shadow-ambient hover:shadow-ambient-lg hover:-translate-y-2 transition-all duration-500" href="#">
+          <div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center group-hover:bg-primary transition-colors duration-500 mb-6">
+            <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors">tablet_android</span>
+          </div>
+          <p class="label-md text-on-surface group-hover:text-primary transition-colors">Tablets</p>
+        </a>
+        <a class="group bg-surface-container-lowest p-8 rounded-2xl flex flex-col items-center justify-center shadow-ambient hover:shadow-ambient-lg hover:-translate-y-2 transition-all duration-500" href="#">
+          <div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center group-hover:bg-primary transition-colors duration-500 mb-6">
+            <span class="material-symbols-outlined text-2xl text-on-surface-variant group-hover:text-on-primary transition-colors">camera</span>
+          </div>
+          <p class="label-md text-on-surface group-hover:text-primary transition-colors">Imaging</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="py-24 bg-surface">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex items-end justify-between mb-16">
+        <div>
+          <h2 class="text-title-lg text-on-surface mb-2">Featured Selections</h2>
+          <p class="text-body-md text-on-surface-variant">The absolute pinnacle of modern engineering.</p>
+        </div>
+        <a class="text-primary font-semibold flex items-center gap-2 hover:gap-4 transition-all label-md" href="#">
+          VIEW ALL
+          <span class="material-symbols-outlined">trending_flat</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Product Card 1 -->
+        <div class="product-card group">
+          <div class="aspect-square p-8 flex items-center justify-center relative overflow-hidden bg-surface-container-low/50">
+            <img class="max-h-full transition-transform duration-500 group-hover:scale-110" alt="Acoustic One S" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt3IPDTQqfHyO0t8SNj1_2hWSKxIJx8ZqqKv0Oq0R2-xCrfnauh5Lg2Qi9o3WaAQn3Ld8XpFDel7LTiKudVnU1c2jwsieuJLPgT6IS3a75HW30nSUfb-1VbL1YbR_BfYleAERvRR7I49AkWS3tj0zx0jPz7a5ao1ytmpHy0jnjKXwSgPgdYvdcluLxOjTxDq-9Bi9Y21ZjGBd0NFxc66eZ4kS3fR7DYFu_B9f5Ck5O45dgdgT-bWE0p6D9LokvPjUQQP-QrRW-HwrZ"/>
+            <button class="absolute bottom-4 right-4 bg-primary text-on-primary p-3 rounded-full shadow-primary opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+              <span class="material-symbols-outlined">add_shopping_cart</span>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-1 mb-2">
+              <span class="material-symbols-outlined text-sm text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="text-xs font-bold text-on-surface-variant">4.9</span>
+            </div>
+            <h3 class="title-md text-on-surface mb-1 group-hover:text-primary transition-colors">Acoustic One S</h3>
+            <p class="label-md text-on-surface-variant mb-4">Pure-tone noise cancellation</p>
+            <p class="text-2xl font-bold tracking-tight text-primary">$349.00</p>
+          </div>
+        </div>
+
+        <!-- Product Card 2 -->
+        <div class="product-card group">
+          <div class="aspect-square p-8 flex items-center justify-center relative overflow-hidden bg-surface-container-low/50">
+            <img class="max-h-full transition-transform duration-500 group-hover:scale-110" alt="Tactile Pro 65" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgzI-k12xZsh-tvcHpRcvPQujNiNDaiPk8wFFtxbbTW98Lom5ZyeV71VAFuIuVMMA35n627WxXts4nyCUH_THBGaomTbnGWvzxfDVNGHVMYmNb8PPYEMDDa1llp1B7cCO3oh_mq6mRAwnFXp2YNM1c7oLIg8Idh6xLncXpZy-bAU11Hq4qesgJQQjzgoywpbIu8JivmAAtIXdwHgs1A04h_42aiOyGNDxexcV4bPmAJpfHyeNbXxr1twmUR6reCKpnJ0_2q_FZJi7j"/>
+            <button class="absolute bottom-4 right-4 bg-primary text-on-primary p-3 rounded-full shadow-primary opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+              <span class="material-symbols-outlined">add_shopping_cart</span>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-1 mb-2">
+              <span class="material-symbols-outlined text-sm text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="text-xs font-bold text-on-surface-variant">4.8</span>
+            </div>
+            <h3 class="title-md text-on-surface mb-1 group-hover:text-primary transition-colors">Tactile Pro 65</h3>
+            <p class="label-md text-on-surface-variant mb-4">65% Layout, Hot-swappable</p>
+            <p class="text-2xl font-bold tracking-tight text-primary">$189.00</p>
+          </div>
+        </div>
+
+        <!-- Product Card 3 -->
+        <div class="product-card group">
+          <div class="aspect-square p-8 flex items-center justify-center relative overflow-hidden bg-surface-container-low/50">
+            <img class="max-h-full transition-transform duration-500 group-hover:scale-110" alt="Precision Point X" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPAb30GV_tjPupieJLgZhi8KbhZJsqzKa4eLQG_kSGlANIdtGKvVd0HfcSjF4OZ8O3SLpqYCMiLKpPUeLt7Fd9JryXhErNiVVJnd-bGwm1XC29PB7y2nznA-L-yzVTmvf9OscSv8Cj2-M7Xan8c5vkOawwNSiRFN1t1yKzz2vqS2UyFL2PE34lPBPOefz0zy79rpEWuibHxvtfUOIlOCVSOFU5_wwuoBEbnHOqLTY2sMXcmJeQFzX_vOr52SFfmz7iaIvMvwSLzHyO"/>
+            <button class="absolute bottom-4 right-4 bg-primary text-on-primary p-3 rounded-full shadow-primary opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+              <span class="material-symbols-outlined">add_shopping_cart</span>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-1 mb-2">
+              <span class="material-symbols-outlined text-sm text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="text-xs font-bold text-on-surface-variant">5.0</span>
+            </div>
+            <h3 class="title-md text-on-surface mb-1 group-hover:text-primary transition-colors">Precision Point X</h3>
+            <p class="label-md text-on-surface-variant mb-4">Lag-free wireless sensor</p>
+            <p class="text-2xl font-bold tracking-tight text-primary">$129.00</p>
+          </div>
+        </div>
+
+        <!-- Product Card 4 -->
+        <div class="product-card group">
+          <div class="aspect-square p-8 flex items-center justify-center relative overflow-hidden bg-surface-container-low/50">
+            <img class="max-h-full transition-transform duration-500 group-hover:scale-110" alt="Canvas Air 12" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKjyV9zCxGA9bxRAHiS0FHb7cNju3XiTFQPPb2RzGujw5e0XB9C2tPAe3e4wUgSDSv8M-pL8NUJArvlhgmLpxthz5nNUSCyla-Yk67xjZgIFqEhbIexd4Bvx0zI9BWz0XgM-3aLQOg0H4bOhRkYi7_y_bVNl2lkCaZjPw6vRKD-mCwtuQG6bbZfwZU9ZKpcJgQh4cEk9N30F9lfAqH00Hh5A1Iczkxb6vk-QnNgWpJ1-r_Ef8FKhm2XDnBpeSnM8i64gAclFeLdX3g"/>
+            <button class="absolute bottom-4 right-4 bg-primary text-on-primary p-3 rounded-full shadow-primary opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+              <span class="material-symbols-outlined">add_shopping_cart</span>
+            </button>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-1 mb-2">
+              <span class="material-symbols-outlined text-sm text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="text-xs font-bold text-on-surface-variant">4.7</span>
+            </div>
+            <h3 class="title-md text-on-surface mb-1 group-hover:text-primary transition-colors">Canvas Air 12</h3>
+            <p class="label-md text-on-surface-variant mb-4">4K Retina OLED, 512GB</p>
+            <p class="text-2xl font-bold tracking-tight text-primary">$899.00</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bento Highlight -->
+  <section class="py-24 bg-surface-container-low">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="md:col-span-2 bg-inverse-surface rounded-4xl p-16 relative overflow-hidden text-inverse-on-surface flex flex-col justify-end min-h-[500px] group">
+          <img class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-[2s]" alt="Creative Station" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWwByWoF_czGMPp8nXiLTU80OLCCidq3mrxVLOqQ7hsmGij0XntunqD0QuhZo0Fb0EC4VPJT99zYrSf18FyuF28UZHiOdTpag-lF_PaipZJ-P2t0qX8PmHZ_-wcNLgAOAkXoVXgmJJIZmx37YIAVSj8jL_hbKTj1OjoqKT2vSieIDsf6ZIrCsjCQo9IJDPV6WmXXUIcJ_eG96ghEdRLHFyGWuP5XmvXfCzq-4zLSJIVgl3gww3zihnPaYEQNS1-0jUz7p42oJP1kSq"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-inverse-surface via-inverse-surface/30 to-transparent"></div>
+          <div class="relative z-10">
+            <h3 class="text-5xl font-black mb-6 tracking-tight leading-tight">The Ultimate <br/>Creative Station.</h3>
+            <p class="text-inverse-on-surface/80 mb-10 max-w-sm text-lg font-medium">Bring your curation to life with industry-leading color accuracy and performance.</p>
+            <button class="bg-surface-container-lowest text-on-surface px-8 py-4 rounded-full font-bold hover:bg-primary hover:text-on-primary transition-all active:scale-95">Explore Bundles</button>
+          </div>
+        </div>
+        <div class="flex flex-col gap-8">
+          <div class="flex-1 bg-primary rounded-4xl p-10 flex flex-col justify-center items-center text-center text-on-primary shadow-ambient group hover:-translate-y-2 transition-all duration-500">
+            <div class="w-16 h-16 bg-on-primary/10 rounded-2xl flex items-center justify-center mb-6">
+              <span class="material-symbols-outlined text-4xl">bolt</span>
+            </div>
+            <h4 class="text-2xl font-black mb-2 tracking-tight">Ultra-Fast Delivery</h4>
+            <p class="text-sm opacity-90 font-medium">Next-day precision, guaranteed.</p>
+          </div>
+          <div class="flex-1 bg-surface-container-lowest rounded-4xl p-10 flex flex-col justify-center items-center text-center ghost-border shadow-ambient group hover:-translate-y-2 transition-all duration-500">
+            <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
+              <span class="material-symbols-outlined text-4xl text-primary">verified_user</span>
+            </div>
+            <h4 class="text-2xl font-black mb-2 tracking-tight text-on-surface">3-Year Warranty</h4>
+            <p class="text-sm text-on-surface-variant font-medium">Peace of mind for your precision tools.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

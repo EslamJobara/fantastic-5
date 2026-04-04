@@ -1,0 +1,218 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss';
+
+/* The Precision Curator Design System - Global Styles */
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8f9fa; /* surface */
+  color: #191c1d; /* on-surface - never use pure black */
+}
+
+/* Material Symbols Configuration */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Signature Textures */
+
+/* Liquid Gradient for Primary CTAs */
+.liquid-gradient {
+  background: linear-gradient(135deg, #0058be 0%, #2170e4 100%);
+}
+
+/* Glassmorphism for Navigation */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Ambient Shadow - The "Ghost" Shadow */
+.ambient-shadow {
+  box-shadow: 0 40px 40px -5px rgba(25, 28, 29, 0.06);
+}
+
+/* Ghost Border - Barely Perceptible */
+.ghost-border {
+  border: 1px solid rgba(194, 198, 214, 0.2);
+}
+
+/* Tonal Shift Hover */
+.tonal-shift {
+  transition: background-color 0.3s ease;
+}
+
+.tonal-shift:hover {
+  background-color: rgba(0, 90, 194, 0.05); /* surface-tint at 5% */
+}
+
+/* Typography Scale - Editorial Voice */
+.display-lg {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.display-md {
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.title-lg {
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.title-md {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.body-lg {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.body-md {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.label-md {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Remove default borders - enforce "No-Line" Rule */
+.no-line {
+  border: none !important;
+}
+
+/* Product Card - No dividers allowed */
+.product-card {
+  background: #ffffff; /* surface_container_lowest */
+  border-radius: 2rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 40px 40px -5px rgba(25, 28, 29, 0.06);
+}
+
+/* Input Fields - Outlined Style */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  border: 1px solid rgba(194, 198, 214, 0.4); /* outline_variant at 40% */
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #0058be; /* primary */
+  border-width: 2px;
+  outline: none;
+}
+
+/* Buttons - Primary with Liquid Gradient */
+.btn-primary {
+  background: linear-gradient(135deg, #0058be 0%, #2170e4 100%);
+  color: #ffffff;
+  padding: 1rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 16px rgba(0, 88, 190, 0.2);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 12px 24px rgba(0, 88, 190, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Buttons - Secondary */
+.btn-secondary {
+  background: #e7e8e9; /* surface_container_high */
+  color: #191c1d; /* on_surface */
+  padding: 1rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background: #e1e3e4; /* surface_container_highest */
+}
+
+/* Interactive Chips */
+.chip {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.chip-unselected {
+  background: #e1e3e4; /* surface_container_highest */
+  color: #191c1d;
+}
+
+.chip-selected {
+  background: #0058be; /* primary */
+  color: #ffffff; /* on_primary */
+}
+
+/* Spec Tables - Technical Lists */
+.spec-list {
+  width: 100%;
+}
+
+.spec-list-row {
+  display: flex;
+  padding: 0.75rem 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.spec-list-row:nth-child(odd) {
+  background: #f8f9fa; /* surface */
+}
+
+.spec-list-row:nth-child(even) {
+  background: #f3f4f5; /* surface_container_low */
+}
+
+/* Asymmetrical Margins for Editorial Sections */
+.editorial-hero {
+  padding-left: 4rem;
+  padding-right: 5rem;
+}
+
+@media (max-width: 768px) {
+  .editorial-hero {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+

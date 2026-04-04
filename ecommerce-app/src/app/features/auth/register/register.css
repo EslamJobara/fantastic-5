@@ -1,0 +1,10 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.liquid-gradient {
+  background: linear-gradient(135deg, #0058be 0%, #2170e4 100%);
+}

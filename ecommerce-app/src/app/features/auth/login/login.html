@@ -1,0 +1,48 @@
+<!-- Login Canvas -->
+<main class="min-h-screen pt-20 pb-12 flex items-center justify-center relative overflow-hidden">
+  <!-- Atmospheric Background Elements -->
+  <div class="absolute top-1/4 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-[100px]"></div>
+  <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-tertiary/5 rounded-full blur-[100px]"></div>
+
+  <div class="w-full max-w-md px-6 z-10">
+    <!-- Login Card -->
+    <div class="bg-surface-container-lowest p-10 rounded-xl shadow-ambient">
+      <div class="mb-10 text-center">
+        <h1 class="text-3xl font-bold tracking-tight text-on-surface mb-2">Welcome Back</h1>
+        <p class="text-on-surface-variant text-sm">Please enter your details to access your showroom.</p>
+      </div>
+
+      <form class="space-y-6">
+        <!-- Email Field -->
+        <div class="space-y-2">
+          <label class="label-md text-on-surface-variant ml-1" for="email">Email Address</label>
+          <input class="w-full px-4 py-3 bg-surface-container-low no-line rounded-lg focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-300 text-on-surface placeholder:text-outline/50" id="email" name="email" placeholder="curator@precision.com" type="email"/>
+        </div>
+
+        <!-- Password Field -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center ml-1">
+            <label class="label-md text-on-surface-variant" for="password">Password</label>
+            <a class="label-md text-primary hover:text-primary-container transition-colors" href="#">Forgot password?</a>
+          </div>
+          <input class="w-full px-4 py-3 bg-surface-container-low no-line rounded-lg focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-300 text-on-surface" id="password" name="password" placeholder="••••••••" type="password"/>
+        </div>
+
+        <!-- Login Button -->
+        <button class="w-full py-4 liquid-gradient text-on-primary font-semibold rounded-full shadow-primary hover:shadow-primary-lg transition-all duration-300 active:scale-[0.98] mt-4" type="submit">Login</button>
+      </form>
+
+      <!-- Footer Link -->
+      <div class="mt-10 text-center">
+        <p class="text-sm text-on-surface-variant">New to the collection? <a class="text-primary font-semibold hover:underline underline-offset-4 decoration-2" routerLink="/register">Create an account</a></p>
+      </div>
+    </div>
+
+    <!-- Product Teaser (Asymmetric Decorative Element) -->
+    <div class="mt-12 opacity-40 flex items-center justify-center gap-8 grayscale">
+      <img class="w-20 h-20 object-cover rounded-xl shadow-sm -rotate-12" alt="Close-up of a high-end silver metallic laptop lid with soft studio lighting reflecting off the smooth surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQkfrWE5UK68lTP9b4-J2My1lF2HVIx8p3TJUIwKlJ3mHmCRd0T-UFxLLOM2cwSu5F6sIvdOmEcY0L2-S7PvprO9LJ-ubIiBZbvRCyVGyoDHCzG_Ml7vlx-8AzjxCGgThr_gPehSEksZc9OpiU5LGEuQGEFYkAiIEMG1dMzxp7TCJ8b_Bj7S9rsf35mO36W0Om4Pv7rhOqCChr2Aq2OhtiXggn7v_BBuDDFubkEgH9ET-Vr-xdQ3BQowrFOU-g2TlBzVRRN4zyu9Nb"/>
+      <img class="w-24 h-24 object-cover rounded-xl shadow-md rotate-[8deg]" alt="Minimalist design of high-end premium wireless headphones on a clean neutral background with subtle shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPYPumMX3cRhIITkKadNyI1LBF_MJsxPsNBXVQOF7Uo4g61-qtO7NxGaJ-rYyAiisoNZBqWB0hHEHRTFa8IfEWjBNqAxB6D4S-GB8_AQrsD9bktH4yfqQWyL2kgIaszDDGxVHhA_BhpgN1AobWHZ4fbaac-pEtfU3GIil4_ra8wcFZJdtnaCqLCdhbT47z1qLO2gCEKEpdJhSvbvpq3fKQd5R8iSwUS0V15z2tUOxfotfJqkzR3Zx9ptHnKfXA_tg-Fyyzy1yUI8Al"/>
+      <img class="w-20 h-20 object-cover rounded-xl shadow-sm -rotate-3" alt="Elegant luxury watch with a clean face and leather strap captured in a professional high-key photography style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_4NCW6tgsy86c1xpNsccCrRQbURqpzTfbx2Ydg45QduKzffrlCPY64T8LcIdRCGNqcOcxgM5scoJvjscs5GfjTADuOYLAbTF6WX0PR3dCsEP5paQmHUksokKQLzWbgh-bvByVW1zZd9ckuVzPRL27kjUQW8ERrb5wpK4NHK8YV1PsIjNZAYyeSZyzgCoH_68PQNskYG_rm8t14el6mJ3lFxD8KqypiT_fj5gnRNSgAjcREffSzMOEJke7Ja8Qce7GL4S6dMeyEaxx"/>
+    </div>
+  </div>
+</main>

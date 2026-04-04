@@ -1,0 +1,88 @@
+<!-- Header Suppression: As per mandate, navigation shells are excluded for linear/transactional tasks like Sign-up. Only Brand Anchor remains. -->
+<header class="w-full h-20 flex items-center justify-center bg-surface-container-lowest shadow-ambient">
+  <span class="text-xl font-bold tracking-tighter text-on-surface">The Precision Curator</span>
+</header>
+
+<main class="grow flex items-center justify-center px-4 py-12">
+  <div class="w-full max-w-md">
+    <!-- Atmospheric Precision Card: Using tonal shifts and ambient shadows instead of borders -->
+    <div class="bg-surface-container-lowest p-8 md:p-12 rounded-xl shadow-ambient">
+      <div class="mb-10 text-center">
+        <h1 class="text-3xl font-bold tracking-tight text-on-surface mb-2">Create Account</h1>
+        <p class="text-on-surface-variant text-sm leading-relaxed">Join our curated community of tech enthusiasts.</p>
+      </div>
+
+      <form class="space-y-6">
+        <div class="space-y-1.5">
+          <label class="label-md text-on-surface-variant ml-1" for="fullname">Full Name</label>
+          <input class="w-full px-4 py-3 bg-surface-container-low no-line rounded-lg focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-300 text-on-surface placeholder:text-outline" id="fullname" name="fullname" placeholder="John Doe" type="text"/>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="label-md text-on-surface-variant ml-1" for="email">Email Address</label>
+          <input class="w-full px-4 py-3 bg-surface-container-low no-line rounded-lg focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-300 text-on-surface placeholder:text-outline" id="email" name="email" placeholder="john@example.com" type="email"/>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="label-md text-on-surface-variant ml-1" for="password">Password</label>
+          <div class="relative">
+            <input class="w-full px-4 py-3 bg-surface-container-low no-line rounded-lg focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-300 text-on-surface placeholder:text-outline" id="password" name="password" placeholder="••••••••" type="password"/>
+            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline cursor-pointer text-sm">visibility</span>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="label-md text-on-surface-variant ml-1" for="confirm_password">Confirm Password</label>
+          <input class="w-full px-4 py-3 bg-surface-container-low no-line rounded-lg focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-300 text-on-surface placeholder:text-outline" id="confirm_password" name="confirm_password" placeholder="••••••••" type="password"/>
+        </div>
+
+        <div class="pt-2">
+          <button class="w-full py-4 px-6 liquid-gradient text-on-primary font-semibold rounded-full shadow-primary hover:shadow-primary-lg transition-all duration-200 active:scale-[0.98]" type="submit">Register</button>
+        </div>
+      </form>
+
+      <div class="mt-8 text-center">
+        <p class="text-sm text-on-surface-variant">Already have an account? <a class="text-primary font-semibold hover:underline underline-offset-4 ml-1" routerLink="/login">Log in</a></p>
+      </div>
+    </div>
+
+    <!-- Contextual Decorative Element: Ghost Shadow Depth -->
+    <div class="mt-8 flex justify-center items-center gap-4 text-outline/30 select-none">
+      <div class="h-px w-12 bg-outline-variant/20"></div>
+      <span class="label-sm text-outline/30">Atmospheric Precision</span>
+      <div class="h-px w-12 bg-outline-variant/20"></div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer Component from Shared Components JSON -->
+<footer class="w-full bg-surface-container-low">
+  <div class="max-w-7xl mx-auto px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div class="col-span-1 md:col-span-1">
+      <span class="text-lg font-bold text-on-surface block mb-4">The Precision Curator</span>
+      <p class="text-sm font-body leading-relaxed text-on-surface-variant">© 2024 Precision Curator. Atmospheric Precision.</p>
+    </div>
+    <div>
+      <h4 class="label-md text-on-surface mb-4">Explore</h4>
+      <ul class="space-y-2">
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">About Us</a></li>
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="label-md text-on-surface mb-4">Legal</h4>
+      <ul class="space-y-2">
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="label-md text-on-surface mb-4">Support</h4>
+      <p class="text-sm font-body leading-relaxed text-on-surface-variant mb-4">High-end electronics curated with technical authority.</p>
+      <div class="flex gap-4">
+        <span class="material-symbols-outlined text-on-surface-variant text-lg">headset_mic</span>
+        <span class="material-symbols-outlined text-on-surface-variant text-lg">mail</span>
+      </div>
+    </div>
+  </div>
+</footer>
