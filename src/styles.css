@@ -211,6 +211,22 @@ select:focus {
   animation-delay: 4s;
 }
 
+/* Glassmorphism Card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 32px 0 rgba(37, 99, 235, 0.15);
+}
+
 /* Asymmetrical Margins for Editorial Sections */
 .editorial-hero {
   padding-left: 4rem;
