@@ -140,8 +140,11 @@
   <!-- Featured Products -->
   <section class="py-32">
     <div class="max-w-7xl mx-auto px-8">
-      <div class="flex flex-col gap-10 mb-16">
-        <h2 class="text-6xl font-bold tracking-tight text-on-surface">Explore the lineup.</h2>
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <span class="text-primary font-black uppercase tracking-[0.3em] text-xs block mb-4">Complementary Items</span>
+          <h2 class="text-3xl font-black font-headline tracking-tighter">Explore the lineup.</h2>
+        </div>
         <div class="relative inline-flex items-center bg-white shadow-ambient rounded-full p-1.5 w-fit">
           <!-- sliding indicator -->
           <div class="absolute top-1.5 bottom-1.5 rounded-full bg-slate-900 transition-all duration-300 ease-out pointer-events-none"
@@ -160,28 +163,11 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 transition-all duration-200"
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 transition-all duration-200"
            [class.opacity-0]="!cardsVisible"
            [class.-translate-y-2]="!cardsVisible">
 
-        <div *ngFor="let p of filteredProducts" class="flex flex-col items-center group">
-          <div class="w-full aspect-square bg-white rounded-[2rem] flex items-center justify-center p-10 mb-6 overflow-hidden relative shadow-sm transition-all duration-500 group-hover:shadow-[0_8px_32px_0_rgba(37,99,235,0.15)] group-hover:-translate-y-1">
-            <img class="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105" [alt]="p.name" [src]="p.img"/>
-            <button class="absolute bottom-4 right-4 bg-primary text-white p-3 rounded-full opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-              <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-            </button>
-          </div>
-          <span class="text-[10px] font-normal text-on-surface-variant mb-1 uppercase tracking-widest">{{ p.badge }}</span>
-          <h3 class="text-xl font-bold text-on-surface mb-1 text-center">{{ p.name }}</h3>
-          <p class="text-sm text-on-surface-variant mb-6 text-center">{{ p.desc }}</p>
-          <div class="flex items-center gap-6">
-            <span class="text-lg font-bold text-primary">{{ p.price }}</span>
-            <button class="flex items-center gap-1 text-sm font-semibold text-primary group-hover:gap-2 transition-all duration-200">
-              Buy
-              <span class="material-symbols-outlined text-base leading-none">arrow_forward</span>
-            </button>
-          </div>
-        </div>
+        <app-product-card *ngFor="let p of filteredProducts" [product]="p"></app-product-card>
 
       </div>
     </div>

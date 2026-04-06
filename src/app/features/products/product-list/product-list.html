@@ -1,218 +1,93 @@
+<app-blob-background />
 <main class="pt-32 pb-20 max-w-7xl mx-auto px-8">
+  <!-- Sorting & Stats - Full Width -->
+  <div class="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
+    <div>
+      <p class="text-body-md text-on-surface-variant">Displaying {{ products.length }} Precision Instruments</p>
+    </div>
+    
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
+      <!-- Search Bar -->
+      <div class="w-full sm:w-80">
+        <app-search-bar 
+          placeholder="Search products..." 
+          width="w-full"
+          variant="page"
+          (search)="handleSearch($event)">
+        </app-search-bar>
+      </div>
+      
+      <!-- Sort Dropdown -->
+      <div class="flex items-center gap-4 whitespace-nowrap">
+        <label class="label-md text-outline">Sort By</label>
+        <select class="bg-transparent no-line text-sm font-bold text-primary focus:ring-0 cursor-pointer">
+          <option>Newest Arrivals</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters & Products Side by Side -->
   <div class="flex flex-col md:flex-row gap-12">
     <!-- Sidebar Filters -->
-    <aside class="w-full md:w-64 flex-shrink-0 space-y-10">
-      <section>
-        <h3 class="label-md text-outline mb-6">Category</h3>
-        <div class="space-y-3">
-          <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
-            <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
-              <div class="w-2.5 h-2.5 bg-primary rounded-sm opacity-100"></div>
-            </div>
-            <input checked class="hidden" type="checkbox"/>
-            <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">Laptops</span>
-          </label>
-          <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
-            <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
-              <div class="w-2.5 h-2.5 bg-primary rounded-sm opacity-0 group-has-[:checked]:opacity-100"></div>
-            </div>
-            <input class="hidden" type="checkbox"/>
-            <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">Accessories</span>
-          </label>
-          <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
-            <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
-              <div class="w-2.5 h-2.5 bg-primary rounded-sm opacity-0 group-has-[:checked]:opacity-100"></div>
-            </div>
-            <input class="hidden" type="checkbox"/>
-            <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">Gadgets</span>
-          </label>
-        </div>
-      </section>
-
-      <section>
-        <h3 class="label-md text-outline mb-6">Price Range</h3>
-        <div class="px-2">
-          <input class="w-full h-1 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" type="range"/>
-          <div class="flex justify-between mt-4 text-sm text-on-surface-variant font-medium">
-            <span>$0</span>
-            <span>$5,000+</span>
+    <aside class="w-full md:w-64 flex-shrink-0">
+      <div class="glass-card rounded-3xl p-8 space-y-10 sticky top-24">
+        <section>
+          <h3 class="label-md text-outline mb-6">Category</h3>
+          <div class="space-y-3">
+            <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
+              <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
+                <div class="w-2.5 h-2.5 bg-primary rounded-sm opacity-100"></div>
+              </div>
+              <input checked class="hidden" type="checkbox"/>
+              <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">Laptops</span>
+            </label>
+            <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
+              <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
+                <div class="w-2.5 h-2.5 bg-primary rounded-sm opacity-0 group-has-[:checked]:opacity-100"></div>
+              </div>
+              <input class="hidden" type="checkbox"/>
+              <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">Accessories</span>
+            </label>
+            <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
+              <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
+                <div class="w-2.5 h-2.5 bg-primary rounded-sm opacity-0 group-has-[:checked]:opacity-100"></div>
+              </div>
+              <input class="hidden" type="checkbox"/>
+              <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">Gadgets</span>
+            </label>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h3 class="label-md text-outline mb-6">Brand</h3>
-        <div class="flex flex-wrap gap-2">
-          <button class="chip chip-selected">Apple</button>
-          <button class="chip chip-unselected">Dell</button>
-          <button class="chip chip-unselected">Sony</button>
-          <button class="chip chip-unselected">Logitech</button>
-          <button class="chip chip-unselected">Asus</button>
-        </div>
-      </section>
+        <section>
+          <h3 class="label-md text-outline mb-6">Price Range</h3>
+          <div class="px-2">
+            <input class="w-full h-1 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" type="range"/>
+            <div class="flex justify-between mt-4 text-sm text-on-surface-variant font-medium">
+              <span>$0</span>
+              <span>$5,000+</span>
+            </div>
+          </div>
+        </section>
+
+
+      </div>
     </aside>
 
     <!-- Main Content Area -->
     <div class="flex-1">
-      <!-- Sorting & Stats -->
-      <div class="flex items-end justify-between mb-12">
-        <div>
-          <h1 class="text-display-md text-on-surface mb-2">Technical Curator</h1>
-          <p class="text-body-md text-on-surface-variant">Displaying 12 Precision Instruments</p>
-        </div>
-        <div class="flex items-center gap-4">
-          <label class="label-md text-outline">Sort By</label>
-          <select class="bg-transparent no-line text-sm font-bold text-primary focus:ring-0 cursor-pointer">
-            <option>Popularity</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
-            <option>Newest Arrivals</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Product Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-        <!-- Product Card 1 -->
-        <div class="group">
-          <div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-xl shadow-ambient relative transition-all duration-500 hover:-translate-y-2">
-            <div class="absolute top-4 right-4 z-10">
-              <span class="px-3 py-1 bg-tertiary text-on-tertiary label-sm rounded-full">New Arrival</span>
-            </div>
-            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="minimalist silver laptop on white desk with soft natural window lighting and clean aesthetic shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRGDwtLxL-NgFDB5ZY819ZISRgEDdT41rM74tpxv61bJ-kGuuSMQCVhONzD39c55sp3KR4um69MgMkkIZq3pZlEvOIfPHKM91HKi036T0H7uNcbK12t9_mXW9ORQqjMDEB8PVoC_H9KuymxJzhHC7MRYZPRQXCYNTEDGI--b9U5x6lStGplhoiKfnNCu4ZXAQQ8FfwrZii1HOfpel2lOVoMqaNDDywXpLM4-ZOW0rjtF-xwMI_Wp8iz6ETQhMGq0hmNdlH7phmu1rU"/>
-            <div class="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          </div>
-          <div class="mt-6 space-y-2">
-            <div class="flex justify-between items-start">
-              <h3 class="title-md text-on-surface">Lumina Pro 14"</h3>
-              <p class="text-primary font-bold">$1,299</p>
-            </div>
-            <p class="label-md text-outline">M3 Chip • 16GB RAM • 512GB SSD</p>
-            <button class="w-full mt-4 btn-primary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">Add to Cart</button>
-          </div>
-        </div>
-
-        <!-- Product Card 2 -->
-        <div class="group">
-          <div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-xl shadow-ambient relative transition-all duration-500 hover:-translate-y-2">
-            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="high-end wireless headphones with sleek metallic finish and leather padding on minimalist wooden stand" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClnnMDJ7ahHNcrONhxVynHcWYCP_sTity5znvSHX9sNjW_J1rAHzzazxyrN_R56gRq4ZGpnlYtETUhaHzOnU3GDiGEhAbRnIfkxnVFEcEysXmxHojEamcr96JZ10Sa9i4FouxN9hvFgFay9EY-AOqMIMsTwqXGfoWm0kVmXXpqVcJArnKqEmyWS2binP6yM0payEcNXT9hrdE9RT6CdoQi8oAVXXMSyh8cYEpRcjZuBnXYQVhtPL10zdyyDZxOOcike5MKRnCw8pBD"/>
-          </div>
-          <div class="mt-6 space-y-2">
-            <div class="flex justify-between items-start">
-              <h3 class="title-md text-on-surface">Acoustic S1 Wireless</h3>
-              <p class="text-primary font-bold">$349</p>
-            </div>
-            <p class="label-md text-outline">Active Noise Canceling • 40H Battery</p>
-            <button class="w-full mt-4 btn-primary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">Add to Cart</button>
-          </div>
-        </div>
-
-        <!-- Product Card 3 -->
-        <div class="group">
-          <div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-xl shadow-ambient relative transition-all duration-500 hover:-translate-y-2">
-            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="luxury smartwatch with white band and digital interface on a clean glass surface with teal reflections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWcCrzVEzLJrTst1L08ttWkJ96Vp_pBDnMAuThMtDZBcmSpLDxK4kFoAkFoqwbYVPy3r8qwE5HgGp_Yw0NSRG7zgtIv_XUPRWHYA0B95TLqhkjtiJTfhKX82Ao9JUy_dScmQTluJT--RNPIULmwCk6u0m0FhDlv1UBFzgBlZtj-0tgS8zm2I5DQssUe2jwLqiHxnsjeL-MAugIyQ4POMppH-qXl2Eu8rK1M2GPH3ZNwHgtmYIxAaJHjNocWM_GmzQuzM53qdrEUNlh"/>
-          </div>
-          <div class="mt-6 space-y-2">
-            <div class="flex justify-between items-start">
-              <h3 class="title-md text-on-surface">Chronos Gen 5</h3>
-              <p class="text-primary font-bold">$499</p>
-            </div>
-            <p class="label-md text-outline">OLED Display • Heart Rate Sensor</p>
-            <button class="w-full mt-4 btn-primary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">Add to Cart</button>
-          </div>
-        </div>
-
-        <!-- Product Card 4 -->
-        <div class="group">
-          <div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-xl shadow-ambient relative transition-all duration-500 hover:-translate-y-2">
-            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="pro ergonomic mechanical keyboard with subtle RGB lighting and matte keycaps on a felt desk mat" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmO7IJiRPU6c3Uc1vZy-r8Tryo8G9o5c1BcUyXhTbcYa0Q8DNtKsNUpWcSk-Ej1hkuHphOcze9_TGn0D-0AePxTM49R3aM6_ZqyZDX2xGYksgCdaKrZ9We_3z5MFb4E-r16jb5Cklxhg_Il4zTrwWHZklY_rNwKiqPRkDkqYAQ99iIjkNSn2ezUjLtevS7y4lxk1m9qaikF3uWScLmtQtlI4jRQ9zXFbAYNo7jRkQ3m0Opf3QUJ4YP37pSgOQSQ0AgbcDqb57M-zJy"/>
-          </div>
-          <div class="mt-6 space-y-2">
-            <div class="flex justify-between items-start">
-              <h3 class="title-md text-on-surface">Tactile Mechanical K1</h3>
-              <p class="text-primary font-bold">$189</p>
-            </div>
-            <p class="label-md text-outline">Hot-Swappable • RGB • Aluminum Base</p>
-            <button class="w-full mt-4 btn-primary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">Add to Cart</button>
-          </div>
-        </div>
-
-        <!-- Product Card 5 -->
-        <div class="group">
-          <div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-xl shadow-ambient relative transition-all duration-500 hover:-translate-y-2">
-            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="ultra thin tablet with stylus lying on a designer desk with architect blueprints and soft desk light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdnmBLSSY9CgMeaijUQk8TvnjXG3OaPCucvMqmruiHEJjdL8Pul_bbRQixEg56NFuGj06S8Sh5wGmDi6cOjO3lQtlXBJQPTEsaxoYqHqAMEml3ClJsOb2ZPmDrpPUXKT-E08ZVsAhoc6V8lmjs6_Aizz_f1hw9cw_O-voLameT2dQ3T6d33znJZesKbBUTSXVmD_fByWrlp5adlEyLG0ppJinrxwCnRF7MBN_E9_WHEIecfKUH8uKeLWmU_21DRkDeY1jrfm98DBr0"/>
-          </div>
-          <div class="mt-6 space-y-2">
-            <div class="flex justify-between items-start">
-              <h3 class="title-md text-on-surface">Slate Pro 12.9</h3>
-              <p class="text-primary font-bold">$1,099</p>
-            </div>
-            <p class="label-md text-outline">Liquid Retina • Pencil Support</p>
-            <button class="w-full mt-4 btn-primary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">Add to Cart</button>
-          </div>
-        </div>
-
-        <!-- Product Card 6 -->
-        <div class="group">
-          <div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-xl shadow-ambient relative transition-all duration-500 hover:-translate-y-2">
-            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="ergonomic wireless mouse with modern architectural lines on a dark grey tech-focused background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsJVUqZWPyxactILpkLH3NdfZMAHY4TRpc0-0OdF18cXvcm0vBPK5r7d5GfcTvRsGEVaQhbx6uDLUBNP66MCPMlqhv3hXXXu1ub6fjPCpLqXYiks3ZDkyCq3WO_g_p5Zg0vCijcutfXToTsys8forToKABI8ciTOl_7of1_fIa6mhdSsq9Gr9r0-6RDlOX_bhaHDdzwECimyLZ6z-z1aTNaRXdtSY-zjCIPwtvlHYgdH9G4hwWsTgig1mooPawaE39q1uLy4sguld0"/>
-          </div>
-          <div class="mt-6 space-y-2">
-            <div class="flex justify-between items-start">
-              <h3 class="title-md text-on-surface">Precision Mouse Gen 2</h3>
-              <p class="text-primary font-bold">$129</p>
-            </div>
-            <p class="label-md text-outline">8000 DPI • Silent Clicks • Multi-Device</p>
-            <button class="w-full mt-4 btn-primary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">Add to Cart</button>
-          </div>
-        </div>
-
-        <!-- Product Card 7 -->
-        <div class="group">
-          <div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-xl shadow-ambient relative transition-all duration-500 hover:-translate-y-2">
-            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="studio monitor speaker with wood grain finish on a minimalist shelving unit with warm light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbeAJudCI_leJOIZxm1oAs-wV5dItSnIEXq4Mvk4eM9TkXoNdC1R03dMePb1T-Z21Ckttk_FADxaCi8vQ9F5eECAXvdAYNvr7bqtLi_0UR5OlsW2zDwm02GGZCBazauiNTaeBWFIptBHdWCb7SXY0j1WBEZXKntOmkuKg2IH12QAsjQ6B2KBsNSlrOu4avkQljS-d6eD6c5xytZ_3H2Ycyt2U3jeFHeSNBQnj1S0nQlL5uWN9klqsJUTEIpCKmU3-AkaIDkvK_8Xid"/>
-          </div>
-          <div class="mt-6 space-y-2">
-            <div class="flex justify-between items-start">
-              <h3 class="title-md text-on-surface">Sonic Core H1</h3>
-              <p class="text-primary font-bold">$299</p>
-            </div>
-            <p class="label-md text-outline">Hi-Res Audio • Bluetooth 5.2</p>
-            <button class="w-full mt-4 btn-primary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">Add to Cart</button>
-          </div>
-        </div>
-
-        <!-- Product Card 8 -->
-        <div class="group">
-          <div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-xl shadow-ambient relative transition-all duration-500 hover:-translate-y-2">
-            <div class="absolute top-4 right-4 z-10">
-              <span class="px-3 py-1 bg-primary text-on-primary label-sm rounded-full">Bestseller</span>
-            </div>
-            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="professional workspace featuring multiple slim monitors and a high-end desktop workstation in dark tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBY_aJ0Rg9zMZa9IPucmgf0Ox3jYll5jgDxMT-UOZpnYVIk19v3pohJIoVNZSO-LyXMD4XIyy14tQP4rlq5AZY5gbVAFxQWvxK-cXDbr_8H0iq5Qgc21xWscxkwpqi_Jsvg3cGGfO7pYaElX10rwYodGupagg6Sjui5uhWa52n1VXbbMzWVBjBpOjC8qGvAU4wX3jAbZdKq3PkGMxksYd96h9HixPepWCuFwFIteCQ8FCyQxioDGaUZZjKQUMtdonntO1jnMHCKGLMV"/>
-          </div>
-          <div class="mt-6 space-y-2">
-            <div class="flex justify-between items-start">
-              <h3 class="title-md text-on-surface">Vortex Pro PC</h3>
-              <p class="text-primary font-bold">$2,499</p>
-            </div>
-            <p class="label-md text-outline">RTX 4080 • i9-14900K • 32GB RAM</p>
-            <button class="w-full mt-4 btn-primary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">Add to Cart</button>
-          </div>
-        </div>
-
-        <!-- Product Card 9 -->
-        <div class="group">
-          <div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-xl shadow-ambient relative transition-all duration-500 hover:-translate-y-2">
-            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="mirrorless digital camera with professional lens on a dark fabric background with dramatic spotlighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlvbxwLP2qyLQ28jOpCW77o_luhZTGivdXg_L9uRJgSuZVDbpIi8nDoskrmFiQhMNNKsxSKGAo8ncjuEYhyU_PC_WCB6lcuUBYQP-lT46bzUNqmia26OrLvPp1UaonCMFSLe23M6CHEEQqRwiuRTAMCnccJt_2S9H0EbWo4ecEPGTkKAXcgxgrVTWfe5JAU3iPsoufNUrqe8qXogqRHjBWPiVtO5G5r9IbHQSMptzdjC5b4H4S1wO3cEQP6hzSMdubvYEUVUR__iNH"/>
-          </div>
-          <div class="mt-6 space-y-2">
-            <div class="flex justify-between items-start">
-              <h3 class="title-md text-on-surface">Visionary X-100</h3>
-              <p class="text-primary font-bold">$1,599</p>
-            </div>
-            <p class="label-md text-outline">45MP Sensor • 8K Video • IBIS</p>
-            <button class="w-full mt-4 btn-primary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">Add to Cart</button>
-          </div>
+      <!-- Product Grid Container -->
+      <div class="glass-card rounded-3xl p-8 lg:p-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          <app-product-card 
+            *ngFor="let product of products" 
+            [product]="product"
+            [showActions]="true"
+            (addToCart)="handleAddToCart($event)"
+            (viewDetails)="handleViewDetails($event)">
+          </app-product-card>
         </div>
       </div>
 

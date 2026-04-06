@@ -7,6 +7,7 @@ import { ProductListComponent } from './features/products/product-list/product-l
 import { RegisterComponent } from './features/auth/register/register';
 import { LoginComponent } from './features/auth/login/login';
 import { LandingComponent } from './features/home/landing/landing';
+import { OrderHistoryComponent } from './features/orders/order-history/order-history';
 
 const routes: Routes = [ { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
@@ -14,7 +15,8 @@ const routes: Routes = [ { path: '', component: LandingComponent },
   { path: 'products', component: ProductListComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'cart', component: CartPageComponent },
-  { path: 'checkout', component: CheckoutPageComponent },];
+  { path: 'checkout', component: CheckoutPageComponent },
+  { path: 'orders', component: OrderHistoryComponent },];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

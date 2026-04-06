@@ -1,140 +1,152 @@
+<app-blob-background />
 <main class="pt-32 pb-24 px-8 max-w-7xl mx-auto">
-  <div class="mb-12">
-    <h1 class="text-display-md text-on-surface mb-2">Secure Checkout</h1>
-    <p class="text-body-md text-on-surface-variant">Review your details and finalize your curation.</p>
+  <div class="mb-16">
+    <h1 class="text-display-md text-on-surface mb-2">Checkout</h1>
+    <p class="text-body-md text-on-surface-variant">Securely complete your purchase with our Liquid Vitrine experience.</p>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+    <!-- Left Column: Shipping & Payment -->
     <div class="lg:col-span-7 space-y-12">
-      <!-- Shipping Address Section -->
-      <section>
-        <div class="flex items-center gap-4 mb-8">
-          <span class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-sm font-bold shadow-primary">1</span>
-          <h2 class="text-title-lg text-on-surface">Shipping Address</h2>
+      <!-- Shipping Section -->
+      <section class="glass-card rounded-2xl p-8 md:p-10">
+        <div class="flex items-center gap-4 mb-10">
+          <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-2xl">local_shipping</span>
+          </div>
+          <h2 class="text-title-lg text-on-surface">Shipping Details</h2>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div class="md:col-span-2">
-            <label class="label-md text-on-surface-variant mb-2 ml-1 block">Full name</label>
-            <input class="w-full bg-surface-container-low no-line focus:ring-2 focus:ring-primary/20 rounded-xl px-4 py-3.5 transition-all text-on-surface placeholder:text-outline" placeholder="Julianne Moore" type="text"/>
+            <label class="label-md text-on-surface-variant mb-3 block">Full Name</label>
+            <input 
+              class="w-full glass-input rounded-xl p-4 transition-all focus:ring-0 text-on-surface placeholder:text-outline" 
+              placeholder="e.g. Julian Vossen" 
+              type="text"/>
           </div>
           <div class="md:col-span-2">
-            <label class="label-md text-on-surface-variant mb-2 ml-1 block">Address line</label>
-            <input class="w-full bg-surface-container-low no-line focus:ring-2 focus:ring-primary/20 rounded-xl px-4 py-3.5 transition-all text-on-surface placeholder:text-outline" placeholder="124 Precision Ave, Studio District" type="text"/>
+            <label class="label-md text-on-surface-variant mb-3 block">Street Address</label>
+            <input 
+              class="w-full glass-input rounded-xl p-4 transition-all focus:ring-0 text-on-surface placeholder:text-outline" 
+              placeholder="123 Performance Way" 
+              type="text"/>
           </div>
           <div>
-            <label class="label-md text-on-surface-variant mb-2 ml-1 block">Phone</label>
-            <input class="w-full bg-surface-container-low no-line focus:ring-2 focus:ring-primary/20 rounded-xl px-4 py-3.5 transition-all text-on-surface placeholder:text-outline" placeholder="+1 (555) 000-0000" type="tel"/>
+            <label class="label-md text-on-surface-variant mb-3 block">City</label>
+            <input 
+              class="w-full glass-input rounded-xl p-4 transition-all focus:ring-0 text-on-surface placeholder:text-outline" 
+              placeholder="Berlin" 
+              type="text"/>
           </div>
           <div>
-            <label class="label-md text-on-surface-variant mb-2 ml-1 block">Postal Code</label>
-            <input class="w-full bg-surface-container-low no-line focus:ring-2 focus:ring-primary/20 rounded-xl px-4 py-3.5 transition-all text-on-surface placeholder:text-outline" placeholder="90210" type="text"/>
+            <label class="label-md text-on-surface-variant mb-3 block">Postal Code</label>
+            <input 
+              class="w-full glass-input rounded-xl p-4 transition-all focus:ring-0 text-on-surface placeholder:text-outline" 
+              placeholder="10115" 
+              type="text"/>
           </div>
-        </div>
+          <div class="md:col-span-2">
+            <label class="label-md text-on-surface-variant mb-3 block">Phone Number</label>
+            <input 
+              class="w-full glass-input rounded-xl p-4 transition-all focus:ring-0 text-on-surface placeholder:text-outline" 
+              placeholder="+49 000 0000000" 
+              type="tel"/>
+          </div>
+        </form>
       </section>
 
-      <!-- Payment Method Section -->
-      <section>
+      <!-- Payment Section (Cash on Delivery only) -->
+      <section class="glass-card rounded-2xl p-8 md:p-10">
         <div class="flex items-center gap-4 mb-8">
-          <span class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-sm font-bold shadow-primary">2</span>
+          <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-2xl">payments</span>
+          </div>
           <h2 class="text-title-lg text-on-surface">Payment Method</h2>
         </div>
-        <div class="space-y-4">
-          <label class="flex items-center p-5 bg-surface-container-lowest rounded-2xl cursor-pointer group tonal-shift transition-colors shadow-ambient">
-            <input checked class="w-5 h-5 text-primary ghost-border focus:ring-primary accent-primary" name="payment" type="radio"/>
-            <div class="ml-4 flex-1 flex items-center justify-between">
-              <div>
-                <p class="font-medium text-on-surface">Credit Card</p>
-                <p class="text-body-sm text-on-surface-variant">Visa, Mastercard, AMEX</p>
-              </div>
-              <div class="flex gap-2">
-                <span class="material-symbols-outlined text-on-surface-variant">credit_card</span>
-              </div>
+        <div class="p-6 rounded-2xl bg-white/40 border-2 border-primary/30 flex items-center justify-between group cursor-default transition-all">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-3xl">handshake</span>
             </div>
-          </label>
-          <label class="flex items-center p-5 bg-surface-container-lowest rounded-2xl cursor-pointer group tonal-shift transition-colors shadow-ambient">
-            <input class="w-5 h-5 text-primary ghost-border focus:ring-primary accent-primary" name="payment" type="radio"/>
-            <div class="ml-4 flex-1 flex items-center justify-between">
-              <div>
-                <p class="font-medium text-on-surface">PayPal</p>
-                <p class="text-body-sm text-on-surface-variant">Fast and secure checkout</p>
-              </div>
-              <span class="material-symbols-outlined text-on-surface-variant">account_balance_wallet</span>
+            <div>
+              <p class="text-lg font-bold text-on-surface">Cash on delivery</p>
+              <p class="text-sm text-on-surface-variant">Pay when the product arrives at your door.</p>
             </div>
-          </label>
+          </div>
+          <div class="w-6 h-6 rounded-full border-4 border-primary bg-white shadow-primary"></div>
         </div>
-
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-surface-container-low rounded-2xl">
-          <div class="md:col-span-2">
-            <label class="label-md text-on-surface-variant mb-2 block">Card number</label>
-            <input class="w-full bg-surface-container-lowest no-line focus:ring-2 focus:ring-primary/20 rounded-xl px-4 py-3.5 transition-all text-on-surface placeholder:text-outline" placeholder="0000 0000 0000 0000" type="text"/>
-          </div>
-          <div>
-            <label class="label-md text-on-surface-variant mb-2 block">Expiry</label>
-            <input class="w-full bg-surface-container-lowest no-line focus:ring-2 focus:ring-primary/20 rounded-xl px-4 py-3.5 transition-all text-on-surface placeholder:text-outline" placeholder="MM/YY" type="text"/>
-          </div>
-          <div>
-            <label class="label-md text-on-surface-variant mb-2 block">CVC</label>
-            <input class="w-full bg-surface-container-lowest no-line focus:ring-2 focus:ring-primary/20 rounded-xl px-4 py-3.5 transition-all text-on-surface placeholder:text-outline" placeholder="123" type="text"/>
-          </div>
-        </div>
+        <p class="mt-6 text-xs text-on-surface-variant italic font-medium">
+          * Only Cash on Delivery is currently available for your region to ensure architectural reliability.
+        </p>
       </section>
     </div>
 
-    <!-- Order Summary Sidebar -->
-    <div class="lg:col-span-5">
-      <div class="sticky top-32 p-8 bg-surface-container-lowest rounded-3xl shadow-ambient">
-        <h3 class="text-title-lg text-on-surface mb-8">Order Summary</h3>
+    <!-- Right Column: Order Summary -->
+    <div class="lg:col-span-5 lg:sticky lg:top-32">
+      <aside class="glass-card rounded-2xl p-8 md:p-10">
+        <h2 class="text-title-lg text-on-surface mb-10">Order Summary</h2>
         
-        <div class="space-y-6 mb-8">
-          <div class="flex gap-4">
-            <div class="w-20 h-20 bg-surface-container-low rounded-xl overflow-hidden flex-shrink-0">
-              <img alt="MacBook Pro" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIyCxAuBHyVXMMxUNrPrhdNdAz6Wx8sVI97lwcBvToDV1nGq_0Bhey-k-vt0s1d3Sjh13__3CDzhkOfIr22gXQNBYUsivZIPuuUOJ7b0jsLWZKOStBte15auRi39Emvt-mj_D8H0GG_62JtgPiT8y2O5b342e2av1nzGnI71Z0hXa_JQvFsfz2ozN2dQGf9iMyF8BhgeFVzA2e0EUPpCDBRvEjGXk8VZNnhAvcvCsHYlvaDu9IaGPHh59iwL-nxDJ3iX6KXBG7FCZT"/>
+        <!-- Product List -->
+        <div class="space-y-8 mb-10">
+          <!-- Item 1 -->
+          <div class="flex gap-6 group">
+            <div class="w-24 h-24 rounded-2xl bg-white/60 p-2 flex-shrink-0 flex items-center justify-center border border-white/50">
+              <img 
+                alt="Studio Master X-1" 
+                class="w-20 h-20 object-contain group-hover:scale-105 transition-transform mix-blend-multiply" 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_sebg7nc4cmjOCePTfKYAV_1AwlAqXwYf4PRi1V5-69mjnGr4qJsxYpJ9LPs3LB5oD6SAmrwSedrJWvJIlP7r8yCXbTNt02mp0S7cNJNUcr0Gn9l7PTUf_4mKodNZoT-bXvgkUcOTX2_bzEC4sKLGJBHczR0-TKk3KtNiUkKw-gFx0rXcAOLdhO_46qFvVYET-QAC1hldo4p5zr-MX5cQ8Y_UssMO7NQZogs-jqGhqVtw0qzgOscYL9ZLaihfPt17vaiWXvEL5MSI"/>
             </div>
-            <div class="flex-1">
-              <p class="font-medium text-on-surface line-clamp-1">Curator Book Pro 16"</p>
-              <p class="text-body-sm text-on-surface-variant mb-2">32GB RAM / 1TB SSD</p>
-              <p class="font-semibold text-primary">$2,499.00</p>
+            <div class="flex-grow flex flex-col justify-center">
+              <h3 class="text-lg font-bold leading-tight text-on-surface">Studio Master X-1</h3>
+              <p class="label-md text-on-surface-variant mt-1">TITANIUM FINISH</p>
+              <p class="text-primary font-black mt-2 text-lg">$349.00</p>
             </div>
           </div>
-          <div class="flex gap-4">
-            <div class="w-20 h-20 bg-surface-container-low rounded-xl overflow-hidden flex-shrink-0">
-              <img alt="Headphones" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnjpubBV4M151W-h_o-F5dA32gza4kmI-XFAx7--hT0_HOd2SImhaAWnryFKxXmw6nAeiRjVt1OiNGWeDXUWVlxpI-mnhugq83kOjBny52aGDfRNAp_VrKYcoTzXovodLccNfwfK4E_HUjbhHGrRL-bF7k_XHBQhVds911cRBpKech_O4BvZV8eMCxKZZmQagmJY5KGTdLsNbqtJD68wOO7zkBnJoZr3HJd4er9VsCHzsP3Esb0PyeCAN1refQw84nuL0uxDqojq6J"/>
+
+          <!-- Item 2 -->
+          <div class="flex gap-6 group">
+            <div class="w-24 h-24 rounded-2xl bg-white/60 p-2 flex-shrink-0 flex items-center justify-center border border-white/50">
+              <img 
+                alt="Linear Key 80" 
+                class="w-20 h-20 object-contain group-hover:scale-105 transition-transform mix-blend-multiply" 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_ivPa-sMm3ES-bMc7PobKzWj6iD1wq-o1cNjrY6ldq-XE5iiLS0WGQiG18NuAKgsKVBhfaAvWhOXH_1jCqXJjn0T-8UAY9tA4GQyqEWqICn5rNSYODmDcz_RBZaGzotpvFeelibwbcInhORwjspjAw7zjFoyPxVKGbVMIv-WyFAOEeGDerWxOx0eES1VqTRg4llVPUBRqw7W6IijSfzt-bUv3gZ85SQ-U2aksiYoivnMYXGrZqOuaAb0q5amGHQVVx9NfXMETTK8g"/>
             </div>
-            <div class="flex-1">
-              <p class="font-medium text-on-surface line-clamp-1">Sonic Precision ANC</p>
-              <p class="text-body-sm text-on-surface-variant mb-2">Space Black</p>
-              <p class="font-semibold text-primary">$349.00</p>
+            <div class="flex-grow flex flex-col justify-center">
+              <h3 class="text-lg font-bold leading-tight text-on-surface">Linear Key 80</h3>
+              <p class="label-md text-on-surface-variant mt-1">MIDNIGHT BLACK</p>
+              <p class="text-primary font-black mt-2 text-lg">$189.00</p>
             </div>
           </div>
         </div>
 
-        <div class="space-y-3 pt-6 bg-surface-container-low/50 -mx-8 px-8 py-6 rounded-2xl">
-          <div class="flex justify-between text-on-surface-variant">
+        <!-- Pricing Info -->
+        <div class="border-t border-white/40 pt-8 space-y-4">
+          <div class="flex justify-between text-on-surface-variant font-semibold">
             <span>Subtotal</span>
-            <span>$2,848.00</span>
+            <span class="text-on-surface">$538.00</span>
           </div>
-          <div class="flex justify-between text-on-surface-variant">
+          <div class="flex justify-between text-on-surface-variant font-semibold">
             <span>Shipping</span>
-            <span class="text-tertiary font-semibold">Free</span>
+            <span class="text-primary">Calculated at delivery</span>
           </div>
-          <div class="flex justify-between text-on-surface-variant">
-            <span>Tax</span>
-            <span>$227.84</span>
-          </div>
-          <div class="h-px bg-outline-variant/30 my-4"></div>
-          <div class="flex justify-between text-xl font-bold text-on-surface">
-            <span>Total</span>
-            <span>$3,075.84</span>
+          <div class="pt-6 mt-6 border-t border-white/40 flex justify-between items-end">
+            <div>
+              <p class="label-md text-on-surface-variant">Total Amount</p>
+              <p class="text-4xl font-black text-on-surface tracking-tighter">$538.00</p>
+            </div>
+            <span class="text-xs font-bold text-on-surface-variant mb-1">USD</span>
           </div>
         </div>
 
-        <button class="w-full mt-10 btn-primary text-lg py-5">Place Order</button>
+        <button class="w-full mt-10 liquid-gradient text-white rounded-2xl py-5 text-xl font-black tracking-tight shadow-primary hover:shadow-primary-lg transition-all">
+          Place Order
+        </button>
 
-        <div class="mt-6 flex items-center justify-center gap-2 text-on-surface-variant">
-          <span class="material-symbols-outlined text-sm">lock</span>
-          <span class="label-sm">Encrypted Transaction</span>
+        <div class="mt-8 flex items-center justify-center gap-2 text-on-surface-variant text-xs font-bold tracking-wide uppercase">
+          <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">lock</span>
+          <span>Encrypted checkout session</span>
         </div>
-      </div>
+      </aside>
     </div>
   </div>
 </main>
