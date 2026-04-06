@@ -11,6 +11,8 @@ import { OrderService } from '../services/order.service';
 export class OrderHistoryComponent implements OnInit {
   orders: Order[] = [];
   expandedOrderId: string | null = null;
+  isLoading = true;
+  error: string | null = null;
 
   constructor(private orderService: OrderService) {}
 
@@ -19,12 +21,18 @@ export class OrderHistoryComponent implements OnInit {
   }
 
   loadOrders(): void {
+    this.isLoading = true;
+    this.error = null;
+    
     this.orderService.getOrders().subscribe({
       next: (orders) => {
         this.orders = orders;
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading orders:', error);
+        this.error = 'Failed to load orders. Please try again.';
+        this.isLoading = false;
       }
     });
   }
@@ -67,5 +75,21 @@ export class OrderHistoryComponent implements OnInit {
 
   formatPrice(price: number): string {
     return `$${price.toFixed(2)}`;
+  }
+
+  reorder(orderId: string): void {
+    this.orderService.reorder(orderId).subscribe({
+      next: () => {
+        alert('Items added to cart!');
+      },
+      error: (error) => {
+        console.error('Error reordering:', error);
+        alert('Failed to reorder. Please try again.');
+      }
+    });
+  }
+
+  get hasOrders(): boolean {
+    return this.orders.length > 0;
   }
 }

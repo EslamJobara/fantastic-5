@@ -21,104 +21,116 @@
          [style.transform]="trackTransform"
          (transitionend)="onTransitionEnd($event)">
 
-      <!-- CLONE: Slide 3 (last) - for seamless backward loop -->
+      <!-- CLONE: Last slide for seamless backward loop -->
       <div class="min-w-full h-full flex items-center" aria-hidden="true">
         <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
           <div class="lg:col-span-5 z-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-widest mb-8">PRECISION TRACKING</div>
-            <h2 class="text-[5.5rem] lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">Curator<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Watch.</span></h2>
-            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">The ultimate companion for the modern professional. Seamlessly syncing your digital life with sapphire-glass elegance.</p>
-            <button class="btn-amber">Pre-order Now</button>
-          </div>
-          <div class="lg:col-span-7 relative flex justify-center">
-            <img class="relative z-10 w-2/3 h-auto object-contain" alt="" src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80"/>
-          </div>
-        </div>
-      </div>
-      <!-- Slide 1: Laptops -->
-      <div class="min-w-full h-full flex items-center">
-        <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
-          <div class="lg:col-span-5 z-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-widest mb-8">
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest mb-8"
+                 [class]="heroSlides[heroSlides.length - 1].badgeClass">
+              {{ heroSlides[heroSlides.length - 1].badge }}
+            </div>
+            <h2 class="text-[5.5rem] lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">
+              {{ heroSlides[heroSlides.length - 1].title }}<br/>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r" 
+                    [class]="getTitleGradientClass(heroSlides.length - 1)">
+                {{ heroSlides[heroSlides.length - 1].titleGradient }}
               </span>
-              NEW ARRIVAL
-            </div>
-            <h1 class="text-[5.5rem] lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">Zenith<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-400 to-slate-600">Pro M3.</span></h1>
-            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">Engineered for curators who demand atmospheric precision. 24-hour battery life encased in aerospace-grade titanium.</p>
-            <div class="flex flex-wrap gap-4">
-              <button class="btn-amber">Shop Zenith</button>
-              <button class="bg-surface-container-high text-on-surface px-10 py-4 rounded-lg font-bold ghost-border hover:bg-surface-container-highest transition-all active:scale-95">Specifications</button>
-            </div>
-          </div>
-          <div class="lg:col-span-7 relative">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.08)_0%,transparent_70%)] rounded-full transform scale-150"></div>
-            <img class="relative z-10 w-full h-auto object-contain transform hover:scale-105 transition-transform duration-700" alt="Zenith Pro M3 Laptop" src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80"/>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 2: Audio -->
-      <div class="min-w-full h-full flex items-center">
-        <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
-          <div class="lg:col-span-5 z-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-on-surface/10 text-on-surface text-[10px] font-bold tracking-widest mb-8">
-              PURE SOUND
-            </div>
-            <h2 class="text-[5.5rem] lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">Sonic<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-500 to-slate-800">Ultra X.</span></h2>
-            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">Experience atmospheric silence with industry-leading active noise cancellation and spatial acoustic drivers.</p>
-            <div class="flex flex-wrap gap-4">
-              <button class="btn-amber">Explore Sound</button>
-            </div>
+            </h2>
+            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">
+              {{ heroSlides[heroSlides.length - 1].description }}
+            </p>
+            <button class="btn-amber">{{ heroSlides[heroSlides.length - 1].primaryButton }}</button>
           </div>
           <div class="lg:col-span-7 relative flex justify-center">
-            <img class="relative z-10 w-3/4 h-auto object-contain transform hover:scale-105 transition-transform duration-700" alt="Sonic Ultra X Headphones" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80"/>
+            <img [class]="'relative z-10 h-auto object-contain ' + (heroSlides[heroSlides.length - 1].imageClass || '')"
+                 [alt]="heroSlides[heroSlides.length - 1].imageAlt" 
+                 [src]="heroSlides[heroSlides.length - 1].image"/>
           </div>
         </div>
       </div>
 
-      <!-- Slide 3: Wearables -->
-      <div class="min-w-full h-full flex items-center">
-        <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
-          <div class="lg:col-span-5 z-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-widest mb-8">
-              PRECISION TRACKING
+      <!-- Real Slides -->
+      @for (slide of heroSlides; track $index) {
+        <div class="min-w-full h-full flex items-center">
+          <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
+            <div class="lg:col-span-5 z-10">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest mb-8"
+                   [class]="slide.badgeClass">
+                @if (slide.hasAnimation) {
+                  <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                  </span>
+                }
+                {{ slide.badge }}
+              </div>
+              <h1 class="text-[5.5rem] lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">
+                {{ slide.title }}<br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r" [class]="getTitleGradientClass($index)">
+                  {{ slide.titleGradient }}
+                </span>
+              </h1>
+              <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">
+                {{ slide.description }}
+              </p>
+              <div class="flex flex-wrap gap-4">
+                <button class="btn-amber">{{ slide.primaryButton }}</button>
+                @if (slide.secondaryButton) {
+                  <button class="bg-surface-container-high text-on-surface px-10 py-4 rounded-lg font-bold ghost-border hover:bg-surface-container-highest transition-all active:scale-95">
+                    {{ slide.secondaryButton }}
+                  </button>
+                }
+              </div>
             </div>
-            <h2 class="text-[5.5rem] lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">Curator<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Watch.</span></h2>
-            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">The ultimate companion for the modern professional. Seamlessly syncing your digital life with sapphire-glass elegance.</p>
-            <div class="flex flex-wrap gap-4">
-              <button class="btn-amber">Pre-order Now</button>
+            <div class="lg:col-span-7 relative" [class.flex]="$index !== 0" [class.justify-center]="$index !== 0">
+              @if ($index === 0) {
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.08)_0%,transparent_70%)] rounded-full transform scale-150"></div>
+              }
+              <img [class]="'relative z-10 h-auto object-contain transform hover:scale-105 transition-transform duration-700 ' + (slide.imageClass || '')"
+                   [alt]="slide.imageAlt" 
+                   [src]="slide.image"/>
             </div>
-          </div>
-          <div class="lg:col-span-7 relative flex justify-center">
-            <img class="relative z-10 w-2/3 h-auto object-contain transform hover:scale-105 transition-transform duration-700" alt="Curator Watch II" src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=800&q=80"/>
           </div>
         </div>
-      </div>
+      }
 
-      <!-- CLONE: Slide 1 (first) - for seamless forward loop -->
+      <!-- CLONE: First slide for seamless forward loop -->
       <div class="min-w-full h-full flex items-center" aria-hidden="true">
         <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
           <div class="lg:col-span-5 z-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-widest mb-8">
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              NEW ARRIVAL
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest mb-8"
+                 [class]="heroSlides[0].badgeClass">
+              @if (heroSlides[0].hasAnimation) {
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
+              }
+              {{ heroSlides[0].badge }}
             </div>
-            <h1 class="text-[5.5rem] lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">Zenith<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-400 to-slate-600">Pro M3.</span></h1>
-            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">Engineered for curators who demand atmospheric precision. 24-hour battery life encased in aerospace-grade titanium.</p>
+            <h1 class="text-[5.5rem] lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">
+              {{ heroSlides[0].title }}<br/>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r" [class]="getTitleGradientClass(0)">
+                {{ heroSlides[0].titleGradient }}
+              </span>
+            </h1>
+            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">
+              {{ heroSlides[0].description }}
+            </p>
             <div class="flex flex-wrap gap-4">
-              <button class="btn-amber">Shop Zenith</button>
-              <button class="bg-surface-container-high text-on-surface px-10 py-4 rounded-lg font-bold ghost-border hover:bg-surface-container-highest transition-all active:scale-95">Specifications</button>
+              <button class="btn-amber">{{ heroSlides[0].primaryButton }}</button>
+              @if (heroSlides[0].secondaryButton) {
+                <button class="bg-surface-container-high text-on-surface px-10 py-4 rounded-lg font-bold ghost-border hover:bg-surface-container-highest transition-all active:scale-95">
+                  {{ heroSlides[0].secondaryButton }}
+                </button>
+              }
             </div>
           </div>
           <div class="lg:col-span-7 relative">
             <div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl transform scale-150 -translate-y-12"></div>
-            <img class="relative z-10 w-full h-auto object-contain" alt="" src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80"/>
+            <img [class]="'relative z-10 h-auto object-contain ' + (heroSlides[0].imageClass || '')"
+                 [alt]="heroSlides[0].imageAlt" 
+                 [src]="heroSlides[0].image"/>
           </div>
         </div>
       </div>
@@ -126,13 +138,14 @@
 
     <!-- Navigation Dots -->
     <div class="absolute bottom-12 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 bg-white/70 backdrop-blur-md border border-white/60 px-5 py-3 rounded-full shadow-ambient">
-      <button 
-        *ngFor="let slide of [0, 1, 2]; let i = index"
-        (click)="goToSlide(i)"
-        [class]="currentSlide === i
-          ? 'w-6 h-2.5 rounded-full bg-slate-900 transition-all duration-300'
-          : 'w-2.5 h-2.5 rounded-full bg-slate-300 hover:bg-slate-500 transition-all duration-300'">
-      </button>
+      @for (slide of [0, 1, 2]; track $index) {
+        <button 
+          (click)="goToSlide($index)"
+          [class]="currentSlide === $index
+            ? 'w-6 h-2.5 rounded-full bg-slate-900 transition-all duration-300'
+            : 'w-2.5 h-2.5 rounded-full bg-slate-300 hover:bg-slate-500 transition-all duration-300'">
+        </button>
+      }
     </div>
   </section>
 
@@ -150,16 +163,17 @@
           <div class="absolute top-1.5 bottom-1.5 rounded-full bg-slate-900 transition-all duration-300 ease-out pointer-events-none"
                [style.width.px]="pillWidth"
                [style.left.px]="pillOffset"></div>
-          <button
-            *ngFor="let f of filters; let i = index"
-            #filterBtn
-            (click)="setFilter(f, i, filterBtn)"
-            class="relative z-10 px-5 py-1.5 rounded-full text-xs font-medium transition-colors duration-300"
-            [class.text-white]="activeFilter === f"
-            [class.text-slate-500]="activeFilter !== f"
-            [class.hover:text-slate-800]="activeFilter !== f">
-            {{ f }}
-          </button>
+          @for (f of filters; track $index) {
+            <button
+              #filterBtn
+              (click)="setFilter(f, $index)"
+              class="relative z-10 px-5 py-1.5 rounded-full text-xs font-medium transition-colors duration-300"
+              [class.text-white]="activeFilter === f"
+              [class.text-slate-500]="activeFilter !== f"
+              [class.hover:text-slate-800]="activeFilter !== f">
+              {{ f }}
+            </button>
+          }
         </div>
       </div>
 
@@ -167,7 +181,9 @@
            [class.opacity-0]="!cardsVisible"
            [class.-translate-y-2]="!cardsVisible">
 
-        <app-product-card *ngFor="let p of filteredProducts" [product]="p"></app-product-card>
+        @for (p of filteredProducts; track p.name) {
+          <app-product-card [product]="p"></app-product-card>
+        }
 
       </div>
     </div>
