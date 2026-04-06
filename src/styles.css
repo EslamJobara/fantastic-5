@@ -203,6 +203,14 @@ select:focus {
   background: #f3f4f5; /* surface_container_low */
 }
 
+/* Blob Animation Delays */
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
 /* Asymmetrical Margins for Editorial Sections */
 .editorial-hero {
   padding-left: 4rem;
