@@ -6,8 +6,8 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #f8f9fa; /* surface */
-  color: #191c1d; /* on-surface - never use pure black */
+  background-color: #F8FAFC; /* surface - cool white like the reference */
+  color: #191c1d;
 }
 
 /* Material Symbols Configuration */
@@ -201,6 +201,27 @@ select:focus {
 
 .spec-list-row:nth-child(even) {
   background: #f3f4f5; /* surface_container_low */
+}
+
+/* Buttons - Amber CTA */
+.btn-amber {
+  background: #b45309;
+  color: #ffffff;
+  padding: 1rem 2.5rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 16px rgba(180, 83, 9, 0.25);
+}
+
+.btn-amber:hover {
+  background: #92400e;
+  box-shadow: 0 12px 24px rgba(180, 83, 9, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-amber:active {
+  transform: scale(0.98);
 }
 
 /* Blob Animation Delays */
