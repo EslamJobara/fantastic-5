@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -25,7 +25,7 @@ import { AuthService } from '../services/auth.service';
     ])
   ]
 })
-export class AuthPageComponent {
+export class AuthPageComponent implements OnInit {
   activeTab: 'login' | 'register' = 'login';
   showPassword = false;
   showConfirmPassword = false;
@@ -39,7 +39,8 @@ export class AuthPageComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     // إنشاء Login Form
     this.loginForm = this.fb.group({
@@ -61,9 +62,24 @@ export class AuthPageComponent {
     });
   }
 
+  ngOnInit(): void {
+    // قراءة الـ route لتحديد الـ tab
+    this.route.url.subscribe(segments => {
+      const lastSegment = segments[segments.length - 1]?.path;
+      if (lastSegment === 'register') {
+        this.activeTab = 'register';
+      } else {
+        this.activeTab = 'login';
+      }
+    });
+  }
+
   switchTab(tab: 'login' | 'register'): void {
     this.activeTab = tab;
     this.errorMessage = '';
+    
+    // تحديث الـ URL
+    this.router.navigate(['/auth', tab]);
   }
 
   togglePasswordVisibility(): void {
