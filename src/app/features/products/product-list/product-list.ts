@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ProductService, Product } from '../services/product.service';
+import { ProductService, Product } from '../../../core/services/product.service';
 import { CategoryService, Category } from '../../../core/services/category.service';
 
 @Component({
