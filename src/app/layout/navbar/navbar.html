@@ -23,9 +23,35 @@
         <button class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95" routerLink="/cart">
           <span class="material-symbols-outlined text-on-surface-variant">shopping_cart</span>
         </button>
-        <button class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95" routerLink="/auth">
-          <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
-        </button>
+        
+        <!-- User Menu -->
+        <div class="relative user-menu-container">
+          <button 
+            *ngIf="!isLoggedIn"
+            class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95" 
+            routerLink="/auth/login">
+            <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+          </button>
+          
+          <button 
+            *ngIf="isLoggedIn"
+            (click)="toggleUserMenu($event)"
+            class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95">
+            <span class="material-symbols-outlined text-primary">account_circle</span>
+          </button>
+          
+          <!-- Dropdown Menu -->
+          <div 
+            *ngIf="isLoggedIn && showUserMenu"
+            class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-xl border border-white/40 rounded-2xl shadow-xl overflow-hidden z-50">
+            <button 
+              (click)="logout()"
+              class="w-full px-4 py-3 text-left text-sm font-medium text-on-surface hover:bg-surface-container transition-colors flex items-center gap-3">
+              <span class="material-symbols-outlined text-error">logout</span>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

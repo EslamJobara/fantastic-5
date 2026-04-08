@@ -4,13 +4,16 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 export interface Product {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   price: number;
   stock: number;
   category: string;
   image: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
 }
 
 export interface ProductFilters {
@@ -21,6 +24,7 @@ export interface ProductFilters {
 }
 
 export interface ProductResponse {
+  message: string;
   data: Product[];
 }
 

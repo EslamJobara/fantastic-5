@@ -1,7 +1,7 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
@@ -14,6 +14,7 @@ import { HomeModule } from './features/home/home-module';
 import { ProductsModule } from './features/products/products-module';
 import { OrdersModule } from './features/orders/orders-module';
 import { SearchBar } from './shared/components/search-bar/search-bar';
+import { tokenInterceptor } from './core/interceptors/token-interceptor';
 
 @NgModule({
   declarations: [App, Navbar, Footer],
@@ -30,7 +31,10 @@ import { SearchBar } from './shared/components/search-bar/search-bar';
     OrdersModule,
     SearchBar
   ],
-  providers: [provideBrowserGlobalErrorListeners()],
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideHttpClient(withInterceptors([tokenInterceptor]))
+  ],
   bootstrap: [App],
 })
 export class AppModule {}

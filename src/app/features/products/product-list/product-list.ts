@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ProductService, Product } from '../services/product.service';
 
 @Component({
@@ -10,7 +10,10 @@ import { ProductService, Product } from '../services/product.service';
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadProducts();
@@ -20,6 +23,7 @@ export class ProductListComponent implements OnInit {
     this.productService.getProducts().subscribe({
       next: (response) => {
         this.products = response.data;
+        this.cdr.detectChanges(); // Force change detection
       },
       error: (error) => {
         console.error('Error loading products:', error);

@@ -2,17 +2,16 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../../features/auth/services/auth.service';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const guestGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+  // لو مسجل دخول، نوديه على الصفحة الرئيسية
   if (authService.isLoggedIn()) {
-    return true;
+    router.navigate(['/']);
+    return false;
   }
 
-  // لو مش مسجل دخول، نوديه على صفحة اللوجن
-  router.navigate(['/auth/login'], { 
-    queryParams: { returnUrl: state.url } 
-  });
-  return false;
+  // لو مش مسجل دخول، يقدر يدخل على صفحة اللوجن
+  return true;
 };

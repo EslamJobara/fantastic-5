@@ -7,17 +7,19 @@ import { ProductListComponent } from './features/products/product-list/product-l
 import { AuthPageComponent } from './features/auth/auth-page/auth-page';
 import { LandingComponent } from './features/home/landing/landing';
 import { OrderHistoryComponent } from './features/orders/order-history/order-history';
+import { authGuard } from './core/guards/auth-guard';
+import { guestGuard } from './core/guards/guest-guard';
 
 const routes: Routes = [ 
   { path: '', component: LandingComponent },
   { path: 'auth', redirectTo: 'auth/login', pathMatch: 'full' },
-  { path: 'auth/login', component: AuthPageComponent },
-  { path: 'auth/register', component: AuthPageComponent },
+  { path: 'auth/login', component: AuthPageComponent, canActivate: [guestGuard] },
+  { path: 'auth/register', component: AuthPageComponent, canActivate: [guestGuard] },
   { path: 'products', component: ProductListComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
-  { path: 'cart', component: CartPageComponent },
-  { path: 'checkout', component: CheckoutPageComponent },
-  { path: 'orders', component: OrderHistoryComponent },
+  { path: 'cart', component: CartPageComponent, canActivate: [authGuard] },
+  { path: 'checkout', component: CheckoutPageComponent, canActivate: [authGuard] },
+  { path: 'orders', component: OrderHistoryComponent, canActivate: [authGuard] },
 ];
 
 @NgModule({

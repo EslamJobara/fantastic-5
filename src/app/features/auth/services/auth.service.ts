@@ -75,8 +75,8 @@ export class AuthService {
           localStorage.setItem('access_token', response.data.accessToken);
           localStorage.setItem('refresh_token', response.data.refreshToken);
           
-          // TODO: جلب بيانات المستخدم من الـ token أو من endpoint منفصل
-          // this.loadUserFromToken(response.data.accessToken);
+          // تحديث حالة المستخدم
+          this.currentUserSubject.next({ loggedIn: true });
         })
       );
   }
@@ -119,7 +119,7 @@ export class AuthService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   /**
