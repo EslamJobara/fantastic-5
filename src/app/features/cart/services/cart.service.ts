@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, of, delay } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface CartItem {
   id: string;
@@ -24,7 +25,7 @@ export interface Cart {
   providedIn: 'root'
 })
 export class CartService {
-  private apiUrl = 'http://localhost:3000/api/cart'; // غير دا حسب الباك إند بتاعك
+  private apiUrl = `${environment.apiUrl}/cart`;
   
   // 🔧 Mock Mode - غير دا لـ false لما الباك يبقى جاهز
   private useMockData = true;
