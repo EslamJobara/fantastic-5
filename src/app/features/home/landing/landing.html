@@ -163,15 +163,26 @@
           <div class="absolute top-1.5 bottom-1.5 rounded-full bg-slate-900 transition-all duration-300 ease-out pointer-events-none"
                [style.width.px]="pillWidth"
                [style.left.px]="pillOffset"></div>
-          @for (f of filters; track $index) {
+          <!-- All Products Filter -->
+          <button
+            #filterBtn
+            (click)="setFilter(null, 0)"
+            class="relative z-10 px-5 py-1.5 rounded-full text-xs font-medium transition-colors duration-300"
+            [class.text-white]="selectedCategoryId === null"
+            [class.text-slate-500]="selectedCategoryId !== null"
+            [class.hover:text-slate-800]="selectedCategoryId !== null">
+            All
+          </button>
+          <!-- Category Filters from API -->
+          @for (category of categories; track category._id; let i = $index) {
             <button
               #filterBtn
-              (click)="setFilter(f, $index)"
+              (click)="setFilter(category._id, i + 1)"
               class="relative z-10 px-5 py-1.5 rounded-full text-xs font-medium transition-colors duration-300"
-              [class.text-white]="activeFilter === f"
-              [class.text-slate-500]="activeFilter !== f"
-              [class.hover:text-slate-800]="activeFilter !== f">
-              {{ f }}
+              [class.text-white]="selectedCategoryId === category._id"
+              [class.text-slate-500]="selectedCategoryId !== category._id"
+              [class.hover:text-slate-800]="selectedCategoryId !== category._id">
+              {{ category.name }}
             </button>
           }
         </div>
@@ -181,8 +192,8 @@
            [class.opacity-0]="!cardsVisible"
            [class.-translate-y-2]="!cardsVisible">
 
-        @for (p of filteredProducts; track p.name) {
-          <app-product-card [product]="p"></app-product-card>
+        @for (product of filteredProducts; track product._id) {
+          <app-product-card [product]="product"></app-product-card>
         }
 
       </div>

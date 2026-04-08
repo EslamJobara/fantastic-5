@@ -1,4 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ElementRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
+import { ProductService, Product as ApiProduct } from '../../../core/services/product.service';
+import { CategoryService, Category } from '../../../core/services/category.service';
 
 export interface Product {
   name: string;
@@ -77,29 +79,61 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   ];
 
-  // Filter
-  activeFilter = 'All';
+  // Filter - API Data
+  categories: Category[] = [];
+  allProducts: ApiProduct[] = [];
+  selectedCategoryId: string | null = null;
   activeFilterIndex = 0;
   cardsVisible = true;
   pillWidth = 0;
   pillOffset = 6;
-  readonly filters = ['All', 'Laptops', 'Audio', 'Wearables', 'Accessories'];
 
   @ViewChildren('filterBtn') filterBtns!: QueryList<ElementRef<HTMLButtonElement>>;
 
-  readonly allProducts: Product[] = [
-    { name: 'Acoustic One S',     price: '349',   category: 'Audio',       badge: 'New', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDt3IPDTQqfHyO0t8SNj1_2hWSKxIJx8ZqqKv0Oq0R2-xCrfnauh5Lg2Qi9o3WaAQn3Ld8XpFDel7LTiKudVnU1c2jwsieuJLPgT6IS3a75HW30nSUfb-1VbL1YbR_BfYleAERvRR7I49AkWS3tj0zx0jPz7a5ao1ytmpHy0jnjKXwSgPgdYvdcluLxOjTxDq-9Bi9Y21ZjGBd0NFxc66eZ4kS3fR7DYFu_B9f5Ck5O45dgdgT-bWE0p6D9LokvPjUQQP-QrRW-HwrZ' },
-    { name: 'Tactile Pro 65',     price: '189',   category: 'Accessories', badge: 'New', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgzI-k12xZsh-tvcHpRcvPQujNiNDaiPk8wFFtxbbTW98Lom5ZyeV71VAFuIuVMMA35n627WxXts4nyCUH_THBGaomTbnGWvzxfDVNGHVMYmNb8PPYEMDDa1llp1B7cCO3oh_mq6mRAwnFXp2YNM1c7oLIg8Idh6xLncXpZy-bAU11Hq4qesgJQQjzgoywpbIu8JivmAAtIXdwHgs1A04h_42aiOyGNDxexcV4bPmAJpfHyeNbXxr1twmUR6reCKpnJ0_2q_FZJi7j' },
-    { name: 'Precision Point X',  price: '129',   category: 'Accessories', badge: 'New', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAPAb30GV_tjPupieJLgZhi8KbhZJsqzKa4eLQG_kSGlANIdtGKvVd0HfcSjF4OZ8O3SLpqYCMiLKpPUeLt7Fd9JryXhErNiVVJnd-bGwm1XC29PB7y2nznA-L-yzVTmvf9OscSv8Cj2-M7Xan8c5vkOawwNSiRFN1t1yKzz2vqS2UyFL2PE34lPBPOefz0zy79rpEWuibHxvtfUOIlOCVSOFU5_wwuoBEbnHOqLTY2sMXcmJeQFzX_vOr52SFfmz7iaIvMvwSLzHyO' },
-    { name: 'Canvas Air 12',      price: '899',   category: 'Laptops',     badge: 'New', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDKjyV9zCxGA9bxRAHiS0FHb7cNju3XiTFQPPb2RzGujw5e0XB9C2tPAe3e4wUgSDSv8M-pL8NUJArvlhgmLpxthz5nNUSCyla-Yk67xjZgIFqEhbIexd4Bvx0zI9BWz0XgM-3aLQOg0H4bOhRkYi7_y_bVNl2lkCaZjPw6vRKD-mCwtuQG6bbZfwZU9ZKpcJgQh4cEk9N30F9lfAqH00Hh5A1Iczkxb6vk-QnNgWpJ1-r_Ef8FKhm2XDnBpeSnM8i64gAclFeLdX3g' },
-    { name: 'Zenith Pro M3',      price: '1,299', category: 'Laptops',     badge: 'New', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAjuqlsOmGJt0FEsFz4DG3FjJPShIO2wMvyHCT4p9p3Zf7olaG3fmW6Z1soWWq2tWmoDrTWoBfVpEsbT-6j7X4a_p5k19NBxDjyH4yWShQQDwvbS_LyBQinaneF0ObuL3jbjvgE5wYye0dh3D6gmAdAIYmB8B3GZ1jQ9Ixl0sY0xiacs-yHB-MkhLep-kReTTL4_YLde3080iRWGhjQ_qMfinL7nhdqYvxlGaVh_zkk9pY7bFEcDedi_9HMNEwqLnA0G41_Ewq2vebo' },
-    { name: 'Curator Watch II',   price: '499',   category: 'Wearables',   badge: 'New', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDKjyV9zCxGA9bxRAHiS0FHb7cNju3XiTFQPPb2RzGujw5e0XB9C2tPAe3e4wUgSDSv8M-pL8NUJArvlhgmLpxthz5nNUSCyla-Yk67xjZgIFqEhbIexd4Bvx0zI9BWz0XgM-3aLQOg0H4bOhRkYi7_y_bVNl2lkCaZjPw6vRKD-mCwtuQG6bbZfwZU9ZKpcJgQh4cEk9N30F9lfAqH00Hh5A1Iczkxb6vk-QnNgWpJ1-r_Ef8FKhm2XDnBpeSnM8i64gAclFeLdX3g' },
-  ];
-
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private productService: ProductService,
+    private categoryService: CategoryService
+  ) {}
 
   ngAfterViewInit() {
     this.updatePill(0);
+  }
+
+  ngOnInit() {
+    this.startAutoAdvance();
+    this.loadCategories();
+    this.loadProducts();
+  }
+
+  ngOnDestroy() {
+    this.stopAutoAdvance();
+  }
+
+  loadCategories() {
+    this.categoryService.getAllCategories().subscribe({
+      next: (response) => {
+        this.categories = response.data;
+        this.cdr.detectChanges();
+        // Update pill after categories load
+        setTimeout(() => this.updatePill(0), 100);
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+      }
+    });
+  }
+
+  loadProducts() {
+    this.productService.getProducts().subscribe({
+      next: (response) => {
+        this.allProducts = response.data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading products:', error);
+      }
+    });
   }
 
   private updatePill(index: number) {
@@ -116,27 +150,27 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  get filteredProducts(): Product[] {
-    return this.activeFilter === 'All'
-      ? this.allProducts
-      : this.allProducts.filter(p => p.category === this.activeFilter);
+  get filteredProducts(): ApiProduct[] {
+    const filtered = this.selectedCategoryId
+      ? this.allProducts.filter(p => p.category === this.selectedCategoryId)
+      : this.allProducts;
+    
+    // Return only first 4 products
+    return filtered.slice(0, 4);
   }
 
-  setFilter(filter: string, index: number) {
-    if (filter === this.activeFilter) return;
+  setFilter(categoryId: string | null, index: number) {
+    if (categoryId === this.selectedCategoryId) return;
     this.updatePill(index);
     this.cardsVisible = false;
     this.cdr.detectChanges();
     setTimeout(() => {
-      this.activeFilter = filter;
+      this.selectedCategoryId = categoryId;
       this.activeFilterIndex = index;
       this.cardsVisible = true;
       this.cdr.detectChanges();
     }, 200);
   }
-
-  ngOnInit() { this.startAutoAdvance(); }
-  ngOnDestroy() { this.stopAutoAdvance(); }
 
   get trackTransform(): string {
     return `translateX(-${this.trackIndex * 100}%)`;
