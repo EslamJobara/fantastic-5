@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ProductService, Product, ProductResponse } from '../../../core/services/product.service';
 
 @Component({
   selector: 'app-product-details',
@@ -6,7 +8,41 @@ import { Component } from '@angular/core';
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
 })
-export class ProductDetailsComponent {
+export class ProductDetailsComponent implements OnInit {
+  product: Product | null = null;
+  isLoading = true;
+  error: string | null = null;
+
+  constructor(
+    private route: ActivatedRoute,
+    private productService: ProductService
+  ) {}
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.productService.getProductById(id).subscribe({
+        next: (response) => {
+          if (response && response.data) {
+            if (Array.isArray(response.data)) {
+                this.product = response.data[0];
+            } else {
+                this.product = response.data as unknown as Product;
+            }
+          }
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching product', err);
+          this.error = 'Failed to load product details';
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.isLoading = false;
+      this.error = 'No product ID provided';
+    }
+  }
   relatedProducts = [
     {
       name: 'Vision Tab Ultra',

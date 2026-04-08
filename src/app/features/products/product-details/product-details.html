@@ -3,7 +3,9 @@
 
   <!-- Product Details -->
   <section class="max-w-screen-xl mx-auto px-8 pb-24">
-    <div class="glass-card rounded-3xl p-8 lg:p-12">
+    <div *ngIf="isLoading" class="text-center py-20">Loading product...</div>
+    <div *ngIf="error" class="text-center py-20 text-red-500">{{ error }}</div>
+    <div *ngIf="product && !isLoading" class="glass-card rounded-3xl p-8 lg:p-12">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
 
         <!-- Left: Image Gallery -->
@@ -26,7 +28,7 @@
           <!-- Main Image -->
           <div class="order-1 md:order-2 flex-grow aspect-square rounded-2xl bg-white/30 overflow-hidden group border border-white/40">
             <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Main product"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm7q_y6N-_b5nVv2VsmiKwPudrS_f8TK9Q1P9YkLdylBJ_vok4axJ4NwlIbbS0v2HKDe6QnMNI91HidgOWHUBh41E-wL2BB4ja7wTHGksL0qVSzsit2lU-Sb5O58QWbPe8A5KFjPTAncn4M9vQM3_MJcXCybbUoM6haPtXPt7bJv63IwNFhK5u85y-Io_Wf3fXE5vIHM4SSjZZIRixZLSOX3R20F3oyGrjlmLYAJeHBBXvyNdaqvAZv3NkH8oGoz4M4mv5A6McG2Kv"/>
+              [src]="product.image"/>
           </div>
         </div>
 
@@ -35,19 +37,20 @@
           <div class="mb-4">
             <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-primary/20">
               <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-APPLE            </span>
+              {{ product.category }}
+            </span>
           </div>
 
-          <h1 class="text-4xl lg:text-5xl font-black tracking-tighter text-on-surface mb-2">Lumina Pro X15</h1>
-          <p class="text-on-surface-variant font-medium mb-6">Product ID: LPX-15-2024</p>
+          <h1 class="text-4xl lg:text-5xl font-black tracking-tighter text-on-surface mb-2">{{ product.name }}</h1>
+          <p class="text-on-surface-variant font-medium mb-6">Product ID: {{ product._id }}</p>
 
           <div class="flex items-center gap-6 mb-8">
             <div>
-              <span class="text-4xl font-black text-primary">$2,499.00</span>
-              <span class="ml-3 text-on-surface-variant line-through text-lg">$2,899.00</span>
+              <span class="text-4xl font-black text-primary">{{ product.price | currency }}</span>
             </div>
-
           </div>
+
+          <p class="text-on-surface-variant font-medium mb-6">{{ product.description }}</p>
 
           <div class="space-y-8 mb-10">
             
@@ -63,7 +66,7 @@ APPLE            </span>
                 </button>
               </div>
               <div class="flex flex-col">
-                <span class="text-sm font-bold text-on-surface">42 Units in Stock</span>
+                <span class="text-sm font-bold text-on-surface">{{ product.stock }} Units in Stock</span>
               </div>
             </div>
           </div>
