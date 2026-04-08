@@ -55,8 +55,9 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {
-    const token = localStorage.getItem('access_token');
+  )
+  {
+    // const token = localStorage.getItem('access_token');
     // if (token) {
     //   this.loadUserFromToken(token);
     // }
