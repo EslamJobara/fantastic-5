@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService, Product, ProductResponse } from '../../../core/services/product.service';
 
 @Component({
@@ -12,14 +12,18 @@ export class ProductDetailsComponent implements OnInit {
   product: Product | null = null;
   isLoading = true;
   error: string | null = null;
+  selectedImage: string = '';
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private productService: ProductService
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+    this.route.paramMap.subscribe(params => {
+      this.isLoading = true;
+      const id = params.get('id');
     if (id) {
       this.productService.getProductById(id).subscribe({
         next: (response) => {
@@ -30,6 +34,7 @@ export class ProductDetailsComponent implements OnInit {
                 this.product = response.data as unknown as Product;
             }
             if (this.product) {
+               this.selectedImage = this.product.image;
                this.loadRelatedProducts(this.product.category, this.product._id);
             }
           }
@@ -45,9 +50,15 @@ export class ProductDetailsComponent implements OnInit {
       this.isLoading = false;
       this.error = 'No product ID provided';
     }
+    });
   }
   relatedProducts: Product[] = [];
   quantity: number = 1;
+
+  goToProduct(productId: string) {
+    this.router.navigate(['/product', productId]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   increaseQuantity() {
     if (this.product && this.quantity < this.product.stock) {
@@ -59,6 +70,10 @@ export class ProductDetailsComponent implements OnInit {
     if (this.quantity > 1) {
       this.quantity--;
     }
+  }
+
+  changeImage(imageUrl: string) {
+    this.selectedImage = imageUrl;
   }
 
   loadRelatedProducts(category: string, currentProductId: string) {

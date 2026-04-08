@@ -11,6 +11,7 @@ export interface Product {
   stock: number;
   category: string;
   image: string;
+  colors?: { colorName: string; colorHex: string; imageUrl: string }[];
   createdAt?: string;
   updatedAt?: string;
   __v?: number;
