@@ -48,6 +48,7 @@ export interface RegisterResponse {
   providedIn: 'root'
 })
 export class AuthService {
+  // let x = 10;
   private apiUrl = `${environment.apiUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$ = this.currentUserSubject.asObservable();

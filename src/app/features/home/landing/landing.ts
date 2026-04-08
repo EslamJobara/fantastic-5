@@ -49,7 +49,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       description: 'Engineered for curators who demand atmospheric precision. 24-hour battery life encased in aerospace-grade titanium.',
       primaryButton: 'Shop Zenith',
       secondaryButton: 'Specifications',
-      image: '/pics/laptop.png',
+      image: '/pics/lap.png',
       imageAlt: 'Zenith Pro M3 Laptop',
       imageClass: 'w-full'
     },
