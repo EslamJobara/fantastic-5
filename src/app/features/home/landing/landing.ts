@@ -49,7 +49,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       description: 'Engineered for curators who demand atmospheric precision. 24-hour battery life encased in aerospace-grade titanium.',
       primaryButton: 'Shop Zenith',
       secondaryButton: 'Specifications',
-      image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
+      image: '/pics/laptop.png',
       imageAlt: 'Zenith Pro M3 Laptop',
       imageClass: 'w-full'
     },
@@ -60,7 +60,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       titleGradient: 'Ultra X.',
       description: 'Experience atmospheric silence with industry-leading active noise cancellation and spatial acoustic drivers.',
       primaryButton: 'Explore Sound',
-      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80',
+      image: '/pics/headphone.png',
       imageAlt: 'Sonic Ultra X Headphones',
       imageClass: 'w-3/4'
     },
@@ -71,7 +71,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       titleGradient: 'Watch.',
       description: 'The ultimate companion for the modern professional. Seamlessly syncing your digital life with sapphire-glass elegance.',
       primaryButton: 'Pre-order Now',
-      image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=800&q=80',
+      image: '/pics/watch.png',
       imageAlt: 'Curator Watch II',
       imageClass: 'w-2/3'
     }
