@@ -141,17 +141,6 @@
             }
           </div>
 
-          <div class="flex items-center gap-3 px-1">
-            <input 
-              formControlName="rememberMe"
-              class="w-5 h-5 rounded-lg border-white/50 text-primary focus:ring-primary/50 bg-white/30 cursor-pointer" 
-              id="remember" 
-              type="checkbox"/>
-            <label class="text-xs text-on-surface-variant font-semibold cursor-pointer" for="remember">
-              Keep session active for 30 days
-            </label>
-          </div>
-
           <button 
             [disabled]="isLoading"
             class="w-full py-5 liquid-gradient text-white rounded-2xl font-black text-sm tracking-widest uppercase shadow-primary hover:shadow-primary-lg transition-all active:scale-[0.98] duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
@@ -185,6 +174,58 @@
             @if (registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched) {
               <p class="text-xs text-red-500 ml-1">{{ getRegisterError('fullName') }}</p>
             }
+          </div>
+
+          <div class="space-y-2">
+            <label class="label-md text-on-surface-variant ml-1">Username</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">badge</span>
+              <input 
+                formControlName="userName"
+                class="w-full pl-12 pr-4 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                [class.border-red-500]="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched"
+                placeholder="john_doe" 
+                type="text"/>
+            </div>
+            @if (registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched) {
+              <p class="text-xs text-red-500 ml-1">{{ getRegisterError('userName') }}</p>
+            }
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="label-md text-on-surface-variant ml-1">Age</label>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">cake</span>
+                <input 
+                  formControlName="age"
+                  class="w-full pl-12 pr-4 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                  [class.border-red-500]="registerForm.get('age')?.invalid && registerForm.get('age')?.touched"
+                  placeholder="25" 
+                  type="number"
+                  min="13"
+                  max="120"/>
+              </div>
+              @if (registerForm.get('age')?.invalid && registerForm.get('age')?.touched) {
+                <p class="text-xs text-red-500 ml-1">{{ getRegisterError('age') }}</p>
+              }
+            </div>
+
+            <div class="space-y-2">
+              <label class="label-md text-on-surface-variant ml-1">Phone</label>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">phone</span>
+                <input 
+                  formControlName="phone"
+                  class="w-full pl-12 pr-4 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                  [class.border-red-500]="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched"
+                  placeholder="01012345678" 
+                  type="tel"/>
+              </div>
+              @if (registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched) {
+                <p class="text-xs text-red-500 ml-1">{{ getRegisterError('phone') }}</p>
+              }
+            </div>
           </div>
 
           <div class="space-y-2">

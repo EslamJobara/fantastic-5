@@ -1,28 +1,46 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 
 export interface LoginRequest {
   email: string;
   password: string;
-  rememberMe?: boolean;
 }
 
 export interface RegisterRequest {
+  role?: string;
   fullName: string;
+  userName: string;
+  age: number;
+  phone: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
-export interface AuthResponse {
-  token: string;
-  user: {
-    id: string;
+export interface LoginResponse {
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}
+
+export interface RegisterResponse {
+  message: string;
+  data: {
+    role: string;
+    fullName: string;
+    userName: string;
+    age: number;
+    phone: string;
     email: string;
-    name: string;
+    password: string;
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
   };
 }
 
@@ -39,7 +57,7 @@ export class AuthService {
     private router: Router
   ) {
     // لو فيه token محفوظ، حمله
-    const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem('access_token');
     if (token) {
       this.loadUserFromToken(token);
     }
@@ -47,45 +65,59 @@ export class AuthService {
 
   /**
    * تسجيل الدخول
+   * Backend: POST /api/auth/login
    */
-  login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
+  login(credentials: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
         tap(response => {
-          // حفظ الـ token
-          localStorage.setItem('auth_token', response.token);
+          // حفظ الـ tokens
+          localStorage.setItem('access_token', response.data.accessToken);
+          localStorage.setItem('refresh_token', response.data.refreshToken);
           
-          // حفظ الـ user
-          this.currentUserSubject.next(response.user);
-          
-          // لو اختار Remember Me، احفظ في localStorage
-          if (credentials.rememberMe) {
-            localStorage.setItem('remember_me', 'true');
-          }
+          // TODO: جلب بيانات المستخدم من الـ token أو من endpoint منفصل
+          // this.loadUserFromToken(response.data.accessToken);
         })
       );
   }
 
   /**
    * إنشاء حساب جديد
+   * Backend: POST /api/auth/signUp
+   * ملاحظة: بعد التسجيل، لازم نعمل login تلقائي
    */
-  register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data)
-      .pipe(
-        tap(response => {
-          // حفظ الـ token والـ user
-          localStorage.setItem('auth_token', response.token);
-          this.currentUserSubject.next(response.user);
-        })
-      );
+  register(data: RegisterRequest): Observable<RegisterResponse> {
+    // إضافة role: "user" بشكل افتراضي
+    const requestData = {
+      role: 'user',
+      ...data
+    };
+    
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/signUp`, requestData);
+  }
+
+  /**
+   * تسجيل + دخول تلقائي
+   * بعد التسجيل، نعمل login تلقائي عشان ناخد الـ tokens
+   */
+  registerAndLogin(data: RegisterRequest): Observable<LoginResponse> {
+    return this.register(data).pipe(
+      switchMap(() => {
+        // بعد التسجيل الناجح، نعمل login
+        return this.login({
+          email: data.email,
+          password: data.password
+        });
+      })
+    );
   }
 
   /**
    * تسجيل الخروج
    */
   logout(): void {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('remember_me');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }
@@ -94,14 +126,21 @@ export class AuthService {
    * التحقق من تسجيل الدخول
    */
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('auth_token');
+    return !!localStorage.getItem('access_token');
   }
 
   /**
-   * الحصول على الـ token
+   * الحصول على الـ access token
    */
   getToken(): string | null {
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem('access_token');
+  }
+
+  /**
+   * الحصول على الـ refresh token
+   */
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refresh_token');
   }
 
   /**
@@ -110,9 +149,12 @@ export class AuthService {
   private loadUserFromToken(token: string): void {
     // هنا ممكن تعمل API call عشان تجيب بيانات المستخدم
     // أو تفك الـ JWT token
-    this.http.get<any>(`${this.apiUrl}/me`).subscribe({
-      next: (user) => this.currentUserSubject.next(user),
-      error: () => this.logout()
-    });
+    const accessToken = localStorage.getItem('access_token');
+    if (accessToken) {
+      this.http.get<any>(`${this.apiUrl}/me`).subscribe({
+        next: (user) => this.currentUserSubject.next(user),
+        error: () => this.logout()
+      });
+    }
   }
 }

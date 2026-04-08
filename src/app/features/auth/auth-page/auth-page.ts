@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-auth-page',
   standalone: false,
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  templateUrl: './auth-page.html',
+  styleUrl: './auth-page.css',
   animations: [
     trigger('fadeScale', [
       transition(':enter', [
@@ -25,7 +25,7 @@ import { AuthService } from '../services/auth.service';
     ])
   ]
 })
-export class LoginComponent {
+export class AuthPageComponent {
   activeTab: 'login' | 'register' = 'login';
   showPassword = false;
   showConfirmPassword = false;
@@ -44,15 +44,17 @@ export class LoginComponent {
     // إنشاء Login Form
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false]
+      password: ['', [Validators.required, Validators.minLength(6), this.passwordStrengthValidator]]
     });
 
     // إنشاء Register Form
     this.registerForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(3)]],
+      userName: ['', [Validators.required, Validators.minLength(3)]],
+      age: ['', [Validators.required, Validators.min(13), Validators.max(120)]],
+      phone: ['', [Validators.required, Validators.pattern(/^01[0-2,5]{1}[0-9]{8}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(6), this.passwordStrengthValidator]],
       confirmPassword: ['', [Validators.required]]
     }, {
       validators: this.passwordMatchValidator
@@ -114,9 +116,19 @@ export class LoginComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.authService.register(this.registerForm.value).subscribe({
+    const { fullName, userName, age, phone, email, password } = this.registerForm.value;
+
+    // استخدام registerAndLogin عشان نعمل login تلقائي بعد التسجيل
+    this.authService.registerAndLogin({ 
+      fullName, 
+      userName, 
+      age: Number(age), 
+      phone, 
+      email, 
+      password 
+    }).subscribe({
       next: (response) => {
-        console.log('Registration successful', response);
+        console.log('Registration and login successful', response);
         this.router.navigate(['/']);
       },
       error: (error) => {
@@ -141,12 +153,48 @@ export class LoginComponent {
     return null;
   }
 
+  // Validator لقوة الباسوورد (Capital Letter + Special Character)
+  private passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    
+    if (!value) {
+      return null;
+    }
+
+    // التحقق من وجود حرف كبير
+    const hasUpperCase = /[A-Z]/.test(value);
+    
+    // التحقق من وجود special character
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value);
+
+    const passwordValid = hasUpperCase && hasSpecialChar;
+
+    if (!passwordValid) {
+      return {
+        passwordStrength: {
+          hasUpperCase,
+          hasSpecialChar
+        }
+      };
+    }
+
+    return null;
+  }
+
   // Helper methods للـ validation errors
   getLoginError(field: string): string {
     const control = this.loginForm.get(field);
     if (control?.hasError('required')) return 'This field is required';
     if (control?.hasError('email')) return 'Invalid email address';
     if (control?.hasError('minlength')) return 'Password must be at least 6 characters';
+    if (control?.hasError('passwordStrength')) {
+      const errors = control.errors?.['passwordStrength'];
+      if (!errors.hasUpperCase && !errors.hasSpecialChar) {
+        return 'Password must contain uppercase letter and special character';
+      }
+      if (!errors.hasUpperCase) return 'Password must contain at least one uppercase letter';
+      if (!errors.hasSpecialChar) return 'Password must contain at least one special character';
+    }
     return '';
   }
 
@@ -155,6 +203,17 @@ export class LoginComponent {
     if (control?.hasError('required')) return 'This field is required';
     if (control?.hasError('email')) return 'Invalid email address';
     if (control?.hasError('minlength')) return `Minimum ${control.errors?.['minlength'].requiredLength} characters`;
+    if (control?.hasError('min')) return `Minimum age is ${control.errors?.['min'].min}`;
+    if (control?.hasError('max')) return `Maximum age is ${control.errors?.['max'].max}`;
+    if (control?.hasError('pattern') && field === 'phone') return 'Invalid Egyptian phone number';
+    if (control?.hasError('passwordStrength')) {
+      const errors = control.errors?.['passwordStrength'];
+      if (!errors.hasUpperCase && !errors.hasSpecialChar) {
+        return 'Password must contain uppercase letter and special character';
+      }
+      if (!errors.hasUpperCase) return 'Password must contain at least one uppercase letter';
+      if (!errors.hasSpecialChar) return 'Password must contain at least one special character';
+    }
     if (field === 'confirmPassword' && this.registerForm.hasError('passwordMismatch')) {
       return 'Passwords do not match';
     }
