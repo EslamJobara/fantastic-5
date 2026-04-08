@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProductService, Product } from '../../../core/services/product.service';
 import { CategoryService, Category } from '../../../core/services/category.service';
 
@@ -17,7 +18,8 @@ export class ProductListComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -68,9 +70,9 @@ export class ProductListComponent implements OnInit {
     // Add your cart logic here
   }
 
-  handleViewDetails(product: any) {
-    console.log('View details:', product);
-    // Navigate to product details
+  handleViewDetails(product: Product) {
+    // Navigate to product details page
+    this.router.navigate(['/products', product._id]);
   }
 
   handleSearch(query: string) {
