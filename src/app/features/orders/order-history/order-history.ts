@@ -9,30 +9,63 @@ import { OrderService } from '../services/order.service';
   styleUrl: './order-history.css',
 })
 export class OrderHistoryComponent implements OnInit {
-  orders: Order[] = [];
+  orders: Order[] = [
+    {
+      id: '1',
+      orderNumber: 'ORD-8842',
+      date: new Date('2024-10-24'),
+      total: 2499.00,
+      status: 'processing',
+      items: [
+        {
+          id: '1',
+          productName: 'Vitrine Pro Display 16"',
+          productImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCdM-WXbJ3uZ_k2fIcutmHe680QRTPSyQOckVlEDr88TNga6Dv5tYvypFezEh4EvT7kX5zNFcUUZ5VmTNEEa01XhyP2D-RgwKnScHf4Ns1WYJBS6xLz00QAOEXXgX8ACo6pXMyRcgb79sNUPAkZHo1jrQHzCo4ZQOKX1VqFaV4bQHco6G8RuYOZWcT4WRNIDLl1cVlvj1Aa6_xZw661NhYhiuzqZk3gj8RwAibJ2ZfVLc2Qzbzz64FpOLSY5dOPkSroHY5iTR4pbY4y',
+          variant: 'Space Gray | 1TB SSD | 32GB RAM',
+          price: 2499.00,
+          quantity: 1
+        }
+      ]
+    },
+    {
+      id: '2',
+      orderNumber: 'ORD-7721',
+      date: new Date('2024-09-12'),
+      total: 1299.00,
+      status: 'shipped',
+      items: [
+        {
+          id: '2',
+          productName: 'Zenith Pro M3',
+          productImage: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80',
+          variant: 'Silver | 512GB SSD | 16GB RAM',
+          price: 1299.00,
+          quantity: 1
+        }
+      ]
+    }
+  ];
   expandedOrderId: string | null = null;
-  isLoading = true;
+  isLoading = false;
   error: string | null = null;
 
   constructor(private orderService: OrderService) {}
 
   ngOnInit(): void {
-    this.loadOrders();
-  }
-
-  loadOrders(): void {
-    this.isLoading = true;
-    this.error = null;
+    console.log('OrderHistoryComponent initialized');
+    console.log('Initial orders:', this.orders);
+    console.log('hasOrders:', this.hasOrders);
     
+    // Load orders from service (will replace initial mock data)
     this.orderService.getOrders().subscribe({
       next: (orders) => {
         this.orders = orders;
-        this.isLoading = false;
+        console.log('Orders loaded from service:', this.orders);
+        console.log('hasOrders after loading:', this.hasOrders);
       },
       error: (error) => {
         console.error('Error loading orders:', error);
         this.error = 'Failed to load orders. Please try again.';
-        this.isLoading = false;
       }
     });
   }
@@ -75,6 +108,20 @@ export class OrderHistoryComponent implements OnInit {
 
   formatPrice(price: number): string {
     return `$${price.toFixed(2)}`;
+  }
+
+  loadOrders(): void {
+    this.error = null;
+    
+    this.orderService.getOrders().subscribe({
+      next: (orders) => {
+        this.orders = orders;
+      },
+      error: (error) => {
+        console.error('Error loading orders:', error);
+        this.error = 'Failed to load orders. Please try again.';
+      }
+    });
   }
 
   reorder(orderId: string): void {
