@@ -17,6 +17,9 @@ export class ProductListComponent implements OnInit {
   isLoadingProducts = true;
   isLoadingCategories = true;
   searchQuery: string = '';
+  minPrice: number | null = null;
+  maxPrice: number | null = null;
+  sortBy: string = 'newest'; // Default sort
 
   constructor(
     private productService: ProductService,
@@ -34,7 +37,7 @@ export class ProductListComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (params['search']) {
         this.searchQuery = params['search'];
-        this.applySearch();
+        this.applyFilters();
       }
     });
   }
@@ -62,9 +65,9 @@ export class ProductListComponent implements OnInit {
         this.allProducts = response.data; // Store all products
         this.products = response.data; // Display all initially
         this.isLoadingProducts = false;
-        // Apply search if query exists
-        if (this.searchQuery) {
-          this.applySearch();
+        // Apply filters if any exist
+        if (this.searchQuery || this.selectedCategory || this.minPrice !== null || this.maxPrice !== null) {
+          this.applyFilters();
         }
         this.cdr.detectChanges();
       },
@@ -78,15 +81,7 @@ export class ProductListComponent implements OnInit {
 
   filterByCategory(categoryId: string | null) {
     this.selectedCategory = categoryId;
-    
-    if (categoryId) {
-      // Filter from stored products (no API call)
-      this.products = this.allProducts.filter(p => p.category === categoryId);
-    } else {
-      // Show all products
-      this.products = this.allProducts;
-    }
-    this.cdr.detectChanges();
+    this.applyFilters();
   }
 
   handleAddToCart(product: any) {
@@ -101,17 +96,63 @@ export class ProductListComponent implements OnInit {
 
   handleSearch(query: string) {
     this.searchQuery = query;
-    this.applySearch();
+    this.applyFilters();
   }
   
-  applySearch() {
+  onPriceFilterChange() {
+    this.applyFilters();
+  }
+  
+  onSortChange() {
+    this.applySort();
+  }
+  
+  applyFilters() {
+    let filtered = [...this.allProducts];
+    
+    // Apply category filter
+    if (this.selectedCategory) {
+      filtered = filtered.filter(p => p.category === this.selectedCategory);
+    }
+    
+    // Apply search filter
     if (this.searchQuery.trim()) {
-      this.products = this.allProducts.filter(product =>
+      filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
-    } else {
-      this.products = this.allProducts;
+    }
+    
+    // Apply price range filter
+    if (this.minPrice !== null && this.minPrice >= 0) {
+      filtered = filtered.filter(p => p.price >= this.minPrice!);
+    }
+    if (this.maxPrice !== null && this.maxPrice >= 0) {
+      filtered = filtered.filter(p => p.price <= this.maxPrice!);
+    }
+    
+    this.products = filtered;
+    this.applySort();
+  }
+  
+  applySort() {
+    switch (this.sortBy) {
+      case 'newest':
+        // Sort by createdAt descending (newest first)
+        this.products.sort((a, b) => {
+          const dateA = new Date(a.createdAt || 0).getTime();
+          const dateB = new Date(b.createdAt || 0).getTime();
+          return dateB - dateA;
+        });
+        break;
+      case 'price-low':
+        // Sort by price ascending (low to high)
+        this.products.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        // Sort by price descending (high to low)
+        this.products.sort((a, b) => b.price - a.price);
+        break;
     }
     this.cdr.detectChanges();
   }
