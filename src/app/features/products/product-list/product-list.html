@@ -37,26 +37,22 @@
         <section>
           <h3 class="label-md text-outline mb-6">Category</h3>
           <div class="space-y-3">
+            <!-- All Categories -->
             <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
               <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
-                <div class="w-2.5 h-2.5 bg-primary rounded-sm opacity-100"></div>
+                <div class="w-2.5 h-2.5 bg-primary rounded-sm" [class.opacity-100]="!selectedCategory" [class.opacity-0]="selectedCategory"></div>
               </div>
-              <input checked class="hidden" type="checkbox"/>
-              <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">Laptops</span>
+              <input type="radio" name="category" class="hidden" [checked]="!selectedCategory" (change)="filterByCategory(null)"/>
+              <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">All Products</span>
             </label>
-            <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
+            
+            <!-- Dynamic Categories -->
+            <label *ngFor="let category of categories" class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
               <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
-                <div class="w-2.5 h-2.5 bg-primary rounded-sm opacity-0 group-has-[:checked]:opacity-100"></div>
+                <div class="w-2.5 h-2.5 bg-primary rounded-sm" [class.opacity-100]="selectedCategory === category._id" [class.opacity-0]="selectedCategory !== category._id"></div>
               </div>
-              <input class="hidden" type="checkbox"/>
-              <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">Accessories</span>
-            </label>
-            <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
-              <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
-                <div class="w-2.5 h-2.5 bg-primary rounded-sm opacity-0 group-has-[:checked]:opacity-100"></div>
-              </div>
-              <input class="hidden" type="checkbox"/>
-              <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">Gadgets</span>
+              <input type="radio" name="category" class="hidden" [checked]="selectedCategory === category._id" (change)="filterByCategory(category._id)"/>
+              <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">{{ category.name }}</span>
             </label>
           </div>
         </section>
@@ -71,8 +67,6 @@
             </div>
           </div>
         </section>
-
-
       </div>
     </aside>
 
