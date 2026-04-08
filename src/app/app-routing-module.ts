@@ -10,7 +10,7 @@ import { OrderHistoryComponent } from './features/orders/order-history/order-his
 
 const routes: Routes = [ 
   { path: '', component: LandingComponent },
-  { path: 'login', component: AuthPageComponent },
+  { path: 'auth', component: AuthPageComponent },
   { path: 'products', component: ProductListComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'cart', component: CartPageComponent },
