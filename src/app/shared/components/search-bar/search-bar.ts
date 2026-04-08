@@ -17,6 +17,7 @@ export class SearchBar implements OnInit, OnDestroy {
   @Input() placeholder: string = 'Search...';
   @Input() width: string = 'w-64';
   @Input() variant: 'navbar' | 'page' = 'navbar';
+  @Input() showDropdown: boolean = true; // Control dropdown visibility
   @Input() set searchValue(value: string) {
     this._searchValue = value;
   }
@@ -54,7 +55,13 @@ export class SearchBar implements OnInit, OnDestroy {
   }
   
   onInputChange() {
-    if (this._searchValue.trim().length === 0) {
+    // Emit search event immediately for page variant without dropdown
+    if (!this.showDropdown) {
+      this.search.emit(this.searchValue);
+      return;
+    }
+    
+    if (this.searchValue.trim().length === 0) {
       this.searchResults = [];
       this.showResults = false;
       this.isSearching = false;
@@ -62,7 +69,7 @@ export class SearchBar implements OnInit, OnDestroy {
     }
     
     this.isSearching = true;
-    this.searchSubject.next(this._searchValue);
+    this.searchSubject.next(this.searchValue);
   }
   
   performSearch(searchTerm: string) {
@@ -101,14 +108,18 @@ export class SearchBar implements OnInit, OnDestroy {
   
   onKeyPress(event: KeyboardEvent) {
     if (event.key === 'Enter') {
-      this.viewAllResults();
+      if (this.showDropdown) {
+        this.viewAllResults();
+      } else {
+        this.search.emit(this.searchValue);
+      }
     }
   }
   
   viewAllResults() {
-    if (this._searchValue.trim()) {
+    if (this.searchValue.trim()) {
       this.router.navigate(['/products'], { 
-        queryParams: { search: this._searchValue } 
+        queryParams: { search: this.searchValue } 
       });
       this.closeResults();
     }

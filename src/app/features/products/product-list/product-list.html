@@ -13,6 +13,7 @@
           placeholder="Search products..." 
           width="w-full"
           variant="page"
+          [showDropdown]="false"
           [searchValue]="searchQuery"
           (search)="handleSearch($event)">
         </app-search-bar>

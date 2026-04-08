@@ -13,9 +13,9 @@
     class="w-full pr-12"
   />
   <button 
-    (click)="viewAllResults()"
+    (click)="showDropdown ? viewAllResults() : search.emit(searchValue)"
     class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors">
-    @if (isSearching) {
+    @if (isSearching && showDropdown) {
       <div class="w-4 h-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
     } @else {
       <span class="material-symbols-outlined text-lg">search</span>
@@ -23,7 +23,7 @@
   </button>
   
   <!-- Search Results Dropdown -->
-  @if (showResults && searchResults.length > 0) {
+  @if (showDropdown && showResults && searchResults.length > 0) {
     <div class="absolute top-full left-0 right-0 mt-2 glass-card rounded-2xl shadow-ambient overflow-hidden z-50 border border-white/40">
       <!-- Results List -->
       @for (product of searchResults; track product._id) {
@@ -54,7 +54,7 @@
   }
   
   <!-- Backdrop to close results -->
-  @if (showResults) {
+  @if (showDropdown && showResults) {
     <div 
       (click)="closeResults()"
       class="fixed inset-0 z-40"></div>
