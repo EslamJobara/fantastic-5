@@ -1,7 +1,9 @@
 <div class="relative" [ngClass]="width">
   <input 
     [(ngModel)]="searchValue"
+    (ngModelChange)="onInputChange()"
     (keypress)="onKeyPress($event)"
+    (focus)="showResults = searchResults.length > 0"
     [placeholder]="placeholder"
     type="text"
     [ngClass]="{
@@ -11,8 +13,50 @@
     class="w-full pr-12"
   />
   <button 
-    (click)="onSearch()"
+    (click)="viewAllResults()"
     class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors">
-    <span class="material-symbols-outlined text-lg">search</span>
+    @if (isSearching) {
+      <div class="w-4 h-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+    } @else {
+      <span class="material-symbols-outlined text-lg">search</span>
+    }
   </button>
+  
+  <!-- Search Results Dropdown -->
+  @if (showResults && searchResults.length > 0) {
+    <div class="absolute top-full left-0 right-0 mt-2 glass-card rounded-2xl shadow-ambient overflow-hidden z-50 border border-white/40">
+      <!-- Results List -->
+      @for (product of searchResults; track product._id) {
+        <div 
+          (click)="goToProduct(product._id)"
+          class="flex items-center gap-4 p-4 hover:bg-surface-container-high transition-colors cursor-pointer border-b border-white/20 last:border-b-0">
+          <img 
+            [src]="product.image" 
+            [alt]="product.name"
+            class="w-12 h-12 object-cover rounded-lg"
+            (error)="$event.target.src='https://via.placeholder.com/48?text=No+Image'"/>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-sm font-bold text-on-surface truncate">{{ product.name }}</h4>
+            <p class="text-xs text-on-surface-variant truncate">{{ product.description }}</p>
+          </div>
+          <p class="text-sm font-bold text-primary whitespace-nowrap">EGP {{ product.price }}</p>
+        </div>
+      }
+      
+      <!-- View All Button -->
+      <button 
+        (click)="viewAllResults()"
+        class="w-full p-4 text-center text-sm font-bold text-primary hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
+        <span>View All Results</span>
+        <span class="material-symbols-outlined text-base">arrow_forward</span>
+      </button>
+    </div>
+  }
+  
+  <!-- Backdrop to close results -->
+  @if (showResults) {
+    <div 
+      (click)="closeResults()"
+      class="fixed inset-0 z-40"></div>
+  }
 </div>

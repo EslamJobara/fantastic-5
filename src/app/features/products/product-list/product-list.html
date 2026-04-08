@@ -13,6 +13,7 @@
           placeholder="Search products..." 
           width="w-full"
           variant="page"
+          [searchValue]="searchQuery"
           (search)="handleSearch($event)">
         </app-search-bar>
       </div>
@@ -36,25 +37,35 @@
       <div class="glass-card rounded-3xl p-8 space-y-10 sticky top-24">
         <section>
           <h3 class="label-md text-outline mb-6">Category</h3>
-          <div class="space-y-3">
-            <!-- All Categories -->
-            <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
-              <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
-                <div class="w-2.5 h-2.5 bg-primary rounded-sm" [class.opacity-100]="!selectedCategory" [class.opacity-0]="selectedCategory"></div>
-              </div>
-              <input type="radio" name="category" class="hidden" [checked]="!selectedCategory" (change)="filterByCategory(null)"/>
-              <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">All Products</span>
-            </label>
-            
-            <!-- Dynamic Categories -->
-            <label *ngFor="let category of categories" class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
-              <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
-                <div class="w-2.5 h-2.5 bg-primary rounded-sm" [class.opacity-100]="selectedCategory === category._id" [class.opacity-0]="selectedCategory !== category._id"></div>
-              </div>
-              <input type="radio" name="category" class="hidden" [checked]="selectedCategory === category._id" (change)="filterByCategory(category._id)"/>
-              <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">{{ category.name }}</span>
-            </label>
-          </div>
+          
+          <!-- Loading Spinner for Categories -->
+          @if (isLoadingCategories) {
+            <div class="flex justify-center items-center py-8">
+              <div class="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+            </div>
+          } @else {
+            <div class="space-y-3">
+              <!-- All Categories -->
+              <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
+                <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
+                  <div class="w-2.5 h-2.5 bg-primary rounded-sm" [class.opacity-100]="!selectedCategory" [class.opacity-0]="selectedCategory"></div>
+                </div>
+                <input type="radio" name="category" class="hidden" [checked]="!selectedCategory" (change)="filterByCategory(null)"/>
+                <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">All Products</span>
+              </label>
+              
+              <!-- Dynamic Categories -->
+              @for (category of categories; track category._id) {
+                <label class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
+                  <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
+                    <div class="w-2.5 h-2.5 bg-primary rounded-sm" [class.opacity-100]="selectedCategory === category._id" [class.opacity-0]="selectedCategory !== category._id"></div>
+                  </div>
+                  <input type="radio" name="category" class="hidden" [checked]="selectedCategory === category._id" (change)="filterByCategory(category._id)"/>
+                  <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">{{ category.name }}</span>
+                </label>
+              }
+            </div>
+          }
         </section>
 
         <section>
@@ -74,15 +85,29 @@
     <div class="flex-1">
       <!-- Product Grid Container -->
       <div class="glass-card rounded-3xl p-8 lg:p-10">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          <app-product-card 
-            *ngFor="let product of products" 
-            [product]="product"
-            [showActions]="true"
-            (addToCart)="handleAddToCart($event)"
-            (viewDetails)="handleViewDetails($event)">
-          </app-product-card>
-        </div>
+        <!-- Loading Spinner for Products -->
+        @if (isLoadingProducts) {
+          <div class="flex flex-col justify-center items-center py-20">
+            <div class="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
+            <p class="text-on-surface-variant text-sm">Loading products...</p>
+          </div>
+        } @else if (products.length === 0) {
+          <div class="flex flex-col justify-center items-center py-20">
+            <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4">inventory_2</span>
+            <p class="text-on-surface-variant text-lg">No products found</p>
+          </div>
+        } @else {
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+            @for (product of products; track product._id) {
+              <app-product-card 
+                [product]="product"
+                [showActions]="true"
+                (addToCart)="handleAddToCart($event)"
+                (viewDetails)="handleViewDetails($event)">
+              </app-product-card>
+            }
+          </div>
+        }
       </div>
 
       <!-- Pagination -->

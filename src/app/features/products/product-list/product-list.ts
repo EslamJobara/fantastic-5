@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ProductService, Product } from '../../../core/services/product.service';
 import { CategoryService, Category } from '../../../core/services/category.service';
 
@@ -14,40 +14,64 @@ export class ProductListComponent implements OnInit {
   allProducts: Product[] = []; // Store all products for filtering
   categories: Category[] = [];
   selectedCategory: string | null = null;
+  isLoadingProducts = true;
+  isLoadingCategories = true;
+  searchQuery: string = '';
 
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.loadCategories();
     this.loadProducts();
+    
+    // Check for search query parameter
+    this.route.queryParams.subscribe(params => {
+      if (params['search']) {
+        this.searchQuery = params['search'];
+        this.applySearch();
+      }
+    });
   }
 
   loadCategories() {
+    this.isLoadingCategories = true;
     this.categoryService.getAllCategories().subscribe({
       next: (response) => {
         this.categories = response.data;
+        this.isLoadingCategories = false;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading categories:', error);
+        this.isLoadingCategories = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
   loadProducts() {
+    this.isLoadingProducts = true;
     this.productService.getProducts().subscribe({
       next: (response) => {
         this.allProducts = response.data; // Store all products
         this.products = response.data; // Display all initially
+        this.isLoadingProducts = false;
+        // Apply search if query exists
+        if (this.searchQuery) {
+          this.applySearch();
+        }
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading products:', error);
+        this.isLoadingProducts = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -76,7 +100,19 @@ export class ProductListComponent implements OnInit {
   }
 
   handleSearch(query: string) {
-    console.log('Search query:', query);
-    // Add your search/filter logic here
+    this.searchQuery = query;
+    this.applySearch();
+  }
+  
+  applySearch() {
+    if (this.searchQuery.trim()) {
+      this.products = this.allProducts.filter(product =>
+        product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        product.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    } else {
+      this.products = this.allProducts;
+    }
+    this.cdr.detectChanges();
   }
 }
