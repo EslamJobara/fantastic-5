@@ -1,5 +1,5 @@
 <div class="group cursor-pointer">
-<div class="group cursor-pointer">
+<div class="group cursor-pointer" (click)="onViewDetails()">
   <div class="bg-white/60 border border-white/40 rounded-3xl aspect-[4/5] overflow-hidden mb-6 relative">
     <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
          [alt]="product?.name" 
@@ -23,14 +23,14 @@
   <div class="flex gap-3" *ngIf="showActions">
     <button 
       *ngIf="showAddToCart"
-      (click)="onAddToCart()"
+      (click)="onAddToCart(); $event.stopPropagation()"
       class="flex-1 bg-white/80 backdrop-blur border border-slate-200 glass-card rounded-xl hover:border-primary hover:text-primary hover:bg-white hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 py-3 active:scale-95">
       <span class="material-symbols-outlined text-base">add_shopping_cart</span>
       <span class="text-sm font-semibold">{{ addToCartLabel }}</span>
     </button>
     <button 
       *ngIf="showViewDetails"
-      (click)="onViewDetails()"
+      (click)="onViewDetails(); $event.stopPropagation()"
       class="w-12 h-12 bg-white/80 backdrop-blur border border-slate-200 text-slate-700 glass-card rounded-xl hover:border-primary hover:text-primary hover:bg-white hover:-translate-y-0.5 transition-all flex items-center justify-center active:scale-95">
       <span class="material-symbols-outlined text-xl">arrow_forward</span>
     </button>

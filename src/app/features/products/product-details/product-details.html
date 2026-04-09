@@ -3,30 +3,30 @@
 
   <!-- Product Details -->
   <section class="max-w-screen-xl mx-auto px-8 pb-24">
-    <div class="glass-card rounded-3xl p-8 lg:p-12">
+    <div *ngIf="isLoading" class="text-center py-20">Loading product...</div>
+    <div *ngIf="error" class="text-center py-20 text-red-500">{{ error }}</div>
+    <div *ngIf="product && !isLoading" class="glass-card rounded-3xl p-8 lg:p-12">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
 
         <!-- Left: Image Gallery -->
         <div class="lg:col-span-7 flex flex-col md:flex-row gap-6">
           <!-- Thumbnails -->
-          <div class="order-2 md:order-1 flex md:flex-col gap-4 overflow-x-auto md:w-24">
-            <div class="flex-shrink-0 w-20 h-20 rounded-xl bg-white/40 overflow-hidden ring-2 ring-primary ring-offset-4 ring-offset-white/20 cursor-pointer">
-              <img class="w-full h-full object-cover" alt="Primary view"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDatNeNBOuvSF3w4XUr03I5eLMKJQygAmJC-gbkUA6tOmYau-zRpuTXV2Ho6p1l6imkJEVDc6IWpAUOKjM8_kUcuOQNLq1DKQ1qtZNDvXgl1Zus8Vxj4IjDpFzelE9P4XEPr1jilqb6lVXZVBT6S7SxFl5r7Atx5MHvoQhwagy2K5Ei3lj4kmp7EZ_mRBc-LjPM-ZRPr41wn19lvlKVw7BK6ffnmArD9HzJ3qR1boM4WyoyyxmHAS4Rb2OZ0YG7hw43glaEMVoJPYzh"/>
-            </div>
-            <div class="flex-shrink-0 w-20 h-20 rounded-xl bg-white/20 overflow-hidden hover:bg-white/40 cursor-pointer transition-all border border-white/30">
-              <img class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" alt="Side profile"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDa9IdACWeEcG4JWIcuXb1XBccDgjeyUtqDnh9fju_9ZIdVE3-OmYRETCbWbeh9s3O4C-GRzpIqq2oasIqR1Mrg6hK27Nqrbm37IekV0BywwbxxxquRmWgOw3S5MeojF8kEx2M0vQbw0lvOq4rKPRCCMnpfZd7pLuGrnh6FR7y5H9nFx1bsobh7_F2N3X8uvvgz2TKIoteo1ebdCF6iVv5CpzQ_aPRsyMO10SUIi9JoIIU6JiGJTC72Y91-8enxvy7ARiBnZXlQ4PGc"/>
-            </div>
-            <div class="flex-shrink-0 w-20 h-20 rounded-xl bg-white/20 overflow-hidden hover:bg-white/40 cursor-pointer transition-all border border-white/30">
-              <img class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" alt="Keyboard detail"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZdo4-rflCXE4_OIA1lfwudGkZIjxfqEkpv7R0MuEi4Mem0aPGpjsrV_BpTpf4EWrhJCh_Te9yCmTgECyV3bYu0aeAyWqu8rc8Hs2mk4mka7iH_vmxlk8S7vbLBopPhKp8gzpNHY0dfZiGfNuRS6er7M01S78uC6bYIi48i_aLLI0I8nesbIqLEY2zAy5VyU99rdtLDOpsOOxhychYeqTZJTrLp6M-_2MshBgpNwL6yKEKp6zVr6ABVeu2EVWAbEvHsBMJTFacCNkE"/>
+          <div *ngIf="product.colors && product.colors.length > 0" class="order-2 md:order-1 flex md:flex-col gap-4 overflow-x-auto md:w-24">
+            <div *ngFor="let color of product.colors" 
+                 (click)="changeImage(color.imageUrl)"
+                 [class.opacity-100]="selectedImage === color.imageUrl"
+                 [class.opacity-60]="selectedImage !== color.imageUrl"
+                 class="flex-shrink-0 w-20 h-20 rounded-xl bg-white/40 overflow-hidden hover:opacity-100 cursor-pointer transition-all border border-white/30"
+                 [class.ring-2]="selectedImage === color.imageUrl"
+                 [class.ring-primary]="selectedImage === color.imageUrl"
+                 [class.bg-white_40]="selectedImage === color.imageUrl">
+              <img class="w-full h-full object-cover transition-transform hover:scale-110" [alt]="color.colorName" [src]="color.imageUrl"/>
             </div>
           </div>
           <!-- Main Image -->
           <div class="order-1 md:order-2 flex-grow aspect-square rounded-2xl bg-white/30 overflow-hidden group border border-white/40">
             <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Main product"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm7q_y6N-_b5nVv2VsmiKwPudrS_f8TK9Q1P9YkLdylBJ_vok4axJ4NwlIbbS0v2HKDe6QnMNI91HidgOWHUBh41E-wL2BB4ja7wTHGksL0qVSzsit2lU-Sb5O58QWbPe8A5KFjPTAncn4M9vQM3_MJcXCybbUoM6haPtXPt7bJv63IwNFhK5u85y-Io_Wf3fXE5vIHM4SSjZZIRixZLSOX3R20F3oyGrjlmLYAJeHBBXvyNdaqvAZv3NkH8oGoz4M4mv5A6McG2Kv"/>
+              [src]="selectedImage"/>
           </div>
         </div>
 
@@ -35,35 +35,35 @@
           <div class="mb-4">
             <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-primary/20">
               <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-APPLE            </span>
+              {{ product.category }}
+            </span>
           </div>
 
-          <h1 class="text-4xl lg:text-5xl font-black tracking-tighter text-on-surface mb-2">Lumina Pro X15</h1>
-          <p class="text-on-surface-variant font-medium mb-6">Product ID: LPX-15-2024</p>
+          <h1 class="text-4xl lg:text-5xl font-black tracking-tighter text-on-surface mb-2">{{ product.name }}</h1>
 
           <div class="flex items-center gap-6 mb-8">
             <div>
-              <span class="text-4xl font-black text-primary">$2,499.00</span>
-              <span class="ml-3 text-on-surface-variant line-through text-lg">$2,899.00</span>
+              <span class="text-4xl font-black text-primary">{{ product.price | currency }}</span>
             </div>
-
           </div>
+
+          <p class="text-on-surface-variant font-medium mb-6">{{ product.description }}</p>
 
           <div class="space-y-8 mb-10">
             
             <!-- Quantity -->
             <div class="flex items-center gap-6">
               <div class="flex items-center glass-card rounded-full px-4 py-2">
-                <button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+                <button (click)="decreaseQuantity()" [disabled]="quantity <= 1" class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                   <span class="material-symbols-outlined text-xl">remove</span>
                 </button>
-                <span class="w-10 text-center font-black text-lg">1</span>
-                <button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+                <span class="w-10 text-center font-black text-lg">{{ quantity }}</span>
+                <button (click)="increaseQuantity()" [disabled]="quantity >= product.stock" class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                   <span class="material-symbols-outlined text-xl">add</span>
                 </button>
               </div>
               <div class="flex flex-col">
-                <span class="text-sm font-bold text-on-surface">42 Units in Stock</span>
+                <span class="text-sm font-bold text-on-surface">{{ product.stock }} Units in Stock</span>
               </div>
             </div>
           </div>
@@ -140,7 +140,7 @@ APPLE            </span>
   </section>
 
   <!-- Related Products -->
-  <section class="max-w-screen-xl mx-auto px-8">
+  <section *ngIf="relatedProducts.length > 0" class="max-w-screen-xl mx-auto px-8">
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
       <div>
         <span class="text-primary font-black uppercase tracking-[0.3em] text-xs block mb-4">Complementary Items</span>
@@ -156,7 +156,9 @@ APPLE            </span>
       </div>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-      <app-product-card *ngFor="let product of relatedProducts" [product]="product"></app-product-card>
+      <app-product-card *ngFor="let relProduct of relatedProducts" 
+                        [product]="relProduct"
+                        (viewDetails)="goToProduct(relProduct._id)"></app-product-card>
     </div>
   </section>
 

@@ -1,1 +1,7 @@
 /* Search bar specific styles if needed */
+
+/* Ensure dropdown appears above other elements */
+:host {
+  position: relative;
+  z-index: 50;
+}
