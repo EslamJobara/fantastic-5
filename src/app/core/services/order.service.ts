@@ -1,24 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, delay } from 'rxjs';
-import { Order } from '../../features/orders/models/order.model';
+import { Observable, of, delay, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Order as ApiOrder, OrdersResponse } from '@core/models';
+import { Order as LocalOrder } from '../../features/orders/models/order.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = `${environment.apiUrl}/orders`;
+  private apiUrl = `${environment.apiUrl}/order`;
   
   // 🔧 Mock Mode - غير دا لـ false لما الباك يبقى جاهز
-  private useMockData = true;
+  private useMockData = false;
 
   constructor(private http: HttpClient) {}
 
   /**
    * Mock Data - بيانات تجريبية للطلبات
    */
-  private getMockOrders(): Order[] {
+  private getMockOrders(): LocalOrder[] {
     return [
       {
         id: '1',
@@ -111,7 +112,7 @@ export class OrderService {
   /**
    * جلب جميع الطلبات
    */
-  getOrders(): Observable<Order[]> {
+  getOrders(): Observable<LocalOrder[]> {
     if (this.useMockData) {
       // Mock: استخدام البيانات التجريبية
       console.log('📦 Using Mock Orders Data');
@@ -121,13 +122,36 @@ export class OrderService {
     }
 
     // Real API Call
-    return this.http.get<Order[]>(this.apiUrl);
+    return this.http.get<OrdersResponse>(`${this.apiUrl}/getUserOrders`).pipe(
+      map(response => this.transformApiOrders(response.data))
+    );
+  }
+
+  /**
+   * تحويل البيانات من API للـ Model المحلي
+   */
+  private transformApiOrders(apiOrders: ApiOrder[]): LocalOrder[] {
+    return apiOrders.map(apiOrder => ({
+      id: apiOrder._id,
+      orderNumber: `ORD-${apiOrder._id.slice(-4).toUpperCase()}`,
+      date: new Date(apiOrder.createdAt),
+      total: apiOrder.totalPrice,
+      status: apiOrder.status,
+      items: apiOrder.items.map(item => ({
+        id: item.product._id,
+        productName: item.product.name,
+        productImage: item.product.defaultImg,
+        variant: item.variationId || 'Default',
+        price: item.product.price,
+        quantity: item.quantity
+      }))
+    }));
   }
 
   /**
    * جلب طلب واحد بالـ ID
    */
-  getOrderById(orderId: string): Observable<Order | undefined> {
+  getOrderById(orderId: string): Observable<LocalOrder | undefined> {
     if (this.useMockData) {
       // Mock: البحث في البيانات التجريبية
       const order = this.getMockOrders().find(o => o.id === orderId);
@@ -135,13 +159,13 @@ export class OrderService {
     }
 
     // Real API Call
-    return this.http.get<Order>(`${this.apiUrl}/${orderId}`);
+    return this.http.get<LocalOrder>(`${this.apiUrl}/${orderId}`);
   }
 
   /**
    * إلغاء طلب
    */
-  cancelOrder(orderId: string): Observable<Order> {
+  cancelOrder(orderId: string): Observable<LocalOrder> {
     if (this.useMockData) {
       // Mock: تحديث حالة الطلب
       const orders = this.getMockOrders();
@@ -153,7 +177,7 @@ export class OrderService {
     }
 
     // Real API Call
-    return this.http.put<Order>(`${this.apiUrl}/${orderId}/cancel`, {});
+    return this.http.put<LocalOrder>(`${this.apiUrl}/${orderId}/cancel`, {});
   }
 
   /**

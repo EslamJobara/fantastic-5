@@ -60,13 +60,13 @@
                     [checked]="selectedCategory === null"
                     class="appearance-none w-5 h-5 border-2 border-slate-300 rounded checked:border-blue-600 checked:bg-blue-600 cursor-pointer"
                   />
-                  <svg 
-                    *ngIf="selectedCategory === null"
-                    class="absolute top-1 left-1 w-3 h-3 text-white pointer-events-none" 
-                    fill="currentColor" 
-                    viewBox="0 0 12 12">
-                    <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                  </svg>
+                  @if (selectedCategory === null) {
+                    <svg class="absolute top-1 left-1 w-3 h-3 text-white pointer-events-none" 
+                      fill="currentColor" 
+                      viewBox="0 0 12 12">
+                      <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                  }
                 </div>
                 <span class="text-sm select-none"
                       [class.text-slate-900]="selectedCategory === null"
@@ -86,13 +86,13 @@
                       [checked]="selectedCategory === category._id"
                       class="appearance-none w-5 h-5 border-2 border-slate-300 rounded checked:border-blue-600 checked:bg-blue-600 cursor-pointer"
                     />
-                    <svg 
-                      *ngIf="selectedCategory === category._id"
-                      class="absolute top-1 left-1 w-3 h-3 text-white pointer-events-none" 
-                      fill="currentColor" 
-                      viewBox="0 0 12 12">
-                      <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
+                    @if (selectedCategory === category._id) {
+                      <svg class="absolute top-1 left-1 w-3 h-3 text-white pointer-events-none" 
+                        fill="currentColor" 
+                        viewBox="0 0 12 12">
+                        <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </svg>
+                    }
                   </div>
                   <span class="text-sm select-none"
                         [class.text-slate-900]="selectedCategory === category._id"

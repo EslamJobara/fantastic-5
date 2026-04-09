@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { ProductService, Product } from '../../../core/services/product.service';
+import { ProductService } from '../../../core/services/product.service';
+import { Product } from '@core/models';
 
 @Component({
   selector: 'app-search-bar',

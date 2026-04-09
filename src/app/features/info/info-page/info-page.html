@@ -91,9 +91,9 @@
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
       <!-- Member Profile -->
       <div *ngFor="let member of team" 
-           class="group relative glass-panel p-8 flex flex-col items-center transition-all duration-700 hover:-translate-y-5 cursor-pointer hover:shadow-2xl">
+           class="group relative glass-panel p-10 flex flex-col items-center transition-all duration-700 hover:-translate-y-5 cursor-pointer hover:shadow-2xl min-h-[400px]">
         
-        <div class="member-avatar-container w-32 h-32 rounded-[2.5rem] bg-indigo-50/50 mb-8 overflow-hidden relative transform transition-all duration-700 group-hover:rotate-[10deg] group-hover:scale-110 shadow-inner">
+        <div class="member-avatar-container w-36 h-36 rounded-[2.5rem] bg-indigo-50/50 mb-8 overflow-hidden relative transform transition-all duration-700 group-hover:rotate-[10deg] group-hover:scale-110 shadow-inner">
           <img [src]="member.image" [alt]="member.name" class="w-full h-full object-cover">
           <!-- Fallback icon in case image is missing -->
           <div class="absolute inset-0 bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center -z-10 text-blue-400">
@@ -101,11 +101,11 @@
           </div>
         </div>
 
-        <h3 class="title-md mb-2 text-center font-bold text-gray-900 group-hover:text-blue-700 transition-colors">{{member.name}}</h3>
-        <p class="label-md text-gray-400 mb-8">{{member.role}}</p>
+        <h3 class="title-lg mb-3 text-center font-bold text-gray-900 group-hover:text-blue-700 transition-colors">{{member.name}}</h3>
+        <p class="body-md text-gray-500 mb-10 text-center leading-relaxed px-1">{{member.role}}</p>
 
         <!-- Social Channels -->
-        <div class="flex gap-4 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500">
+        <div class="flex gap-4 mt-auto opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500">
           <a [href]="member.github" target="_blank" class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-all">
             <span class="material-symbols-outlined !text-xl">terminal</span>
           </a>

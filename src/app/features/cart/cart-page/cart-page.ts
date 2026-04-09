@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { CartService, Cart, CartItem } from '../../../core/services/cart.service';
+import { CartService } from '../../../core/services/cart.service';
+import { Cart, CartItem } from '../models/cart.model';
 
 @Component({
   selector: 'app-cart-page',

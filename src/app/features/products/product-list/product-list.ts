@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProductService, Product } from '../../../core/services/product.service';
-import { CategoryService, Category } from '../../../core/services/category.service';
+import { ProductService } from '../../../core/services/product.service';
+import { CategoryService } from '../../../core/services/category.service';
+import { Product, Category } from '@core/models';
 
 @Component({
   selector: 'app-product-list',

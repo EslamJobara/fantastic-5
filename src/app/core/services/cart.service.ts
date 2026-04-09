@@ -2,24 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, of, delay } from 'rxjs';
 import { environment } from '../../../environments/environment';
-
-export interface CartItem {
-  id: string;
-  productId: string;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
-
-export interface Cart {
-  items: CartItem[];
-  subtotal: number;
-  tax: number;
-  shipping: number;
-  total: number;
-}
+import { Cart, CartItem } from '../../features/cart/models/cart.model';
 
 @Injectable({
   providedIn: 'root'

@@ -13,10 +13,12 @@
       </div>
     </div>
     <div class="flex items-center gap-6">
-      <div class="hidden lg:block" *ngIf="showSearchBar">
-        <app-search-bar placeholder="Search curated tech..." width="w-64" variant="navbar" (search)="onSearch($event)">
-        </app-search-bar>
-      </div>
+      @if (showSearchBar) {
+        <div class="hidden lg:block">
+          <app-search-bar placeholder="Search curated tech..." width="w-64" variant="navbar" (search)="onSearch($event)">
+          </app-search-bar>
+        </div>
+      }
       <div class="flex items-center gap-2">
         <button class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95"
           routerLink="/cart">
@@ -25,29 +27,36 @@
 
         <!-- User Menu -->
         <div class="relative user-menu-container">
-          <button *ngIf="!isLoggedIn"
-            class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95"
-            routerLink="/auth/login">
-            <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
-          </button>
+          @if (!isLoggedIn) {
+            <button class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95"
+              routerLink="/auth/login">
+              <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+            </button>
+          }
 
-          <button *ngIf="isLoggedIn" (click)="toggleUserMenu($event)"
-            class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95">
-            <span class="material-symbols-outlined text-primary">account_circle</span>
-          </button>
+          @if (isLoggedIn) {
+            <button (click)="toggleUserMenu($event)"
+              class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95">
+              <span class="material-symbols-outlined text-primary">account_circle</span>
+            </button>
+          }
 
           <!-- Dropdown Menu -->
-          <div *ngIf="isLoggedIn && showUserMenu"
-            class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-xl border border-white/40 rounded-2xl shadow-xl overflow-hidden z-50">
-            <a class="font-body tracking-tight text-on-surface-variant hover:text-on-surface tonal-shift px-3 py-2 rounded-lg transition-colors"
-              routerLink="/orders" routerLinkActive="text-primary font-semibold">Orders</a>
+          @if (isLoggedIn && showUserMenu) {
+            <div class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-xl border border-white/40 rounded-2xl shadow-xl overflow-hidden z-50">
+              <a routerLink="/orders" (click)="toggleUserMenu($event)"
+                class="w-full px-4 py-3 text-left text-sm font-medium text-on-surface hover:bg-surface-container transition-colors flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary">receipt_long</span>
+                <span>Orders</span>
+              </a>
 
-            <button (click)="logout()"
-              class="w-full px-4 py-3 text-left text-sm font-medium text-on-surface hover:bg-surface-container transition-colors flex items-center gap-3">
-              <span class="material-symbols-outlined text-error">logout</span>
-              <span>Sign Out</span>
-            </button>
-          </div>
+              <button (click)="logout()"
+                class="w-full px-4 py-3 text-left text-sm font-medium text-on-surface hover:bg-surface-container transition-colors flex items-center gap-3">
+                <span class="material-symbols-outlined text-error">logout</span>
+                <span>Sign Out</span>
+              </button>
+            </div>
+          }
         </div>
       </div>
     </div>

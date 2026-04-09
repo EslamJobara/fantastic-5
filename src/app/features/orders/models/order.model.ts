@@ -1,3 +1,7 @@
+/**
+ * Order Models - Local UI Models
+ */
+
 export interface OrderItem {
   id: string;
   productName: string;
@@ -12,7 +16,7 @@ export interface Order {
   orderNumber: string;
   date: Date;
   total: number;
-  status: 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   items: OrderItem[];
 }
 

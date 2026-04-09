@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ElementRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
-import { ProductService, Product as ApiProduct } from '../../../core/services/product.service';
-import { CategoryService, Category } from '../../../core/services/category.service';
+import { ProductService } from '../../../core/services/product.service';
+import { CategoryService } from '../../../core/services/category.service';
+import { Product as ApiProduct, Category } from '@core/models';
 
 export interface Product {
   name: string;
