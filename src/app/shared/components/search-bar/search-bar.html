@@ -6,17 +6,13 @@
     (focus)="showResults = searchResults.length > 0"
     [placeholder]="placeholder"
     type="text"
-    [ngClass]="{
-      'bg-surface-container-low no-line rounded-full py-2 px-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-on-surface placeholder:text-outline': variant === 'navbar',
-      'glass-card rounded-xl py-3 px-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-on-surface placeholder:text-outline w-full': variant === 'page'
-    }"
-    class="w-full pr-12"
+    class="glass-card rounded-xl py-3 px-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-on-surface placeholder:text-outline w-full pr-12 font-medium"
   />
   <button 
     (click)="showDropdown ? viewAllResults() : search.emit(searchValue)"
     class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors">
     @if (isSearching && showDropdown) {
-      <div class="w-4 h-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+      <div class="w-4 h-4 border-2 border-transparent rounded-full animate-spin" style="border-color: rgba(0, 88, 190, 0.2); border-top-color: #0058be;"></div>
     } @else {
       <span class="material-symbols-outlined text-lg">search</span>
     }
@@ -24,12 +20,12 @@
   
   <!-- Search Results Dropdown -->
   @if (showDropdown && showResults && searchResults.length > 0) {
-    <div class="absolute top-full left-0 right-0 mt-2 glass-card rounded-2xl shadow-ambient overflow-hidden z-50 border border-white/40">
+    <div class="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-ambient overflow-hidden z-50 border border-outline/20">
       <!-- Results List -->
       @for (product of searchResults; track product._id) {
         <div 
           (click)="goToProduct(product._id)"
-          class="flex items-center gap-4 p-4 hover:bg-surface-container-high transition-colors cursor-pointer border-b border-white/20 last:border-b-0">
+          class="flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors cursor-pointer border-b border-slate-100 last:border-b-0">
           <img 
             [src]="product.defaultImg" 
             [alt]="product.name"
@@ -46,7 +42,7 @@
       <!-- View All Button -->
       <button 
         (click)="viewAllResults()"
-        class="w-full p-4 text-center text-sm font-bold text-primary hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
+        class="w-full p-4 text-center text-sm font-bold text-primary hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
         <span>View All Results</span>
         <span class="material-symbols-outlined text-base">arrow_forward</span>
       </button>

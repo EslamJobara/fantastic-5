@@ -14,8 +14,8 @@
     </div>
     <div class="flex items-center gap-6">
       @if (showSearchBar) {
-        <div class="hidden lg:block">
-          <app-search-bar placeholder="Search curated tech..." width="w-64" variant="navbar" (search)="onSearch($event)">
+        <div class="hidden lg:block w-80">
+          <app-search-bar placeholder="Search products..." width="w-full" variant="navbar" (search)="onSearch($event)">
           </app-search-bar>
         </div>
       }
