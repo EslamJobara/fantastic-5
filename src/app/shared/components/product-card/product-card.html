@@ -3,7 +3,7 @@
   <div class="bg-white/60 border border-white/40 rounded-3xl aspect-[4/5] overflow-hidden mb-6 relative">
     <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
          [alt]="product?.name" 
-         [src]="product?.image"
+         [src]="product?.defaultImg"
          (error)="$event.target.src='https://via.placeholder.com/400x500?text=No+Image'"/>
     <button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
       <span class="material-symbols-outlined text-slate-900 text-xl">favorite</span>

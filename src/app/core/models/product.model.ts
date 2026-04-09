@@ -1,40 +1,35 @@
+export interface ProductVariation {
+  colorName: string;
+  colorValue: string;
+  defaultImage: string;
+  variationImgs: string[];
+  isDefault: boolean;
+  stock: number;
+}
+
 export interface Product {
   _id: string;
   name: string;
   description: string;
   price: number;
-  defaultImg: string;
-  images?: string[];
+  stock: number;
   category: string;
-  // category: string | Category;
-  stock?: number;
-  // variations?: ProductVariation[];
-  featured?: boolean,
-  visible?: boolean,
-  deleted?: boolean,
+  variations: ProductVariation[];
+  featured?: boolean;
+  visible?: boolean;
+  deleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  // Computed properties for backward compatibility
+  defaultImg?: string;
+  images?: string[];
 }
-
-// export interface ProductVariation {
-//   _id: string;
-//   name: string;
-//   price?: number;
-//   stock?: number;
-// }
 
 export interface Category {
   _id: string;
   name: string;
   description?: string;
   image?: string;
-}
-
-export interface ProductFilters {
-  category?: string;
-  search?: string;
-  minPrice?: number;
-  maxPrice?: number;
 }
 
 export interface ProductsResponse {
@@ -50,4 +45,36 @@ export interface ProductResponse {
 export interface CategoriesResponse {
   message: string;
   data: Category[];
+}
+
+export interface ProductFilters {
+  category?: string;
+  search?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+// Helper function to get default image from variations
+export function getProductDefaultImage(product: Product): string {
+  const defaultVariation = product.variations?.find(v => v.isDefault);
+  return defaultVariation?.defaultImage || product.variations?.[0]?.defaultImage || 'https://via.placeholder.com/300?text=No+Image';
+}
+
+// Helper function to get all images from variations
+export function getProductImages(product: Product): string[] {
+  if (!product.variations || product.variations.length === 0) {
+    return [];
+  }
+  
+  const allImages: string[] = [];
+  product.variations.forEach(variation => {
+    if (variation.defaultImage) {
+      allImages.push(variation.defaultImage);
+    }
+    if (variation.variationImgs) {
+      allImages.push(...variation.variationImgs);
+    }
+  });
+  
+  return allImages;
 }
