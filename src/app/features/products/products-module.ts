@@ -7,9 +7,10 @@ import { ProductDetailsComponent } from './product-details/product-details';
 import { BlobBackgroundComponent } from '../../shared/components/blob-background/blob-background';
 import { ProductCard } from '../../shared/components/product-card/product-card';
 import { SearchBar } from '../../shared/components/search-bar/search-bar';
+import { ImgFallbackDirective } from '../../shared/directives/img-fallback.directive';
 
 @NgModule({
   declarations: [ProductListComponent, ProductDetailsComponent],
-  imports: [CommonModule, RouterModule, FormsModule, BlobBackgroundComponent, ProductCard, SearchBar],
+  imports: [CommonModule, RouterModule, FormsModule, BlobBackgroundComponent, ProductCard, SearchBar, ImgFallbackDirective],
 })
 export class ProductsModule {}

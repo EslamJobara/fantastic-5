@@ -43,7 +43,7 @@ export class SearchBar implements OnInit, OnDestroy {
   ngOnInit() {
     // Setup debounced search
     this.searchSubscription = this.searchSubject.pipe(
-      debounceTime(1000), // Wait 1 second after user stops typing
+      debounceTime(400), // Wait 400ms after user stops typing
       distinctUntilChanged() // Only emit if value changed
     ).subscribe(searchTerm => {
       this.performSearch(searchTerm);

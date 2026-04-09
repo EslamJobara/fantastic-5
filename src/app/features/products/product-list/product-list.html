@@ -52,22 +52,40 @@
               <!-- All Categories -->
               <label 
                 (click)="filterByCategory(null)"
-                class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
-                <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
-                  <div class="w-2.5 h-2.5 bg-primary rounded-sm transition-opacity" [class.opacity-100]="selectedCategory === null" [class.opacity-0]="selectedCategory !== null"></div>
+                class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg transition-all"
+                [class.bg-blue-50]="isCategorySelected(null)">
+                <div class="w-5 h-5 rounded border-2 transition-all flex items-center justify-center"
+                     [class.bg-blue-600]="isCategorySelected(null)"
+                     [class.border-blue-600]="isCategorySelected(null)"
+                     [class.border-slate-300]="!isCategorySelected(null)">
+                  <span class="material-symbols-outlined text-[14px] text-white font-black transition-opacity" 
+                        [class.opacity-100]="isCategorySelected(null)" 
+                        [class.opacity-0]="!isCategorySelected(null)">check</span>
                 </div>
-                <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">All Products</span>
+                <span class="text-sm transition-colors" 
+                      [class.text-blue-700]="isCategorySelected(null)" 
+                      [class.font-bold]="isCategorySelected(null)"
+                      [class.text-slate-600]="!isCategorySelected(null)">All Products</span>
               </label>
               
               <!-- Dynamic Categories -->
               @for (category of categories; track category._id) {
                 <label 
                   (click)="filterByCategory(category._id)"
-                  class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg">
-                  <div class="w-5 h-5 rounded ghost-border group-hover:border-primary transition-colors flex items-center justify-center">
-                    <div class="w-2.5 h-2.5 bg-primary rounded-sm transition-opacity" [class.opacity-100]="selectedCategory === category._id" [class.opacity-0]="selectedCategory !== category._id"></div>
+                  class="flex items-center gap-3 group cursor-pointer tonal-shift p-2 rounded-lg transition-all"
+                  [class.bg-blue-50]="isCategorySelected(category._id)">
+                  <div class="w-5 h-5 rounded border-2 transition-all flex items-center justify-center"
+                       [class.bg-blue-600]="isCategorySelected(category._id)"
+                       [class.border-blue-600]="isCategorySelected(category._id)"
+                       [class.border-slate-300]="!isCategorySelected(category._id)">
+                    <span class="material-symbols-outlined text-[14px] text-white font-black transition-opacity" 
+                          [class.opacity-100]="isCategorySelected(category._id)" 
+                          [class.opacity-0]="!isCategorySelected(category._id)">check</span>
                   </div>
-                  <span class="text-on-surface-variant group-hover:text-on-surface transition-colors">{{ category.name }}</span>
+                  <span class="text-sm transition-colors" 
+                        [class.text-blue-700]="isCategorySelected(category._id)" 
+                        [class.font-bold]="isCategorySelected(category._id)"
+                        [class.text-slate-600]="!isCategorySelected(category._id)">{{ category.name }}</span>
                 </label>
               }
             </div>
@@ -130,20 +148,51 @@
               </app-product-card>
             }
           </div>
+
+          <!-- Toast Notification -->
+          <div *ngIf="showToast" 
+               class="fixed bottom-8 left-1/2 -translate-x-1/2 glass-card border-l-4 border-l-primary py-4 px-8 rounded-2xl shadow-2xl z-[100] animate-fade-in-up flex items-center gap-4">
+            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-lg">check_circle</span>
+            </div>
+            <div>
+              <p class="font-black text-on-surface tracking-tight">System Updated</p>
+              <p class="text-xs text-on-surface-variant">Item successfully synchronized with your cart</p>
+            </div>
+          </div>
         }
       </div>
 
       <!-- Pagination -->
-      <div class="mt-20 flex justify-center items-center gap-4">
-        <button class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all tonal-shift">
+      <div *ngIf="totalPages > 1" class="mt-20 flex justify-center items-center gap-4">
+        <!-- Previous Button -->
+        <button 
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all tonal-shift disabled:opacity-30 disabled:cursor-not-allowed">
           <span class="material-symbols-outlined">chevron_left</span>
         </button>
+
         <div class="flex items-center gap-2">
-          <button class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-on-primary font-bold shadow-primary">1</button>
-          <button class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high font-bold transition-all tonal-shift">2</button>
-          <button class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high font-bold transition-all tonal-shift">3</button>
+          <button 
+            *ngFor="let page of getPages()"
+            (click)="changePage(page)"
+            class="w-12 h-12 flex items-center justify-center rounded-full font-bold transition-all tonal-shift"
+            [class.bg-primary]="currentPage === page"
+            [class.text-on-primary]="currentPage === page"
+            [class.shadow-primary]="currentPage === page"
+            [class.bg-surface-container]="currentPage !== page"
+            [class.text-on-surface]="currentPage !== page"
+            [class.hover:bg-surface-container-high]="currentPage !== page">
+            {{ page }}
+          </button>
         </div>
-        <button class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all tonal-shift">
+
+        <!-- Next Button -->
+        <button 
+          (click)="changePage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all tonal-shift disabled:opacity-30 disabled:cursor-not-allowed">
           <span class="material-symbols-outlined">chevron_right</span>
         </button>
       </div>

@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,10 +14,12 @@ export class Navbar implements OnInit {
   showSearchBar = true;
   isLoggedIn = false;
   showUserMenu = false;
+  cartItemCount = 0;
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private cartService: CartService
   ) {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
@@ -30,6 +33,11 @@ export class Navbar implements OnInit {
     // Check login status
     this.isLoggedIn = this.authService.isLoggedIn();
     
+    // Subscribe to cart changes
+    this.cartService.cart$.subscribe(cart => {
+      this.cartItemCount = cart.items.reduce((count, item) => count + item.quantity, 0);
+    });
+
     // Subscribe to auth changes
     this.authService.currentUser$.subscribe(user => {
       this.isLoggedIn = !!user || this.authService.isLoggedIn();
@@ -60,7 +68,8 @@ export class Navbar implements OnInit {
   }
 
   onSearch(query: string) {
-    console.log('Search query:', query);
-    // Add your search logic here
+    if (query.trim()) {
+      this.router.navigate(['/products'], { queryParams: { search: query } });
+    }
   }
 }

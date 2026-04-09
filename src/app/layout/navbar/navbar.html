@@ -18,9 +18,14 @@
         </app-search-bar>
       </div>
       <div class="flex items-center gap-2">
-        <button class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95"
+        <button class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95 relative"
           routerLink="/cart">
           <span class="material-symbols-outlined text-on-surface-variant">shopping_cart</span>
+          <!-- Cart Badge -->
+          <span *ngIf="cartItemCount > 0" 
+            class="absolute -top-1 -right-1 w-5 h-5 bg-blue-600 text-white text-[10px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-white ring-2 ring-blue-600/20 animate-bounce-subtle">
+            {{ cartItemCount }}
+          </span>
         </button>
 
         <!-- User Menu -->

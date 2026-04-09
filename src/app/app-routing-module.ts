@@ -22,6 +22,7 @@ const routes: Routes = [
   { path: 'checkout', component: CheckoutPageComponent, canActivate: [authGuard] },
   { path: 'orders', component: OrderHistoryComponent, canActivate: [authGuard] },
   { path: 'info', component: InfoPage },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

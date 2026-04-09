@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, of, delay } from 'rxjs';
+import { BehaviorSubject, Observable, tap, of, delay, map, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ProductService, Product } from './product.service';
 
 export interface CartItem {
   id: string;
@@ -34,44 +35,18 @@ export class CartService {
   
   public cart$ = this.cartSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private productService: ProductService
+  ) {
     this.loadCart();
   }
 
   /**
-   * Mock Data - بيانات تجريبية
+   * Mock Data - بيانات تجريبية أولية
    */
   private getInitialMockCart(): Cart {
-    const items: CartItem[] = [
-      {
-        id: '1',
-        productId: 'prod-1',
-        name: 'Spectre Pro M1 Max',
-        description: '32GB RAM / 1TB SSD / Space Grey',
-        price: 1899.00,
-        quantity: 1,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBkrEDDnCQK-96zYo5sji8hrg5rojSiSvPKyTngIv6sCJYqgkiYS0iHtrUyVKizGZWECscVxbdy-eNu5LwXVdvdoFzp5zbHkYM-nMHJWlRF2e3txHlvFITv98n2IJAiIDZbGKOODVVZ6PxiLd5iOoCZIQgETTFOCrDNOZOwHbmpP0v9nuoxNN2A5D6qgOIHGIz78dpYWD8LZ87T2bwRbni77COBjIk-WINwb51rb_RY0ywaPreHznxAoahtvYC6PnBkIfhVVC1Km9qn'
-      },
-      {
-        id: '2',
-        productId: 'prod-2',
-        name: 'Acoustic Precision X2',
-        description: 'Active Noise Cancelling / Bluetooth 5.2',
-        price: 450.00,
-        quantity: 1,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB-cnuzihNTytV8qi60AwQcewIG-bznRoGc-8yvMACFPA5S6tWfppvF6j7Y0BSeChRP8Jtl2F5TE1JhzRs7ID6fDUTMujL9OY1MnTH4typfH7DChfNp8G7d3NBNirkz2_hzYGSr2Us9tnCfXqvNYiR6l8NHa5YDQHhqsawPHCbHyp9CXU1rd_6WKh5MPB3rh7JzzCqo8fe_Rftpsw5Cw1p97O1l7hK7IOTj9Co4R1FJFycu9tAh4RVOQk2CV9ZFb_lW1VrM0ei1hORD'
-      },
-      {
-        id: '3',
-        productId: 'prod-3',
-        name: 'Nexus Phone 15 Pro',
-        description: '256GB / Ceramic White',
-        price: 1101.00,
-        quantity: 1,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDGH-xM0vgecRbPAxN7pqq7l1zYYyrDEXrFIBJkgaYvuzD0AOPk4rAzOG99eWAmwXiq1VG_MhAMTLI7QKAEo_h__LxozVKYN3nOOy3tKarXkRNvm6bC1iGEIneYtxIHY0y650J-5CZlfY73CkTAR5Il8gn4u6KSWVHCSqHo1_NWvuQB-i1uTLOhk3WZfDZVQASg1vte7C3sJNS-SrRW97PYsujjYjEK-_Ei_NE3JOmtQGERk-f51w8DKWKmO7cHDGmIoOzUbQdvQEKu'
-      }
-    ];
-
+    const items: CartItem[] = []; // نبدأ بسلة فاضية عشان نختبر الإضافة بجد
     return this.calculateCart(items);
   }
 
@@ -81,7 +56,7 @@ export class CartService {
   private calculateCart(items: CartItem[]): Cart {
     const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const tax = subtotal * 0.1; // 10% tax
-    const shipping = subtotal > 1000 ? 0 : 50; // Free shipping over $1000
+    const shipping = subtotal > 1000 || subtotal === 0 ? 0 : 50; 
     const total = subtotal + tax + shipping;
 
     return {
@@ -98,12 +73,10 @@ export class CartService {
    */
   loadCart(): void {
     if (this.useMockData) {
-      // Mock: استخدام البيانات التجريبية
       console.log('📦 Using Mock Cart Data');
       return;
     }
 
-    // Real API Call
     this.http.get<Cart>(`${this.apiUrl}`).subscribe({
       next: (cart) => this.cartSubject.next(cart),
       error: (error) => console.error('Failed to load cart', error)
@@ -115,10 +88,43 @@ export class CartService {
    */
   addToCart(productId: string, quantity: number = 1): Observable<Cart> {
     if (this.useMockData) {
-      // Mock: إضافة منتج للبيانات التجريبية
-      return of(this.cartSubject.value).pipe(
-        delay(500), // محاكاة تأخير الشبكة
-        tap(() => console.log('📦 Mock: Added to cart'))
+      // Mock: جلب المنتج وإضافته فعلياً
+      return this.productService.getProductById(productId).pipe(
+        delay(300),
+        map(response => {
+          const product = (Array.isArray(response.data) ? response.data[0] : response.data) as any;
+          const currentCart = this.cartSubject.value;
+          
+          // هل المنتج موجود أصلاً؟
+          const existingItemIndex = currentCart.items.findIndex(item => item.productId === productId);
+          
+          let updatedItems = [...currentCart.items];
+          
+          if (existingItemIndex > -1) {
+            // تحديث الكمية
+            updatedItems[existingItemIndex] = {
+              ...updatedItems[existingItemIndex],
+              quantity: updatedItems[existingItemIndex].quantity + quantity
+            };
+          } else {
+            // إضافة منتج جديد
+            const newItem: CartItem = {
+              id: Math.random().toString(36).substr(2, 9),
+              productId: product._id,
+              name: product.name,
+              description: product.description.substring(0, 50) + '...',
+              price: product.price,
+              quantity: quantity,
+              image: product.image
+            };
+            updatedItems.push(newItem);
+          }
+          
+          const updatedCart = this.calculateCart(updatedItems);
+          this.cartSubject.next(updatedCart);
+          console.log('📦 Mock: Successfully added real product to cart', updatedCart);
+          return updatedCart;
+        })
       );
     }
 
@@ -134,7 +140,6 @@ export class CartService {
    */
   updateQuantity(itemId: string, quantity: number): Observable<Cart> {
     if (this.useMockData) {
-      // Mock: تحديث الكمية في البيانات التجريبية
       const currentCart = this.cartSubject.value;
       const updatedItems = currentCart.items.map(item => 
         item.id === itemId ? { ...item, quantity } : item
@@ -150,7 +155,6 @@ export class CartService {
       );
     }
 
-    // Real API Call
     return this.http.put<Cart>(`${this.apiUrl}/items/${itemId}`, { quantity })
       .pipe(
         tap(cart => this.cartSubject.next(cart))
@@ -162,7 +166,6 @@ export class CartService {
    */
   removeItem(itemId: string): Observable<Cart> {
     if (this.useMockData) {
-      // Mock: حذف المنتج من البيانات التجريبية
       const currentCart = this.cartSubject.value;
       const updatedItems = currentCart.items.filter(item => item.id !== itemId);
       const updatedCart = this.calculateCart(updatedItems);
@@ -176,7 +179,6 @@ export class CartService {
       );
     }
 
-    // Real API Call
     return this.http.delete<Cart>(`${this.apiUrl}/items/${itemId}`)
       .pipe(
         tap(cart => this.cartSubject.next(cart))
@@ -188,14 +190,11 @@ export class CartService {
    */
   applyPromoCode(code: string): Observable<Cart> {
     if (this.useMockData) {
-      // Mock: محاكاة تطبيق كود خصم
       const currentCart = this.cartSubject.value;
-      
-      // أكواد تجريبية
       const validCodes: { [key: string]: number } = {
-        'SAVE10': 0.1,  // 10% discount
-        'SAVE20': 0.2,  // 20% discount
-        'FREE50': 50    // $50 off
+        'SAVE10': 0.1,
+        'SAVE20': 0.2,
+        'FREE50': 50
       };
 
       if (validCodes[code.toUpperCase()]) {
@@ -203,7 +202,7 @@ export class CartService {
         const discountAmount = discount < 1 ? currentCart.subtotal * discount : discount;
         const updatedCart = {
           ...currentCart,
-          total: currentCart.total - discountAmount
+          total: Math.max(0, currentCart.total - discountAmount)
         };
 
         return of(updatedCart).pipe(
@@ -214,17 +213,15 @@ export class CartService {
           })
         );
       } else {
-        // كود خاطئ
         return of(currentCart).pipe(
           delay(500),
-          tap(() => {
-            throw new Error('Invalid promo code');
+          map(() => {
+            throw { error: { message: 'Invalid promo code' } };
           })
         );
       }
     }
 
-    // Real API Call
     return this.http.post<Cart>(`${this.apiUrl}/promo`, { code })
       .pipe(
         tap(cart => this.cartSubject.next(cart))
@@ -236,7 +233,6 @@ export class CartService {
    */
   clearCart(): Observable<void> {
     if (this.useMockData) {
-      // Mock: مسح البيانات التجريبية
       const emptyCart: Cart = {
         items: [],
         subtotal: 0,
@@ -254,7 +250,6 @@ export class CartService {
       );
     }
 
-    // Real API Call
     return this.http.delete<void>(`${this.apiUrl}/clear`)
       .pipe(
         tap(() => this.cartSubject.next({

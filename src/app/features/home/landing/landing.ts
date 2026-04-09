@@ -1,17 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ElementRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
-import { ProductService, Product as ApiProduct } from '../../../core/services/product.service';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ElementRef, AfterViewInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { ProductService, Product } from '../../../core/services/product.service';
 import { CategoryService, Category } from '../../../core/services/category.service';
-
-export interface Product {
-  name: string;
-  desc?: string;
-  price: string;
-  category: string;
-  badge: string;
-  img: string;
-}
+import { CartService } from '../../../core/services/cart.service';
+import { Router } from '@angular/router';
 
 export interface HeroSlide {
+  productId: string;
   badge: string;
   badgeClass: string;
   hasAnimation?: boolean;
@@ -40,60 +34,28 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   transitionEnabled = true;
   private autoAdvanceTimer: any;
 
-  // Hero Slides Data - جاهز للربط بالباك
-  readonly heroSlides: HeroSlide[] = [
-    {
-      badge: 'NEW ARRIVAL',
-      badgeClass: 'bg-primary/10 text-primary',
-      hasAnimation: true,
-      title: 'Zenith',
-      titleGradient: 'Pro M3.',
-      description: 'Engineered for curators who demand atmospheric precision. 24-hour battery life encased in aerospace-grade titanium.',
-      primaryButton: 'Shop Zenith',
-      secondaryButton: 'Specifications',
-      image: '/pics/lap.png',
-      imageAlt: 'Zenith Pro M3 Laptop',
-      imageClass: 'w-full'
-    },
-    {
-      badge: 'PURE SOUND',
-      badgeClass: 'bg-on-surface/10 text-on-surface',
-      title: 'Sonic',
-      titleGradient: 'Ultra X.',
-      description: 'Experience atmospheric silence with industry-leading active noise cancellation and spatial acoustic drivers.',
-      primaryButton: 'Explore Sound',
-      image: '/pics/headphone.png',
-      imageAlt: 'Sonic Ultra X Headphones',
-      imageClass: 'w-3/4'
-    },
-    {
-      badge: 'PRECISION TRACKING',
-      badgeClass: 'bg-primary/10 text-primary',
-      title: 'Curator',
-      titleGradient: 'Watch.',
-      description: 'The ultimate companion for the modern professional. Seamlessly syncing your digital life with sapphire-glass elegance.',
-      primaryButton: 'Pre-order Now',
-      image: '/pics/watch.png',
-      imageAlt: 'Curator Watch II',
-      imageClass: 'w-2/3'
-    }
-  ];
+  // Hero Slides Data
+  heroSlides: HeroSlide[] = [];
 
   // Filter - API Data
   categories: Category[] = [];
-  allProducts: ApiProduct[] = [];
+  allProducts: Product[] = [];
   selectedCategoryId: string | null = null;
   activeFilterIndex = 0;
   cardsVisible = true;
   pillWidth = 0;
   pillOffset = 6;
 
+  // Product Slider context
+  @ViewChild('productGrid') productGrid!: ElementRef;
   @ViewChildren('filterBtn') filterBtns!: QueryList<ElementRef<HTMLButtonElement>>;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private productService: ProductService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private cartService: CartService,
+    public router: Router
   ) {}
 
   ngAfterViewInit() {
@@ -115,7 +77,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       next: (response) => {
         this.categories = response.data;
         this.cdr.detectChanges();
-        // Update pill after categories load
         setTimeout(() => this.updatePill(0), 100);
       },
       error: (error) => {
@@ -128,6 +89,9 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.productService.getProducts().subscribe({
       next: (response) => {
         this.allProducts = response.data;
+        if (this.allProducts.length > 0) {
+          this.generateHeroSlides();
+        }
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -136,27 +100,69 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  private generateHeroSlides() {
+    const productsForHero = this.allProducts.slice(0, 3);
+    
+    this.heroSlides = productsForHero.map((product, index) => {
+      const nameParts = product.name.split(' ');
+      const title = nameParts[0];
+      const titleGradient = nameParts.slice(1).join(' ');
+
+      return {
+        productId: product._id,
+        badge: index === 0 ? 'FEATURED PRODUCT' : 'NEW ARRIVAL',
+        badgeClass: index === 0 ? 'bg-primary/10 text-primary' : 'bg-on-surface/10 text-on-surface',
+        hasAnimation: index === 0,
+        title: title,
+        titleGradient: titleGradient || 'Edition',
+        description: product.description.length > 120 
+          ? product.description.substring(0, 120) + '...' 
+          : product.description,
+        primaryButton: 'Buy Now - EGP ' + product.price,
+        image: product.image,
+        imageAlt: product.name,
+        imageClass: index === 0 ? 'w-full' : 'w-3/4'
+      };
+    });
+  }
+
+  buyNow(productId: string) {
+    this.cartService.addToCart(productId).subscribe({
+      next: () => {
+        this.router.navigate(['/cart']);
+      },
+      error: (err) => console.error('Failed to buy now', err)
+    });
+  }
+
+  // New: Scroll logic for products lineup
+  scrollLineup(direction: number) {
+    const container = this.productGrid.nativeElement;
+    const scrollAmount = container.offsetWidth * 0.8; // Scroll 80% of view
+    container.scrollBy({
+      left: direction * scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+
   private updatePill(index: number) {
     const btns = this.filterBtns?.toArray();
     if (!btns?.length) return;
     const btn = btns[index]?.nativeElement;
     if (!btn) return;
+    
     this.pillWidth = btn.offsetWidth;
-    let offset = 6;
-    for (let i = 0; i < index; i++) {
-      offset += btns[i].nativeElement.offsetWidth;
-    }
-    this.pillOffset = offset;
+    this.pillOffset = btn.offsetLeft;
     this.cdr.detectChanges();
   }
 
-  get filteredProducts(): ApiProduct[] {
+  get filteredProducts(): Product[] {
     const filtered = this.selectedCategoryId
       ? this.allProducts.filter(p => p.category === this.selectedCategoryId)
       : this.allProducts;
     
-    // Return only first 4 products
-    return filtered.slice(0, 4);
+    // Show up to 10 products in the slider
+    return filtered.slice(0, 10);
   }
 
   setFilter(categoryId: string | null, index: number) {
@@ -168,8 +174,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedCategoryId = categoryId;
       this.activeFilterIndex = index;
       this.cardsVisible = true;
+      // Reset scroll when filter changes
+      if (this.productGrid) {
+        this.productGrid.nativeElement.scrollTo({ left: 0, behavior: 'auto' });
+      }
       this.cdr.detectChanges();
-    }, 200);
+    }, 50);
   }
 
   get trackTransform(): string {
@@ -221,7 +231,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     clearInterval(this.autoAdvanceTimer);
   }
 
-  // Helper للحصول على الـ gradient class
   getTitleGradientClass(index: number): string {
     const gradients = [
       'from-slate-400 to-slate-600',
