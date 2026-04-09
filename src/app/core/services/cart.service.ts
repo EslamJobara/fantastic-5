@@ -80,9 +80,11 @@ export class CartService {
 
     return forkJoin(productRequests).pipe(
       map(results => {
-        const items: UICartItem[] = results
+        const itemsMap = new Map<string, UICartItem>();
+        
+        results
           .filter(result => result.product !== null)
-          .map(result => {
+          .forEach(result => {
             const { cartItem, product } = result;
             
             // Default values
@@ -120,17 +122,31 @@ export class CartService {
               description = `${description} - ${variationName}`;
             }
 
-            return {
-              id: cartItem.product._id || (cartItem.product as any),
-              productId: cartItem.product._id || (cartItem.product as any),
-              name: product!.name,
-              description: description,
-              price: product!.price,
-              quantity: cartItem.quantity,
-              image: image,
-              variationId: cartItem.variationId
-            };
+            const productId = cartItem.product._id || (cartItem.product as any);
+            // إنشاء مفتاح فريد للمنتج + variation
+            const uniqueKey = `${productId}_${cartItem.variationId || 'no-variation'}`;
+            
+            // لو المنتج موجود، نجمع الكمية
+            if (itemsMap.has(uniqueKey)) {
+              const existingItem = itemsMap.get(uniqueKey)!;
+              existingItem.quantity += cartItem.quantity;
+            } else {
+              // لو مش موجود، نضيفه
+              itemsMap.set(uniqueKey, {
+                id: productId,
+                productId: productId,
+                name: product!.name,
+                description: description,
+                price: product!.price,
+                quantity: cartItem.quantity,
+                image: image,
+                variationId: cartItem.variationId
+              });
+            }
           });
+
+        // تحويل الـ Map لـ Array
+        const items: UICartItem[] = Array.from(itemsMap.values());
 
         const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const tax = 0; // No tax
