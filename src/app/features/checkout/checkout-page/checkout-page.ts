@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService, Cart } from '../../../core/services/cart.service';
@@ -31,7 +31,8 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
   constructor(
     private cartService: CartService,
     private authService: AuthService,
-    private router: Router
+    public router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +41,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(cart => {
         this.cart = cart;
+        this.cdr.detectChanges();
         if (cart.items.length === 0 && !this.orderSuccess) {
           // لو السلة فضيت فجأة نرجعه للكارت
           // this.router.navigate(['/cart']);
@@ -55,6 +57,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
           this.shippingInfo.fullName = user.fullName || user.userName || '';
           this.shippingInfo.email = user.email || '';
           this.shippingInfo.phone = user.phone || '';
+          this.cdr.detectChanges();
         }
       });
   }
@@ -74,11 +77,13 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     }
 
     this.isProcessing = true;
+    this.cdr.detectChanges();
     
     // محاكاة إرسال الطلب (بما أن الباك إند اوردر لسه مش جاهز بالكامل)
     setTimeout(() => {
       this.isProcessing = false;
       this.orderSuccess = true;
+      this.cdr.detectChanges();
       
       // مسح السلة بعد النجاح
       this.cartService.clearCart().subscribe();

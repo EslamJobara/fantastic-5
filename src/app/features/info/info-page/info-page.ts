@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { BlobBackgroundComponent } from '../../../shared/components/blob-background/blob-background';
 
 @Component({
   selector: 'app-info-page',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, BlobBackgroundComponent],
   templateUrl: './info-page.html',
   styleUrl: './info-page.css',
 })
-export class InfoPage {
+export class InfoPageComponent {
    
   groupPhoto = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
 

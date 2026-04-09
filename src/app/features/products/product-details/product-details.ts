@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService, Product } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
@@ -18,15 +18,20 @@ export class ProductDetailsComponent implements OnInit {
   relatedProducts: Product[] = [];
   quantity: number = 1;
   showToast = false;
+  isAdding = false;
+
+  @ViewChild('relatedGrid') relatedGrid!: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    // ... rest of init ...
     this.route.paramMap.subscribe(params => {
       this.isLoading = true;
       const id = params.get('id');
@@ -94,14 +99,38 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
+  scrollRelated(direction: number) {
+    if (this.relatedGrid) {
+      const container = this.relatedGrid.nativeElement;
+      const scrollAmount = 300; // Adjust as needed
+      container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+
   addToCart() {
     if (this.product) {
+      this.isAdding = true;
+      this.cdr.detectChanges();
+
       this.cartService.addToCart(this.product._id, this.quantity).subscribe({
         next: () => {
+          this.isAdding = false;
           this.showToast = true;
-          setTimeout(() => this.showToast = false, 3000);
+          this.cdr.detectChanges();
+          setTimeout(() => {
+            this.showToast = false;
+            this.cdr.detectChanges();
+          }, 3000);
         },
-        error: (err) => console.error('Failed to add to cart', err)
+        error: (err) => {
+          this.isAdding = false;
+          this.cdr.detectChanges();
+          console.error('Failed to add to cart', err);
+          alert('Failed to add to cart. Please try again.');
+        }
       });
     }
   }

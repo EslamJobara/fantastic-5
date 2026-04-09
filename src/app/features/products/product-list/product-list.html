@@ -143,6 +143,7 @@
               <app-product-card 
                 [product]="product"
                 [showActions]="true"
+                [isAdding]="loadingProducts.has(product._id)"
                 (addToCart)="handleAddToCart($event)"
                 (viewDetails)="handleViewDetails($event)">
               </app-product-card>

@@ -15,7 +15,7 @@ import { ProductsModule } from './features/products/products-module';
 import { OrdersModule } from './features/orders/orders-module';
 import { SearchBar } from './shared/components/search-bar/search-bar';
 import { tokenInterceptor } from './core/interceptors/token-interceptor';
-import { InfoModule } from './features/info/info-module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [App, Navbar, Footer],
@@ -23,6 +23,7 @@ import { InfoModule } from './features/info/info-module';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
     AppRoutingModule,
     AuthModule,
     CartModule,
@@ -30,7 +31,6 @@ import { InfoModule } from './features/info/info-module';
     HomeModule,
     ProductsModule,
     OrdersModule,
-    InfoModule,
     SearchBar
   ],
   providers: [

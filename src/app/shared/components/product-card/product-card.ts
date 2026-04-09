@@ -16,6 +16,7 @@ export class ProductCard {
   @Input() showViewDetails: boolean = true;
   @Input() addToCartLabel: string = 'Add to Cart';
   @Input() viewDetailsLabel: string = 'View Details';
+  @Input() isAdding: boolean = false;
   
   @Output() addToCart = new EventEmitter<any>();
   @Output() viewDetails = new EventEmitter<any>();

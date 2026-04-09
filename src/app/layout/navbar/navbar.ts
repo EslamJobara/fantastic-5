@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth.service';
@@ -19,23 +19,22 @@ export class Navbar implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private cartService: CartService
+    private cartService: CartService,
+    private cdr: ChangeDetectorRef
   ) {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
-        // Hide search bar on products page
         this.showSearchBar = !event.url.includes('/products');
       });
   }
 
   ngOnInit() {
-    // Check login status
     this.isLoggedIn = this.authService.isLoggedIn();
     
-    // Subscribe to cart changes
     this.cartService.cart$.subscribe(cart => {
       this.cartItemCount = cart.items.reduce((count, item) => count + item.quantity, 0);
+      this.cdr.detectChanges();
     });
 
     // Subscribe to auth changes

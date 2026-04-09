@@ -45,6 +45,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   cardsVisible = true;
   pillWidth = 0;
   pillOffset = 6;
+  showToast = false;
+  loadingProducts: Set<string> = new Set();
 
   // Product Slider context
   @ViewChild('productGrid') productGrid!: ElementRef;
@@ -135,10 +137,39 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  viewDetails(productId: string) {
+    this.router.navigate(['/products', productId]);
+  }
+
+  handleAddToCart(product: Product) {
+    if (this.loadingProducts.has(product._id)) return;
+    
+    this.loadingProducts.add(product._id);
+    this.cdr.detectChanges();
+
+    this.cartService.addToCart(product._id).subscribe({
+      next: () => {
+        this.loadingProducts.delete(product._id);
+        this.showToast = true;
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.showToast = false;
+          this.cdr.detectChanges();
+        }, 3000);
+      },
+      error: (err: any) => {
+        this.loadingProducts.delete(product._id);
+        console.error('Failed to add to cart', err);
+        this.cdr.detectChanges();
+        alert('Failed to add product to cart. Please try again.');
+      }
+    });
+  }
+
   // New: Scroll logic for products lineup
   scrollLineup(direction: number) {
     const container = this.productGrid.nativeElement;
-    const scrollAmount = container.offsetWidth * 0.8; // Scroll 80% of view
+    const scrollAmount = 300; // Adjust as needed
     container.scrollBy({
       left: direction * scrollAmount,
       behavior: 'smooth'

@@ -22,6 +22,7 @@ export class ProductListComponent implements OnInit {
   maxPrice: number | null = null;
   sortBy: string = 'newest'; // Default sort
   showToast = false;
+  loadingProducts: Set<string> = new Set();
   
   // Pagination
   currentPage: number = 1;
@@ -111,8 +112,14 @@ export class ProductListComponent implements OnInit {
   }
 
   handleAddToCart(product: Product) {
+    if (this.loadingProducts.has(product._id)) return;
+    
+    this.loadingProducts.add(product._id);
+    this.cdr.detectChanges();
+
     this.cartService.addToCart(product._id).subscribe({
       next: () => {
+        this.loadingProducts.delete(product._id);
         this.showToast = true;
         this.cdr.detectChanges();
         setTimeout(() => {
@@ -120,7 +127,12 @@ export class ProductListComponent implements OnInit {
           this.cdr.detectChanges();
         }, 3000);
       },
-      error: (err: any) => console.error('Failed to add to cart', err)
+      error: (err: any) => {
+        this.loadingProducts.delete(product._id);
+        console.error('Failed to add to cart', err);
+        this.cdr.detectChanges();
+        alert('Failed to add product to cart. Please try again.');
+      }
     });
   }
 
