@@ -5,19 +5,23 @@ export interface Product {
   price: number;
   defaultImg: string;
   images?: string[];
-  category: string | Category;
+  category: string;
+  // category: string | Category;
   stock?: number;
-  variations?: ProductVariation[];
+  // variations?: ProductVariation[];
+  featured?: boolean,
+  visible?: boolean,
+  deleted?: boolean,
   createdAt?: string;
   updatedAt?: string;
 }
 
-export interface ProductVariation {
-  _id: string;
-  name: string;
-  price?: number;
-  stock?: number;
-}
+// export interface ProductVariation {
+//   _id: string;
+//   name: string;
+//   price?: number;
+//   stock?: number;
+// }
 
 export interface Category {
   _id: string;
@@ -33,7 +37,6 @@ export interface ProductFilters {
   maxPrice?: number;
 }
 
-// API Response Types
 export interface ProductsResponse {
   message: string;
   data: Product[];

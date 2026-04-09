@@ -31,7 +31,7 @@
           (click)="goToProduct(product._id)"
           class="flex items-center gap-4 p-4 hover:bg-surface-container-high transition-colors cursor-pointer border-b border-white/20 last:border-b-0">
           <img 
-            [src]="product.image" 
+            [src]="product.defaultImg" 
             [alt]="product.name"
             class="w-12 h-12 object-cover rounded-lg"
             (error)="$event.target.src='https://via.placeholder.com/48?text=No+Image'"/>

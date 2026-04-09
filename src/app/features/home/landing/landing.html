@@ -1,8 +1,6 @@
 <app-blob-background />
 <main class="pt-20">
-  <!-- Hero Carousel Section -->
   <section class="relative h-[85vh] overflow-hidden">
-    <!-- Carousel Controls -->
     <button 
       (click)="moveSlide(-1)" 
       class="absolute left-8 top-1/2 -translate-y-1/2 z-40 w-12 h-12 flex items-center justify-center rounded-full glass-card text-on-surface hover:scale-110 shadow-ambient transition-all active:scale-95">
@@ -14,14 +12,12 @@
       <span class="material-symbols-outlined text-2xl leading-none">chevron_right</span>
     </button>
 
-    <!-- Slides Track -->
     <div class="flex h-full relative pointer-events-none"
          data-slider="track"
          [style.transition]="transitionEnabled ? 'transform 700ms ease-in-out' : 'none'"
          [style.transform]="trackTransform"
          (transitionend)="onTransitionEnd($event)">
 
-      <!-- CLONE: Last slide for seamless backward loop -->
       <div class="min-w-full h-full flex items-center" aria-hidden="true">
         <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
           <div class="lg:col-span-5 z-10">
@@ -49,7 +45,6 @@
         </div>
       </div>
 
-      <!-- Real Slides -->
       @for (slide of heroSlides; track $index) {
         <div class="min-w-full h-full flex items-center">
           <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
@@ -94,7 +89,6 @@
         </div>
       }
 
-      <!-- CLONE: First slide for seamless forward loop -->
       <div class="min-w-full h-full flex items-center" aria-hidden="true">
         <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
           <div class="lg:col-span-5 z-10">
@@ -136,7 +130,6 @@
       </div>
     </div>
 
-    <!-- Navigation Dots -->
     <div class="absolute bottom-12 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 bg-white/70 backdrop-blur-md border border-white/60 px-5 py-3 rounded-full shadow-ambient">
       @for (slide of [0, 1, 2]; track $index) {
         <button 
@@ -149,8 +142,6 @@
     </div>
   </section>
 
-
-  <!-- Featured Products -->
   <section class="py-32">
     <div class="max-w-7xl mx-auto px-8">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
@@ -159,11 +150,9 @@
           <h2 class="text-3xl font-black font-headline tracking-tighter">Explore the lineup.</h2>
         </div>
         <div class="relative inline-flex items-center bg-white shadow-ambient rounded-full p-1.5 w-fit">
-          <!-- sliding indicator -->
           <div class="absolute top-1.5 bottom-1.5 rounded-full bg-slate-900 transition-all duration-300 ease-out pointer-events-none"
                [style.width.px]="pillWidth"
                [style.left.px]="pillOffset"></div>
-          <!-- All Products Filter -->
           <button
             #filterBtn
             (click)="setFilter(null, 0)"
@@ -173,7 +162,6 @@
             [class.hover:text-slate-800]="selectedCategoryId !== null">
             All
           </button>
-          <!-- Category Filters from API -->
           @for (category of categories; track category._id; let i = $index) {
             <button
               #filterBtn
@@ -191,21 +179,16 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 transition-all duration-200"
            [class.opacity-0]="!cardsVisible"
            [class.-translate-y-2]="!cardsVisible">
-
         @for (product of filteredProducts; track product._id) {
           <app-product-card [product]="product"></app-product-card>
         }
-
       </div>
     </div>
   </section>
 
-  <!-- Bento Highlight -->
   <section class="py-24">
     <div class="max-w-7xl mx-auto px-8">
       <div class="grid grid-cols-1 md:grid-cols-3 grid-rows-2 gap-6 h-[600px]">
-
-        <!-- Big card -->
         <div class="md:col-span-2 md:row-span-2 bg-slate-900 rounded-[2.5rem] p-12 relative overflow-hidden text-white flex flex-col justify-end group">
           <img class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-[2s]" alt="Creative Station" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWwByWoF_czGMPp8nXiLTU80OLCCidq3mrxVLOqQ7hsmGij0XntunqD0QuhZo0Fb0EC4VPJT99zYrSf18FyuF28UZHiOdTpag-lF_PaipZJ-P2t0qX8PmHZ_-wcNLgAOAkXoVXgmJJIZmx37YIAVSj8jL_hbKTj1OjoqKT2vSieIDsf6ZIrCsjCQo9IJDPV6WmXXUIcJ_eG96ghEdRLHFyGWuP5XmvXfCzq-4zLSJIVgl3gww3zihnPaYEQNS1-0jUz7p42oJP1kSq"/>
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
@@ -216,24 +199,21 @@
           </div>
         </div>
 
-        <!-- Small card 1 -->
         <div class="glass-card rounded-[2.5rem] p-8 flex flex-col justify-center items-center text-center">
           <span class="material-symbols-outlined text-5xl mb-4 text-primary">bolt</span>
           <h4 class="text-xl font-bold mb-2">Ultra-Fast Delivery</h4>
           <p class="text-sm text-on-surface-variant opacity-80">Next-day precision, guaranteed.</p>
         </div>
 
-        <!-- Small card 2 -->
         <div class="glass-card rounded-[2.5rem] p-8 flex flex-col justify-center items-center text-center">
           <span class="material-symbols-outlined text-5xl mb-4 text-primary">verified_user</span>
           <h4 class="text-xl font-bold mb-2">3-Year Warranty</h4>
           <p class="text-sm text-on-surface-variant">Peace of mind for your precision tools.</p>
         </div>
-
       </div>
     </div>
   </section>
-  <!-- Newsletter Section -->
+
   <section class="px-8 pb-24">
     <div class="max-w-7xl mx-auto relative">
       <div class="absolute inset-0 bg-primary rounded-[2.5rem] blur-[2px] opacity-10"></div>
@@ -255,11 +235,3 @@
     </div>
   </section>
 </main>
-
-
-
-
-
-
-
-

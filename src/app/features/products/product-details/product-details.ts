@@ -35,7 +35,7 @@ export class ProductDetailsComponent implements OnInit {
                 this.product = response.data as unknown as Product;
             }
             if (this.product) {
-               this.selectedImage = this.product.image;
+               this.selectedImage = this.product.defaultImg || (this.product.images && this.product.images[0]) || '';
                this.loadRelatedProducts(this.product.category, this.product._id);
             }
           }
@@ -62,7 +62,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   increaseQuantity() {
-    if (this.product && this.quantity < this.product.stock) {
+    if (this.product && this.product.stock && this.quantity < this.product.stock) {
       this.quantity++;
     }
   }
