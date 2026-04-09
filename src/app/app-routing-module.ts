@@ -9,6 +9,7 @@ import { LandingComponent } from './features/home/landing/landing';
 import { OrderHistoryComponent } from './features/orders/order-history/order-history';
 import { authGuard } from './core/guards/auth-guard';
 import { guestGuard } from './core/guards/guest-guard';
+import { InfoPage } from './features/info/info-page/info-page'; 
 
 const routes: Routes = [ 
   { path: '', component: LandingComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'cart', component: CartPageComponent, canActivate: [authGuard] },
   { path: 'checkout', component: CheckoutPageComponent, canActivate: [authGuard] },
   { path: 'orders', component: OrderHistoryComponent, canActivate: [authGuard] },
+  { path: 'info', component: InfoPage },
 ];
 
 @NgModule({
