@@ -15,6 +15,7 @@ import { ProductsModule } from './features/products/products-module';
 import { OrdersModule } from './features/orders/orders-module';
 import { SearchBar } from './shared/components/search-bar/search-bar';
 import { tokenInterceptor } from './core/interceptors/token-interceptor';
+import { InfoModule } from './features/info/info-module';
 
 @NgModule({
   declarations: [App, Navbar, Footer],
@@ -29,6 +30,7 @@ import { tokenInterceptor } from './core/interceptors/token-interceptor';
     HomeModule,
     ProductsModule,
     OrdersModule,
+    InfoModule,
     SearchBar
   ],
   providers: [
