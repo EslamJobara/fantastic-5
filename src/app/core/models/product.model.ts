@@ -1,4 +1,5 @@
 export interface ProductVariation {
+  _id?: string;
   colorName: string;
   colorValue: string;
   defaultImage: string;
@@ -17,9 +18,10 @@ export interface Product {
   variations: ProductVariation[];
   featured?: boolean;
   visible?: boolean;
-  deleted?: boolean;
+  isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  __v?: number;
   // Computed properties for backward compatibility
   defaultImg?: string;
   images?: string[];
@@ -39,7 +41,7 @@ export interface ProductsResponse {
 
 export interface ProductResponse {
   message: string;
-  data: Product;
+  data: Product | Product[] | null;
 }
 
 export interface CategoriesResponse {

@@ -10,6 +10,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   image: string;
+  variationId?: string;
 }
 
 export interface Cart {

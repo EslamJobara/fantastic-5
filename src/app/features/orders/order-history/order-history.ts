@@ -83,17 +83,16 @@ export class OrderHistoryComponent implements OnInit {
   }
 
   formatPrice(price: number): string {
-    return `${price.toFixed(2)}`;
+    return `EGP ${price.toFixed(0)}`;
   }
 
   reorder(orderId: string): void {
     this.orderService.reorder(orderId).subscribe({
       next: () => {
-        alert('Items added to cart!');
+        console.log('Items added to cart!');
       },
       error: (error) => {
         console.error('Error reordering:', error);
-        alert('Failed to reorder. Please try again.');
       }
     });
   }

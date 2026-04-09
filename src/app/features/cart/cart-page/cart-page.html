@@ -5,8 +5,19 @@
     <p class="text-body-md text-on-surface-variant">Review your items before precision-engineered delivery.</p>
   </div>
 
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="flex flex-col justify-center items-center py-20 gap-4">
+      <div class="relative w-16 h-16">
+        <div class="absolute inset-0 border-4 rounded-full" style="border-color: rgba(0, 88, 190, 0.1);"></div>
+        <div class="absolute inset-0 border-4 border-transparent rounded-full animate-spin" style="border-top-color: #0058be;"></div>
+      </div>
+      <p class="text-on-surface-variant text-sm font-medium">Loading your cart...</p>
+    </div>
+  }
+
   <!-- Empty Cart State -->
-  @if (!hasItems) {
+  @if (!isLoading && !hasItems) {
     <div class="glass-card p-16 rounded-2xl text-center">
       <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4 block">shopping_cart</span>
       <h2 class="text-title-lg text-on-surface mb-2">Your cart is empty</h2>
@@ -19,13 +30,14 @@
   }
 
   <!-- Cart with Items -->
-  @if (hasItems) {
+  @if (!isLoading && hasItems) {
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
       <!-- Shopping Cart List -->
       <div class="lg:col-span-8 space-y-6">
         @for (item of cart.items; track item.id) {
           <div class="group relative glass-card p-6 rounded-xl flex flex-col md:flex-row gap-8 transition-all duration-300 hover:shadow-lg">
-            <div class="w-full md:w-48 h-48 rounded-lg overflow-hidden bg-white/60 flex items-center justify-center border border-white/50">
+            <div class="w-full md:w-48 h-48 rounded-lg overflow-hidden bg-white/60 flex items-center justify-center border border-white/50 cursor-pointer"
+                 (click)="goToProduct(item.productId)">
               <img 
                 [src]="item.image" 
                 [alt]="item.name"
@@ -35,10 +47,11 @@
             <div class="flex-1 flex flex-col justify-between py-2">
               <div class="flex justify-between">
                 <div>
-                  <h3 class="title-lg text-on-surface">{{ item.name }}</h3>
+                  <h3 class="title-lg text-on-surface cursor-pointer hover:text-primary transition-colors"
+                      (click)="goToProduct(item.productId)">{{ item.name }}</h3>
                   <p class="text-body-sm text-on-surface-variant mt-1">{{ item.description }}</p>
                 </div>
-                <span class="title-lg text-primary">EGP{{ item.price.toFixed(2) }}</span>
+                <span class="title-lg text-primary">{{ item.price | currency:'EGP':'symbol':'1.0-0' }}</span>
               </div>
               <div class="flex items-center justify-between mt-6">
                 <div class="flex items-center bg-white/40 border border-white/60 rounded-full p-1">
@@ -83,14 +96,10 @@
                 <span>EGP{{ cart.shipping.toFixed(2) }}</span>
               }
             </div>
-            <div class="flex justify-between text-on-surface-variant">
-              <span class="font-medium">Tax</span>
-              <span>EGP{{ cart.tax.toFixed(2) }}</span>
-            </div>
             <div class="h-px bg-white/40 my-4"></div>
             <div class="flex justify-between items-baseline">
               <span class="title-md text-on-surface">Total Price</span>
-              <span class="text-3xl font-extrabold tracking-tighter text-on-surface">EGP{{ cart.total.toFixed(2) }}</span>
+              <span class="text-3xl font-extrabold tracking-tighter text-on-surface">{{ cart.total | currency:'EGP':'symbol':'1.0-0' }}</span>
             </div>
           </div>
           <button 

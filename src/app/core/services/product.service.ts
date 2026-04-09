@@ -17,17 +17,50 @@ export class ProductService {
     return this.http.get<ProductsResponse>(`${this.apiUrl}/getAllProducts`).pipe(
       map(response => ({
         ...response,
-        data: response.data.map(product => this.enrichProduct(product))
+        data: response.data
+          .filter(product => product.visible !== false && product.isDeleted !== true)
+          .map(product => this.enrichProduct(product))
       }))
     );
   }
 
   getProductById(productId: string): Observable<ProductResponse> {
-    return this.http.get<ProductResponse>(`${this.apiUrl}/getProductById/${productId}`).pipe(
-      map(response => ({
-        ...response,
-        data: this.enrichProduct(response.data)
-      }))
+    return this.http.get<any>(`${this.apiUrl}/getProductById/${productId}`).pipe(
+      map(response => {
+        // Backend returns array, get first item
+        const productData = Array.isArray(response.data) ? response.data[0] : response.data;
+        
+        // Check if product is visible and not deleted
+        if (productData && (productData.visible === false || productData.isDeleted === true)) {
+          return {
+            ...response,
+            data: null
+          };
+        }
+        
+        return {
+          ...response,
+          data: productData ? this.enrichProduct(productData) : null
+        };
+      })
+    );
+  }
+
+  /**
+   * Get product by ID without visibility filtering (for orders/cart)
+   * This is used when we need to show products that were purchased even if they're now hidden
+   */
+  getProductByIdUnfiltered(productId: string): Observable<ProductResponse> {
+    return this.http.get<any>(`${this.apiUrl}/getProductById/${productId}`).pipe(
+      map(response => {
+        // Backend returns array, get first item
+        const productData = Array.isArray(response.data) ? response.data[0] : response.data;
+        
+        return {
+          ...response,
+          data: productData ? this.enrichProduct(productData) : null
+        };
+      })
     );
   }
 

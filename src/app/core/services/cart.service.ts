@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, of, delay } from 'rxjs';
+import { BehaviorSubject, Observable, tap, map, catchError, of, forkJoin } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Cart, CartItem } from '../../features/cart/models/cart.model';
+import { Cart as UICart, CartItem as UICartItem } from '../../features/cart/models/cart.model';
+import { Cart, CartResponse, AddToCartRequest } from '../models/cart.model';
+import { ProductService } from './product.service';
+import { Product } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,244 +13,294 @@ import { Cart, CartItem } from '../../features/cart/models/cart.model';
 export class CartService {
   private apiUrl = `${environment.apiUrl}/cart`;
   
-  // 🔧 Mock Mode - غير دا لـ false لما الباك يبقى جاهز
-  private useMockData = true;
-  
-  private cartSubject = new BehaviorSubject<Cart>(this.getInitialMockCart());
+  private cartSubject = new BehaviorSubject<UICart>(this.getEmptyCart());
   
   public cart$ = this.cartSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private productService: ProductService
+  ) {
     this.loadCart();
   }
 
   /**
-   * Mock Data - بيانات تجريبية
+   * سلة فارغة
    */
-  private getInitialMockCart(): Cart {
-    const items: CartItem[] = [
-      {
-        id: '1',
-        productId: 'prod-1',
-        name: 'Spectre Pro M1 Max',
-        description: '32GB RAM / 1TB SSD / Space Grey',
-        price: 1899.00,
-        quantity: 1,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBkrEDDnCQK-96zYo5sji8hrg5rojSiSvPKyTngIv6sCJYqgkiYS0iHtrUyVKizGZWECscVxbdy-eNu5LwXVdvdoFzp5zbHkYM-nMHJWlRF2e3txHlvFITv98n2IJAiIDZbGKOODVVZ6PxiLd5iOoCZIQgETTFOCrDNOZOwHbmpP0v9nuoxNN2A5D6qgOIHGIz78dpYWD8LZ87T2bwRbni77COBjIk-WINwb51rb_RY0ywaPreHznxAoahtvYC6PnBkIfhVVC1Km9qn'
-      },
-      {
-        id: '2',
-        productId: 'prod-2',
-        name: 'Acoustic Precision X2',
-        description: 'Active Noise Cancelling / Bluetooth 5.2',
-        price: 450.00,
-        quantity: 1,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB-cnuzihNTytV8qi60AwQcewIG-bznRoGc-8yvMACFPA5S6tWfppvF6j7Y0BSeChRP8Jtl2F5TE1JhzRs7ID6fDUTMujL9OY1MnTH4typfH7DChfNp8G7d3NBNirkz2_hzYGSr2Us9tnCfXqvNYiR6l8NHa5YDQHhqsawPHCbHyp9CXU1rd_6WKh5MPB3rh7JzzCqo8fe_Rftpsw5Cw1p97O1l7hK7IOTj9Co4R1FJFycu9tAh4RVOQk2CV9ZFb_lW1VrM0ei1hORD'
-      },
-      {
-        id: '3',
-        productId: 'prod-3',
-        name: 'Nexus Phone 15 Pro',
-        description: '256GB / Ceramic White',
-        price: 1101.00,
-        quantity: 1,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDGH-xM0vgecRbPAxN7pqq7l1zYYyrDEXrFIBJkgaYvuzD0AOPk4rAzOG99eWAmwXiq1VG_MhAMTLI7QKAEo_h__LxozVKYN3nOOy3tKarXkRNvm6bC1iGEIneYtxIHY0y650J-5CZlfY73CkTAR5Il8gn4u6KSWVHCSqHo1_NWvuQB-i1uTLOhk3WZfDZVQASg1vte7C3sJNS-SrRW97PYsujjYjEK-_Ei_NE3JOmtQGERk-f51w8DKWKmO7cHDGmIoOzUbQdvQEKu'
-      }
-    ];
-
-    return this.calculateCart(items);
-  }
-
-  /**
-   * حساب المجاميع
-   */
-  private calculateCart(items: CartItem[]): Cart {
-    const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const tax = subtotal * 0.1; // 10% tax
-    const shipping = subtotal > 1000 ? 0 : 50; // Free shipping over $1000
-    const total = subtotal + tax + shipping;
-
+  private getEmptyCart(): UICart {
     return {
-      items,
-      subtotal,
-      tax,
-      shipping,
-      total
+      items: [],
+      subtotal: 0,
+      tax: 0,
+      shipping: 0,
+      total: 0
     };
   }
 
   /**
-   * تحميل السلة من الباك إند أو Mock Data
+   * تحويل Cart من API إلى UI Cart مع جلب تفاصيل المنتجات
    */
-  loadCart(): void {
-    if (this.useMockData) {
-      // Mock: استخدام البيانات التجريبية
-      console.log('📦 Using Mock Cart Data');
-      return;
+  private transformToUICartWithProducts(apiCart: Cart): Observable<UICart> {
+    if (!apiCart.items || apiCart.items.length === 0) {
+      return of(this.getEmptyCart());
     }
 
-    // Real API Call
-    this.http.get<Cart>(`${this.apiUrl}`).subscribe({
-      next: (cart) => this.cartSubject.next(cart),
-      error: (error) => console.error('Failed to load cart', error)
+    // Filter out items with null products first
+    const validItems = apiCart.items.filter(item => item.product && (item.product._id || item.product));
+
+    if (validItems.length === 0) {
+      return of(this.getEmptyCart());
+    }
+
+    // جلب تفاصيل كل المنتجات
+    const productRequests = validItems.map(item => {
+      const productId = item.product._id || (item.product as any);
+      
+      if (!productId) {
+        return of({
+          cartItem: item,
+          product: null
+        });
+      }
+
+      return this.productService.getProductById(productId).pipe(
+        map(response => ({
+          cartItem: item,
+          product: Array.isArray(response.data) ? response.data[0] : response.data
+        })),
+        catchError(error => {
+          console.error(`Failed to load product ${productId}`, error);
+          return of({
+            cartItem: item,
+            product: null
+          });
+        })
+      );
+    });
+
+    return forkJoin(productRequests).pipe(
+      map(results => {
+        const items: UICartItem[] = results
+          .filter(result => result.product !== null)
+          .map(result => {
+            const { cartItem, product } = result;
+            
+            // Default values
+            let image = 'https://placehold.co/400x400/e5e7eb/6b7280?text=No+Image';
+            let description = product!.description || '';
+            let variationName = '';
+            
+            // إيجاد الـ variation المحدد
+            if (cartItem.variationId && product!.variations && product!.variations.length > 0) {
+              const selectedVariation = product!.variations.find(v => v._id === cartItem.variationId);
+              
+              if (selectedVariation) {
+                // Variation found - use its data
+                image = selectedVariation.defaultImage || image;
+                variationName = selectedVariation.colorName || '';
+              } else {
+                // Variation not found (deleted) - use default variation
+                console.warn(`Variation ${cartItem.variationId} not found for product ${product!._id}, using default`);
+                const defaultVariation = product!.variations.find(v => v.isDefault) || product!.variations[0];
+                if (defaultVariation) {
+                  image = defaultVariation.defaultImage || image;
+                  variationName = `${defaultVariation.colorName} (Default)`;
+                }
+              }
+            } else if (product!.variations && product!.variations.length > 0) {
+              // No variation selected - use default
+              const defaultVariation = product!.variations.find(v => v.isDefault) || product!.variations[0];
+              if (defaultVariation) {
+                image = defaultVariation.defaultImage || image;
+              }
+            }
+            
+            // Build description with variation name
+            if (variationName) {
+              description = `${description} - ${variationName}`;
+            }
+
+            return {
+              id: cartItem.product._id || (cartItem.product as any),
+              productId: cartItem.product._id || (cartItem.product as any),
+              name: product!.name,
+              description: description,
+              price: product!.price,
+              quantity: cartItem.quantity,
+              image: image,
+              variationId: cartItem.variationId
+            };
+          });
+
+        const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const tax = 0; // No tax
+        const shipping = subtotal > 1000 ? 0 : 50; // شحن مجاني فوق 1000
+        const total = subtotal + shipping;
+
+        return {
+          items,
+          subtotal,
+          tax,
+          shipping,
+          total
+        };
+      })
+    );
+  }
+
+  /**
+   * تحميل السلة من الباك إند
+   */
+  loadCart(): void {
+    this.http.get<CartResponse>(`${this.apiUrl}/getMyCart`).pipe(
+      catchError(error => {
+        console.log('Cart is empty or not found');
+        return of({ message: 'Cart is empty', data: { items: [], totalPrice: 0 } } as CartResponse);
+      })
+    ).subscribe({
+      next: (response) => {
+        if (response.data && response.data.items && response.data.items.length > 0) {
+          this.transformToUICartWithProducts(response.data).subscribe({
+            next: (cart) => this.cartSubject.next(cart),
+            error: (error) => {
+              console.error('Failed to transform cart', error);
+              this.cartSubject.next(this.getEmptyCart());
+            }
+          });
+        } else {
+          this.cartSubject.next(this.getEmptyCart());
+        }
+      },
+      error: (error) => {
+        console.error('Failed to load cart', error);
+        this.cartSubject.next(this.getEmptyCart());
+      }
     });
   }
 
   /**
    * إضافة منتج للسلة
    */
-  addToCart(productId: string, quantity: number = 1): Observable<Cart> {
-    if (this.useMockData) {
-      // Mock: إضافة منتج للبيانات التجريبية
-      return of(this.cartSubject.value).pipe(
-        delay(500), // محاكاة تأخير الشبكة
-        tap(() => console.log('📦 Mock: Added to cart'))
-      );
-    }
+  addToCart(productId: string, quantity: number = 1, variationId?: string): Observable<UICart> {
+    const request: AddToCartRequest = {
+      productId,
+      quantity,
+      variationId
+    };
 
-    // Real API Call
-    return this.http.post<Cart>(`${this.apiUrl}/add`, { productId, quantity })
-      .pipe(
-        tap(cart => this.cartSubject.next(cart))
-      );
+    return this.http.post<CartResponse>(`${this.apiUrl}/addToCart`, request).pipe(
+      catchError(error => {
+        console.error('Failed to add to cart', error);
+        throw error;
+      }),
+      tap(() => {
+        // بعد الإضافة، نعيد تحميل السلة بالكامل
+        this.loadCart();
+      }),
+      map(() => this.cartSubject.value)
+    );
   }
 
   /**
    * تحديث كمية منتج في السلة
    */
-  updateQuantity(itemId: string, quantity: number): Observable<Cart> {
-    if (this.useMockData) {
-      // Mock: تحديث الكمية في البيانات التجريبية
-      const currentCart = this.cartSubject.value;
-      const updatedItems = currentCart.items.map(item => 
-        item.id === itemId ? { ...item, quantity } : item
-      );
-      const updatedCart = this.calculateCart(updatedItems);
-      
-      return of(updatedCart).pipe(
-        delay(300),
-        tap(cart => {
-          this.cartSubject.next(cart);
-          console.log('📦 Mock: Updated quantity');
-        })
-      );
+  updateQuantity(productId: string, quantity: number, variationId?: string): Observable<UICart> {
+    if (quantity === 0) {
+      return this.removeItem(productId, variationId);
     }
 
-    // Real API Call
-    return this.http.put<Cart>(`${this.apiUrl}/items/${itemId}`, { quantity })
-      .pipe(
-        tap(cart => this.cartSubject.next(cart))
-      );
+    const request: AddToCartRequest = {
+      productId,
+      quantity,
+      variationId
+    };
+
+    return this.http.post<CartResponse>(`${this.apiUrl}/addToCart`, request).pipe(
+      catchError(error => {
+        console.error('Failed to update quantity', error);
+        throw error;
+      }),
+      tap(() => {
+        // بعد التحديث، نعيد تحميل السلة بالكامل
+        this.loadCart();
+      }),
+      map(() => this.cartSubject.value)
+    );
+  }
+
+  /**
+   * تقليل كمية منتج في السلة بمقدار 1
+   */
+  decreaseCartQuantity(productId: string, variationId?: string): Observable<UICart> {
+    const request: any = {
+      productId,
+      removeAll: false // نقلل واحد بس مش نحذف كله
+    };
+
+    if (variationId) {
+      request.variationId = variationId;
+    }
+
+    return this.http.patch<CartResponse>(`${this.apiUrl}/remove`, request).pipe(
+      catchError(error => {
+        console.error('Failed to decrease quantity', error);
+        throw error;
+      }),
+      tap(() => {
+        // بعد التقليل، نعيد تحميل السلة بالكامل
+        this.loadCart();
+      }),
+      map(() => this.cartSubject.value)
+    );
   }
 
   /**
    * حذف منتج من السلة
    */
-  removeItem(itemId: string): Observable<Cart> {
-    if (this.useMockData) {
-      // Mock: حذف المنتج من البيانات التجريبية
-      const currentCart = this.cartSubject.value;
-      const updatedItems = currentCart.items.filter(item => item.id !== itemId);
-      const updatedCart = this.calculateCart(updatedItems);
-      
-      return of(updatedCart).pipe(
-        delay(300),
-        tap(cart => {
-          this.cartSubject.next(cart);
-          console.log('📦 Mock: Removed item');
-        })
-      );
+  removeItem(productId: string, variationId?: string): Observable<UICart> {
+    const request: any = {
+      productId,
+      removeAll: true
+    };
+
+    if (variationId) {
+      request.variationId = variationId;
     }
 
-    // Real API Call
-    return this.http.delete<Cart>(`${this.apiUrl}/items/${itemId}`)
-      .pipe(
-        tap(cart => this.cartSubject.next(cart))
-      );
+    return this.http.patch<CartResponse>(`${this.apiUrl}/remove`, request).pipe(
+      catchError(error => {
+        console.error('Failed to remove item', error);
+        throw error;
+      }),
+      tap(() => {
+        // بعد الحذف، نعيد تحميل السلة بالكامل
+        this.loadCart();
+      }),
+      map(() => this.cartSubject.value)
+    );
   }
 
   /**
-   * تطبيق كود خصم
+   * تطبيق كود خصم (مش موجود في API حالياً)
    */
-  applyPromoCode(code: string): Observable<Cart> {
-    if (this.useMockData) {
-      // Mock: محاكاة تطبيق كود خصم
-      const currentCart = this.cartSubject.value;
-      
-      // أكواد تجريبية
-      const validCodes: { [key: string]: number } = {
-        'SAVE10': 0.1,  // 10% discount
-        'SAVE20': 0.2,  // 20% discount
-        'FREE50': 50    // $50 off
-      };
-
-      if (validCodes[code.toUpperCase()]) {
-        const discount = validCodes[code.toUpperCase()];
-        const discountAmount = discount < 1 ? currentCart.subtotal * discount : discount;
-        const updatedCart = {
-          ...currentCart,
-          total: currentCart.total - discountAmount
-        };
-
-        return of(updatedCart).pipe(
-          delay(500),
-          tap(cart => {
-            this.cartSubject.next(cart);
-            console.log('📦 Mock: Applied promo code');
-          })
-        );
-      } else {
-        // كود خاطئ
-        return of(currentCart).pipe(
-          delay(500),
-          tap(() => {
-            throw new Error('Invalid promo code');
-          })
-        );
-      }
-    }
-
-    // Real API Call
-    return this.http.post<Cart>(`${this.apiUrl}/promo`, { code })
-      .pipe(
-        tap(cart => this.cartSubject.next(cart))
-      );
+  applyPromoCode(code: string): Observable<UICart> {
+    // TODO: لما يتضاف endpoint للـ promo code في الـ API
+    console.log('Promo code feature not implemented in API yet');
+    return of(this.cartSubject.value);
   }
 
   /**
    * مسح السلة بالكامل
    */
   clearCart(): Observable<void> {
-    if (this.useMockData) {
-      // Mock: مسح البيانات التجريبية
-      const emptyCart: Cart = {
-        items: [],
-        subtotal: 0,
-        tax: 0,
-        shipping: 0,
-        total: 0
-      };
-
-      return of(void 0).pipe(
-        delay(300),
-        tap(() => {
-          this.cartSubject.next(emptyCart);
-          console.log('📦 Mock: Cleared cart');
-        })
-      );
-    }
-
-    // Real API Call
-    return this.http.delete<void>(`${this.apiUrl}/clear`)
-      .pipe(
-        tap(() => this.cartSubject.next({
-          items: [],
-          subtotal: 0,
-          tax: 0,
-          shipping: 0,
-          total: 0
-        }))
-      );
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/clearCart`).pipe(
+      tap(() => this.cartSubject.next(this.getEmptyCart())),
+      map(() => void 0),
+      catchError(error => {
+        console.error('Failed to clear cart', error);
+        throw error;
+      })
+    );
   }
 
   /**
@@ -260,7 +313,7 @@ export class CartService {
   /**
    * الحصول على السلة الحالية
    */
-  getCurrentCart(): Cart {
+  getCurrentCart(): UICart {
     return this.cartSubject.value;
   }
 }

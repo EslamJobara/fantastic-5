@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ElementRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { Product as ApiProduct, Category } from '@core/models';
@@ -15,6 +16,7 @@ export interface HeroSlide {
   image: string;
   imageAlt: string;
   imageClass?: string;
+  productLink?: string;
 }
 
 @Component({
@@ -43,7 +45,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       secondaryButton: 'Specifications',
       image: '/pics/lap.png',
       imageAlt: 'Zenith Pro M3 Laptop',
-      imageClass: 'w-full'
+      imageClass: 'w-full',
+      productLink: '/products/69d81a7dcaf394a614f441c6'
     },
     {
       badge: 'PURE SOUND',
@@ -54,7 +57,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       primaryButton: 'Explore Sound',
       image: '/pics/headphone.png',
       imageAlt: 'Sonic Ultra X Headphones',
-      imageClass: 'w-3/4'
+      imageClass: 'w-3/4',
+      productLink: '/products/69d81acfcaf394a614f441e7'
     },
     {
       badge: 'PRECISION TRACKING',
@@ -65,7 +69,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       primaryButton: 'Pre-order Now',
       image: '/pics/watch.png',
       imageAlt: 'Curator Watch II',
-      imageClass: 'w-2/3'
+      imageClass: 'w-2/3',
+      productLink: '/products/69d81afecaf394a614f441f2'
     }
   ];
 
@@ -82,7 +87,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private productService: ProductService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private router: Router
   ) {}
 
   ngAfterViewInit() {
@@ -113,7 +119,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   loadProducts() {
     this.productService.getProducts().subscribe({
       next: (response) => {
-        this.allProducts = response.data.filter(product => product.featured === true);
+        // Filter featured products that are visible and not deleted
+        this.allProducts = response.data.filter(
+          product => product.featured === true && 
+                     product.visible !== false && 
+                     product.isDeleted !== true
+        );
         this.cdr.detectChanges();
       },
       error: () => {}
@@ -218,5 +229,11 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       'from-blue-400 to-blue-600'
     ];
     return gradients[index % gradients.length];
+  }
+
+  navigateToProduct(productLink?: string) {
+    if (productLink) {
+      this.router.navigate([productLink]);
+    }
   }
 }

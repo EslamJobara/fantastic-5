@@ -1,7 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
-import { Product, ProductResponse, ProductVariation } from '@core/models';
+import { CategoryService } from '../../../core/services/category.service';
+import { CartService } from '../../../core/services/cart.service';
+import { Product, ProductVariation, Category } from '@core/models';
 
 @Component({
   selector: 'app-product-details',
@@ -12,17 +14,22 @@ import { Product, ProductResponse, ProductVariation } from '@core/models';
 })
 export class ProductDetailsComponent implements OnInit {
   product: Product | null = null;
+  category: Category | null = null;
   isLoading = true;
   error: string | null = null;
   selectedImage: string = '';
   selectedVariation: ProductVariation | null = null;
   relatedProducts: Product[] = [];
   quantity: number = 1;
+  isAddingToCart: boolean = false;
+  addedToCart: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
+    private categoryService: CategoryService,
+    private cartService: CartService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -37,11 +44,12 @@ export class ProductDetailsComponent implements OnInit {
           next: (response) => {
             console.log('Product response:', response);
             if (response && response.data) {
-              // Backend returns array, get first item
+              // Handle both array and single object
               const productData = Array.isArray(response.data) ? response.data[0] : response.data;
               
-              if (productData) {
-                this.product = productData as Product;
+              // Check if product exists and is visible
+              if (productData && productData.visible !== false && productData.isDeleted !== true) {
+                this.product = productData;
                 console.log('Product loaded:', this.product);
                 
                 // Select default variation
@@ -55,11 +63,16 @@ export class ProductDetailsComponent implements OnInit {
                   this.selectedImage = this.product.defaultImg || '';
                 }
                 
+                this.loadCategory(this.product.category);
                 this.loadRelatedProducts(this.product.category, this.product._id);
+              } else {
+                // Product not found or not visible
+                this.error = 'Product not found or unavailable';
               }
+            } else {
+              this.error = 'Product not found';
             }
             this.isLoading = false;
-            this.cdr.markForCheck();
             this.cdr.detectChanges();
           },
           error: (err) => {
@@ -80,7 +93,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   goToProduct(productId: string) {
-    this.router.navigate(['/product', productId]);
+    this.router.navigate(['/products', productId]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -127,19 +140,75 @@ export class ProductDetailsComponent implements OnInit {
     return this.product?.images || [];
   }
 
+  loadCategory(categoryId: string) {
+    this.categoryService.getAllCategories().subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          this.category = response.data.find(cat => cat._id === categoryId) || null;
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => console.error('Failed to load category', err)
+    });
+  }
+
   loadRelatedProducts(category: string, currentProductId: string) {
     this.productService.getProducts().subscribe({
       next: (res) => {
         if (res && res.data) {
           const allProducts = Array.isArray(res.data) ? res.data : [];
+          // Get 4 random products excluding current product, only visible and not deleted
           this.relatedProducts = allProducts
-            .filter(p => p.category === category && p._id !== currentProductId)
+            .filter(p => p._id !== currentProductId && 
+                        p.visible !== false && 
+                        p.isDeleted !== true)
+            .sort(() => Math.random() - 0.5)
             .slice(0, 4);
           this.cdr.markForCheck();
           this.cdr.detectChanges();
         }
       },
       error: (err) => console.error('Failed to load related products', err)
+    });
+  }
+
+  addToCart() {
+    if (!this.product || this.isAddingToCart) {
+      return;
+    }
+
+    // التحقق من اختيار variation إذا كان المنتج يحتوي على variations
+    if (this.product.variations && this.product.variations.length > 0 && !this.selectedVariation) {
+      console.log('Please select a color');
+      return;
+    }
+
+    this.isAddingToCart = true;
+    this.addedToCart = false;
+    
+    this.cartService.addToCart(
+      this.product._id,
+      this.quantity,
+      this.selectedVariation?._id
+    ).subscribe({
+      next: () => {
+        this.isAddingToCart = false;
+        this.addedToCart = true;
+        console.log('Product added to cart successfully!');
+        this.cdr.detectChanges();
+        
+        // Reset success state after 2 seconds
+        setTimeout(() => {
+          this.addedToCart = false;
+          this.cdr.detectChanges();
+        }, 2000);
+      },
+      error: (error) => {
+        this.isAddingToCart = false;
+        this.addedToCart = false;
+        console.error('Failed to add to cart', error);
+        this.cdr.detectChanges();
+      }
     });
   }
 }

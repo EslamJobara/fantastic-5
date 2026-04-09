@@ -1,10 +1,7 @@
+import { Product, ProductVariation } from './product.model';
+
 export interface OrderItem {
-  product: {
-    _id: string;
-    name: string;
-    price: number;
-    defaultImg: string;
-  };
+  product: Product;
   quantity: number;
   variationId?: string;
 }

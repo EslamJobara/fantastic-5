@@ -35,7 +35,7 @@
             <h4 class="text-sm font-bold text-on-surface truncate">{{ product.name }}</h4>
             <p class="text-xs text-on-surface-variant truncate">{{ product.description }}</p>
           </div>
-          <p class="text-sm font-bold text-primary whitespace-nowrap">EGP {{ product.price }}</p>
+          <p class="text-sm font-bold text-primary whitespace-nowrap">{{ product.price | currency:'EGP':'symbol':'1.0-0' }}</p>
         </div>
       }
       

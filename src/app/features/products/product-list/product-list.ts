@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
 import { CategoryService } from '../../../core/services/category.service';
+import { CartService } from '../../../core/services/cart.service';
 import { Product, Category } from '@core/models';
 
 @Component({
@@ -13,6 +14,8 @@ import { Product, Category } from '@core/models';
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   allProducts: Product[] = []; // Store all products for filtering
+  filteredProducts: Product[] = []; // Store filtered products before pagination
+  paginatedProducts: Product[] = []; // Products to display on current page
   categories: Category[] = [];
   selectedCategory: string | null = null;
   isLoadingProducts = true;
@@ -21,10 +24,20 @@ export class ProductListComponent implements OnInit {
   minPrice: number | null = null;
   maxPrice: number | null = null;
   sortBy: string = 'newest'; // Default sort
+  
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 9;
+  totalPages: number = 1;
+  
+  // Add to cart states
+  addingToCart: { [key: string]: boolean } = {};
+  addedToCart: { [key: string]: boolean } = {};
 
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
+    private cartService: CartService,
     private cdr: ChangeDetectorRef,
     private router: Router,
     private route: ActivatedRoute
@@ -62,11 +75,18 @@ export class ProductListComponent implements OnInit {
     this.isLoadingProducts = true;
     this.productService.getProducts().subscribe({
       next: (response) => {
-        this.allProducts = response.data;
-        this.products = response.data;
+        // Filter out products that are not visible or deleted
+        const visibleProducts = response.data.filter(
+          product => product.visible !== false && product.isDeleted !== true
+        );
+        this.allProducts = visibleProducts;
+        this.products = visibleProducts;
         this.isLoadingProducts = false;
         if (this.searchQuery || this.selectedCategory || this.minPrice !== null || this.maxPrice !== null) {
           this.applyFilters();
+        } else {
+          this.filteredProducts = [...this.products];
+          this.updatePagination();
         }
         this.cdr.detectChanges();
       },
@@ -83,8 +103,45 @@ export class ProductListComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  handleAddToCart(product: any) {
-    // TODO: Add cart logic here
+  handleAddToCart(product: Product) {
+    if (this.addingToCart[product._id] || this.addedToCart[product._id]) {
+      return;
+    }
+
+    this.addingToCart[product._id] = true;
+    this.addedToCart[product._id] = false;
+    this.cdr.detectChanges();
+
+    // Get default variation if exists
+    const defaultVariation = product.variations?.find(v => v.isDefault) || product.variations?.[0];
+
+    this.cartService.addToCart(product._id, 1, defaultVariation?._id).subscribe({
+      next: () => {
+        this.addingToCart[product._id] = false;
+        this.addedToCart[product._id] = true;
+        this.cdr.detectChanges();
+
+        // Reset success state after 2 seconds
+        setTimeout(() => {
+          this.addedToCart[product._id] = false;
+          this.cdr.detectChanges();
+        }, 2000);
+      },
+      error: (error) => {
+        console.error('Failed to add to cart', error);
+        this.addingToCart[product._id] = false;
+        this.addedToCart[product._id] = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  isAddingToCart(productId: string): boolean {
+    return this.addingToCart[productId] || false;
+  }
+
+  isAddedToCart(productId: string): boolean {
+    return this.addedToCart[productId] || false;
   }
 
   handleViewDetails(product: Product) {
@@ -152,6 +209,63 @@ export class ProductListComponent implements OnInit {
         this.products.sort((a, b) => b.price - a.price);
         break;
     }
+    this.filteredProducts = [...this.products];
+    this.currentPage = 1; // Reset to first page when sorting
+    this.updatePagination();
     this.cdr.detectChanges();
+  }
+  
+  updatePagination() {
+    this.totalPages = Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedProducts = this.filteredProducts.slice(startIndex, endIndex);
+  }
+  
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+      this.cdr.detectChanges();
+      // Scroll to top of products
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+  
+  nextPage() {
+    this.goToPage(this.currentPage + 1);
+  }
+  
+  previousPage() {
+    this.goToPage(this.currentPage - 1);
+  }
+  
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+    
+    if (this.totalPages <= maxPagesToShow) {
+      // Show all pages if total is less than max
+      for (let i = 1; i <= this.totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Show current page and surrounding pages
+      let startPage = Math.max(1, this.currentPage - 2);
+      let endPage = Math.min(this.totalPages, this.currentPage + 2);
+      
+      // Adjust if we're near the start or end
+      if (this.currentPage <= 3) {
+        endPage = maxPagesToShow;
+      } else if (this.currentPage >= this.totalPages - 2) {
+        startPage = this.totalPages - maxPagesToShow + 1;
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+    }
+    
+    return pages;
   }
 }

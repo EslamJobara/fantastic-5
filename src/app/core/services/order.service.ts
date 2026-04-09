@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, delay, map } from 'rxjs';
+import { Observable, of, delay, map, forkJoin, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Order as ApiOrder, OrdersResponse } from '@core/models';
+import { Order as ApiOrder, OrdersResponse, ProductVariation } from '@core/models';
 import { Order as LocalOrder } from '../../features/orders/models/order.model';
+import { ProductService } from './product.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,10 @@ export class OrderService {
   // 🔧 Mock Mode - غير دا لـ false لما الباك يبقى جاهز
   private useMockData = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private productService: ProductService
+  ) {}
 
   /**
    * Mock Data - بيانات تجريبية للطلبات
@@ -121,31 +125,154 @@ export class OrderService {
       );
     }
 
-    // Real API Call
+    // Real API Call - جلب الأوردرات ثم جلب تفاصيل المنتجات الكاملة
     return this.http.get<OrdersResponse>(`${this.apiUrl}/getUserOrders`).pipe(
-      map(response => this.transformApiOrders(response.data))
+      switchMap(response => this.enrichOrdersWithFullProducts(response.data))
     );
   }
 
   /**
-   * تحويل البيانات من API للـ Model المحلي
+   * جلب تفاصيل المنتجات الكاملة لكل الأوردرات
    */
-  private transformApiOrders(apiOrders: ApiOrder[]): LocalOrder[] {
-    return apiOrders.map(apiOrder => ({
-      id: apiOrder._id,
-      orderNumber: `ORD-${apiOrder._id.slice(-4).toUpperCase()}`,
-      date: new Date(apiOrder.createdAt),
-      total: apiOrder.totalPrice,
-      status: apiOrder.status,
-      items: apiOrder.items.map(item => ({
-        id: item.product._id,
-        productName: item.product.name,
-        productImage: item.product.defaultImg,
-        variant: item.variationId || 'Default',
-        price: item.product.price,
-        quantity: item.quantity
-      }))
-    }));
+  private enrichOrdersWithFullProducts(apiOrders: ApiOrder[]): Observable<LocalOrder[]> {
+    if (!apiOrders || apiOrders.length === 0) {
+      return of([]);
+    }
+
+    // جمع كل الـ product IDs الفريدة
+    const productIds = new Set<string>();
+    apiOrders.forEach(order => {
+      order.items.forEach(item => {
+        if (item.product && item.product._id) {
+          productIds.add(item.product._id);
+        }
+      });
+    });
+
+    // لو مفيش منتجات، ارجع array فاضي
+    if (productIds.size === 0) {
+      return of([]);
+    }
+
+    // جلب تفاصيل كل المنتجات دفعة واحدة (بدون فلترة)
+    const productRequests = Array.from(productIds).map(id => 
+      this.productService.getProductByIdUnfiltered(id).pipe(
+        map(response => ({
+          id,
+          product: Array.isArray(response.data) ? response.data[0] : response.data
+        }))
+      )
+    );
+
+    return forkJoin(productRequests).pipe(
+      map(results => {
+        // إنشاء Map للمنتجات للوصول السريع
+        const productsMap = new Map();
+        results.forEach(result => {
+          if (result.product) {
+            productsMap.set(result.id, result.product);
+          }
+        });
+        
+        console.log('📦 Products Map:', productsMap);
+        
+        return this.transformApiOrdersWithProducts(apiOrders, productsMap);
+      })
+    );
+  }
+
+  /**
+   * تحويل البيانات من API للـ Model المحلي مع استخدام المنتجات الكاملة
+   */
+  private transformApiOrdersWithProducts(apiOrders: ApiOrder[], productsMap: Map<string, any>): LocalOrder[] {
+    console.log('🔍 Transforming orders with full products');
+    
+    return apiOrders.map(apiOrder => {
+      console.log(`\n📦 Processing Order: ${apiOrder._id}`);
+      
+      const transformedOrder = {
+        id: apiOrder._id,
+        orderNumber: `ORD-${apiOrder._id.slice(-4).toUpperCase()}`,
+        date: new Date(apiOrder.createdAt),
+        total: apiOrder.totalPrice,
+        status: apiOrder.status,
+        items: apiOrder.items.map((item, index) => {
+          const productFromOrder = item.product;
+          const fullProduct = productsMap.get(productFromOrder._id);
+          
+          console.log(`\n  📝 Item ${index}:`, {
+            productId: productFromOrder._id,
+            productName: productFromOrder.name,
+            variationId: item.variationId,
+            quantity: item.quantity,
+            hasFullProduct: !!fullProduct,
+            fullProductVariations: fullProduct?.variations?.length || 0
+          });
+          
+          // Default values
+          let variationName = 'Default';
+          let productImage = 'https://placehold.co/400x400/e5e7eb/6b7280?text=No+Image';
+          const productPrice = productFromOrder.price || 0;
+          
+          // استخدام المنتج الكامل من الـ Map
+          if (fullProduct && fullProduct.variations && Array.isArray(fullProduct.variations) && fullProduct.variations.length > 0) {
+            let selectedVariation: ProductVariation | undefined;
+            
+            // Find the specific variation that was ordered
+            if (item.variationId) {
+              selectedVariation = fullProduct.variations.find((v: ProductVariation) => v._id === item.variationId);
+              
+              console.log(`  🔎 Looking for variation: ${item.variationId}`);
+              console.log(`  ✓ Found variation:`, selectedVariation ? {
+                id: selectedVariation._id,
+                name: selectedVariation.colorName,
+                image: selectedVariation.defaultImage
+              } : 'NOT FOUND');
+              
+              // If variation not found (deleted), log warning and use default
+              if (!selectedVariation) {
+                console.warn(`  ⚠️ Variation ${item.variationId} not found, using default`);
+              }
+            }
+            
+            // Fallback to default variation if ordered variation not found
+            if (!selectedVariation) {
+              selectedVariation = fullProduct.variations.find((v: ProductVariation) => v.isDefault) || fullProduct.variations[0];
+              console.log(`  🔄 Using fallback variation:`, selectedVariation ? {
+                id: selectedVariation._id,
+                name: selectedVariation.colorName,
+                isDefault: selectedVariation.isDefault
+              } : 'NONE');
+            }
+            
+            // Use the selected variation's data
+            if (selectedVariation) {
+              variationName = selectedVariation.colorName || 'Default';
+              productImage = selectedVariation.defaultImage || productImage;
+            }
+          } else {
+            console.warn(`  ⚠️ No variations found for product ${productFromOrder._id}`);
+          }
+          
+          const transformedItem = {
+            // Create unique ID by combining product ID, variation ID, and index
+            id: `${productFromOrder._id}_${item.variationId || 'default'}_${index}`,
+            productName: productFromOrder.name || 'Product',
+            productImage: productImage,
+            variant: variationName,
+            price: productPrice,
+            quantity: item.quantity
+          };
+          
+          console.log(`  ✅ Transformed item:`, transformedItem);
+          
+          return transformedItem;
+        })
+      };
+      
+      console.log(`\n✅ Transformed Order:`, transformedOrder);
+      return transformedOrder;
+    });
   }
 
   /**
@@ -178,6 +305,15 @@ export class OrderService {
 
     // Real API Call
     return this.http.put<LocalOrder>(`${this.apiUrl}/${orderId}/cancel`, {});
+  }
+
+  /**
+   * إنشاء طلب جديد
+   */
+  createOrder(items: { product: string; quantity: number; variationId?: string }[]): Observable<any> {
+    const request = { items };
+    
+    return this.http.post<any>(`${this.apiUrl}/createOrder`, request);
   }
 
   /**
