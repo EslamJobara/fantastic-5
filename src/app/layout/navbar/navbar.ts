@@ -15,6 +15,7 @@ export class Navbar implements OnInit, OnDestroy {
   showSearchBar = true;
   isLoggedIn = false;
   showUserMenu = false;
+  showMobileMenu = false;
   cartItemCount = 0;
   
   private destroy$ = new Subject<void>();
@@ -67,11 +68,26 @@ export class Navbar implements OnInit, OnDestroy {
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const userMenuContainer = target.closest('.user-menu-container');
+    const mobileMenuContainer = target.closest('.mobile-menu-container');
     
-    // لو الضغطة مش جوا الـ user menu container، قفل الـ menu
     if (!userMenuContainer && this.showUserMenu) {
       this.showUserMenu = false;
     }
+    
+    if (!mobileMenuContainer && this.showMobileMenu) {
+      this.showMobileMenu = false;
+    }
+  }
+
+  toggleMobileMenu(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.showMobileMenu = !this.showMobileMenu;
+  }
+
+  closeMobileMenu() {
+    this.showMobileMenu = false;
   }
 
   toggleUserMenu(event?: MouseEvent) {

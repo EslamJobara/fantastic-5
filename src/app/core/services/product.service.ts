@@ -71,4 +71,13 @@ export class ProductService {
       images: getProductImages(product)
     };
   }
+
+  /**
+   * Update product with FormData (supports image uploads)
+   * @param productId Product ID to update
+   * @param formData FormData containing product fields and images
+   */
+  updateProduct(productId: string, formData: FormData): Observable<ProductResponse> {
+    return this.http.patch<ProductResponse>(`${this.apiUrl}/updateProduct/${productId}`, formData);
+  }
 }

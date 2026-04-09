@@ -1,6 +1,6 @@
 <app-blob-background />
-<main class="flex-grow flex items-center justify-center pt-32 pb-20 px-6">
-  <div class="w-full max-w-5xl glass-card rounded-3xl overflow-hidden">
+<main class="flex-grow flex items-center justify-center pt-20 sm:pt-24 lg:pt-32 pb-12 sm:pb-16 lg:pb-20 px-4 sm:px-6">
+  <div class="w-full max-w-5xl glass-card rounded-2xl sm:rounded-3xl overflow-hidden">
     <div class="grid grid-cols-1 lg:grid-cols-2">
       
       <!-- Image Side -->
@@ -55,10 +55,10 @@
       </div>
 
       <!-- Form Side -->
-      <div class="p-10 md:p-14 lg:p-20 flex flex-col">
+      <div class="p-6 sm:p-10 lg:p-16 xl:p-20 flex flex-col">
         
-        <div class="mb-12">
-          <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
+        <div class="mb-8 sm:mb-12">
+          <h2 class="font-headline text-2xl sm:text-3xl font-black text-on-surface mb-2">
             {{ activeTab === 'login' ? 'Welcome Back' : 'Create Account' }}
           </h2>
           <p class="text-on-surface-variant font-medium text-sm">
@@ -67,7 +67,7 @@
         </div>
 
         <!-- Tab Switcher -->
-        <div class="flex p-1.5 bg-white/30 backdrop-blur-md rounded-2xl mb-10 border border-white/40">
+        <div class="flex p-1 sm:p-1.5 bg-white/30 backdrop-blur-md rounded-xl sm:rounded-2xl mb-6 sm:mb-10 border border-white/40">
           <button 
             type="button"
             (click)="switchTab('login')"
@@ -75,7 +75,7 @@
             [class.shadow-sm]="activeTab === 'login'"
             [class.text-primary]="activeTab === 'login'"
             [class.text-on-surface-variant]="activeTab !== 'login'"
-            class="flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all">
+            class="flex-1 py-2 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm transition-all">
             Login
           </button>
           <button 
@@ -85,7 +85,7 @@
             [class.shadow-sm]="activeTab === 'register'"
             [class.text-primary]="activeTab === 'register'"
             [class.text-on-surface-variant]="activeTab !== 'register'"
-            class="flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all">
+            class="flex-1 py-2 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm transition-all">
             Register
           </button>
         </div>
@@ -192,7 +192,7 @@
             }
           </div>
 
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="label-md text-on-surface-variant ml-1">Age</label>
               <div class="relative">

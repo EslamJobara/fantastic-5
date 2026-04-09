@@ -1,13 +1,11 @@
 <app-blob-background />
-<main class="pt-32 pb-20 max-w-7xl mx-auto px-8">
-  <!-- Sorting & Stats - Full Width -->
-  <div class="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
+<main class="pt-20 sm:pt-24 lg:pt-32 pb-12 sm:pb-16 lg:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 sm:gap-6 mb-8 sm:mb-12">
     <div>
       <p class="text-body-md text-on-surface-variant">Displaying {{ filteredProducts.length }} Precision Instruments</p>
     </div>
     
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
-      <!-- Search Bar -->
       <div class="w-full sm:w-96 lg:w-[28rem]">
         <app-search-bar 
           placeholder="Search products..." 
@@ -19,7 +17,6 @@
         </app-search-bar>
       </div>
       
-      <!-- Sort Dropdown -->
       <div class="flex items-center gap-4 whitespace-nowrap">
         <label class="label-md text-outline">Sort By</label>
         <select 
@@ -34,15 +31,24 @@
     </div>
   </div>
 
-  <!-- Filters & Products Side by Side -->
-  <div class="flex flex-col md:flex-row gap-12">
-    <!-- Sidebar Filters -->
-    <aside class="w-full md:w-64 flex-shrink-0">
-      <div class="glass-card rounded-3xl p-8 space-y-10 sticky top-24">
+  <div class="flex flex-col md:flex-row gap-6 sm:gap-8 lg:gap-12">
+    <aside class="w-full md:w-56 lg:w-64 flex-shrink-0">
+      <button 
+        (click)="toggleFilters()"
+        class="md:hidden w-full glass-card rounded-xl p-4 mb-4 flex items-center justify-between font-bold text-on-surface hover:bg-white/70 transition-colors">
+        <span class="flex items-center gap-2">
+          <span class="material-symbols-outlined">tune</span>
+          Filters
+        </span>
+        <span class="material-symbols-outlined transition-transform duration-300" [class.rotate-180]="showFilters">
+          expand_more
+        </span>
+      </button>
+
+      <div [class.hidden]="!showFilters" [class.block]="showFilters" class="md:block glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 lg:space-y-10 md:sticky md:top-24">
         <section>
           <h3 class="label-md text-outline mb-6">Category</h3>
           
-          <!-- Loading Spinner for Categories -->
           @if (isLoadingCategories) {
             <div class="flex flex-col justify-center items-center py-8 gap-3">
               <div class="relative w-12 h-12">
@@ -53,7 +59,6 @@
             </div>
           } @else {
             <div class="space-y-3">
-              <!-- All Categories -->
               <label 
                 (click)="filterByCategory(null)"
                 class="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition-colors">
@@ -78,7 +83,6 @@
                       [class.text-slate-600]="selectedCategory !== null">All Products</span>
               </label>
               
-              <!-- Dynamic Categories -->
               @for (category of categories; track category._id) {
                 <label 
                   (click)="filterByCategory(category._id)"
@@ -138,11 +142,8 @@
       </div>
     </aside>
 
-    <!-- Main Content Area -->
     <div class="flex-1">
-      <!-- Product Grid Container -->
-      <div class="glass-card rounded-3xl p-8 lg:p-10">
-        <!-- Loading Spinner for Products -->
+      <div class="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 xl:p-10">
         @if (isLoadingProducts) {
           <div class="flex flex-col justify-center items-center py-20 gap-4">
             <div class="relative w-16 h-16">
@@ -157,7 +158,7 @@
             <p class="text-on-surface-variant text-lg">No products found</p>
           </div>
         } @else {
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 sm:gap-x-6 lg:gap-x-8 gap-y-8 sm:gap-y-10 lg:gap-y-12">
             @for (product of paginatedProducts; track product._id) {
               <app-product-card 
                 [product]="product"
@@ -172,15 +173,14 @@
         }
       </div>
 
-      <!-- Pagination -->
       @if (filteredProducts.length > itemsPerPage) {
-        <div class="mt-20 flex justify-center items-center gap-4">
+        <div class="mt-12 sm:mt-16 lg:mt-20 flex justify-center items-center gap-2 sm:gap-4">
           <button 
             (click)="previousPage()"
             [disabled]="currentPage === 1"
             [class.opacity-50]="currentPage === 1"
             [class.cursor-not-allowed]="currentPage === 1"
-            class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all tonal-shift disabled:hover:bg-surface-container disabled:hover:text-on-surface-variant">
+            class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all tonal-shift disabled:hover:bg-surface-container disabled:hover:text-on-surface-variant">
             <span class="material-symbols-outlined">chevron_left</span>
           </button>
           <div class="flex items-center gap-2">
@@ -193,7 +193,7 @@
                 [class.bg-surface-container]="currentPage !== page"
                 [class.text-on-surface]="currentPage !== page"
                 [class.hover:bg-surface-container-high]="currentPage !== page"
-                class="w-12 h-12 flex items-center justify-center rounded-full font-bold transition-all tonal-shift">
+                class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full font-bold text-sm sm:text-base transition-all tonal-shift">
                 {{ page }}
               </button>
             }
@@ -203,7 +203,7 @@
             [disabled]="currentPage === totalPages"
             [class.opacity-50]="currentPage === totalPages"
             [class.cursor-not-allowed]="currentPage === totalPages"
-            class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all tonal-shift disabled:hover:bg-surface-container disabled:hover:text-on-surface-variant">
+            class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all tonal-shift disabled:hover:bg-surface-container disabled:hover:text-on-surface-variant">
             <span class="material-symbols-outlined">chevron_right</span>
           </button>
         </div>

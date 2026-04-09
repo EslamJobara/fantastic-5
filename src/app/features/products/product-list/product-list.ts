@@ -13,9 +13,9 @@ import { Product, Category } from '@core/models';
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
-  allProducts: Product[] = []; // Store all products for filtering
-  filteredProducts: Product[] = []; // Store filtered products before pagination
-  paginatedProducts: Product[] = []; // Products to display on current page
+  allProducts: Product[] = [];
+  filteredProducts: Product[] = [];
+  paginatedProducts: Product[] = [];
   categories: Category[] = [];
   selectedCategory: string | null = null;
   isLoadingProducts = true;
@@ -23,14 +23,13 @@ export class ProductListComponent implements OnInit {
   searchQuery: string = '';
   minPrice: number | null = null;
   maxPrice: number | null = null;
-  sortBy: string = 'newest'; // Default sort
+  sortBy: string = 'newest';
+  showFilters = false;
   
-  // Pagination properties
   currentPage: number = 1;
   itemsPerPage: number = 9;
   totalPages: number = 1;
   
-  // Add to cart states
   addingToCart: { [key: string]: boolean } = {};
   addedToCart: { [key: string]: boolean } = {};
 
@@ -152,6 +151,10 @@ export class ProductListComponent implements OnInit {
   handleSearch(query: string) {
     this.searchQuery = query;
     this.applyFilters();
+  }
+  
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
   }
   
   onPriceFilterChange() {

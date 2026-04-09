@@ -1,13 +1,13 @@
 <footer class="w-full bg-surface-container-low">
-  <div class="max-w-7xl mx-auto px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
-    <div class="md:col-span-1">
-      <a class="text-lg font-bold text-on-surface mb-6 block" href="#">Silicon Valley</a>
-      <p class="text-sm font-body leading-relaxed text-on-surface-variant mb-6">Curating the world's most atmospheric electronics for the discerning professional.</p>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+    <div class="sm:col-span-2 lg:col-span-1">
+      <a class="text-base sm:text-lg font-bold text-on-surface mb-4 sm:mb-6 block" routerLink="/">Silicon Valley</a>
+      <p class="text-xs sm:text-sm font-body leading-relaxed text-on-surface-variant mb-4 sm:mb-6">Curating the world's most atmospheric electronics for the discerning professional.</p>
       <div class="flex gap-4">
-        <a class="text-on-surface-variant hover:text-primary transition-colors tonal-shift p-2 rounded-lg" href="#">
+        <a class="text-on-surface-variant hover:text-primary transition-colors tonal-shift p-2 rounded-lg" href="https://siliconvalley.com" target="_blank" rel="noopener noreferrer">
           <span class="material-symbols-outlined">public</span>
         </a>
-        <a class="text-on-surface-variant hover:text-primary transition-colors tonal-shift p-2 rounded-lg" href="#">
+        <a class="text-on-surface-variant hover:text-primary transition-colors tonal-shift p-2 rounded-lg" href="mailto:info@siliconvalley.com">
           <span class="material-symbols-outlined">alternate_email</span>
         </a>
       </div>
@@ -15,33 +15,33 @@
     <div>
       <h5 class="label-md text-on-surface mb-4">Shop</h5>
       <ul class="space-y-3">
-        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">Laptops</a></li>
-        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">Accessories</a></li>
-        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">Gadgets</a></li>
-        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">New Arrivals</a></li>
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" routerLink="/products" [queryParams]="{category: 'laptops'}">Laptops</a></li>
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" routerLink="/products" [queryParams]="{category: 'accessories'}">Accessories</a></li>
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" routerLink="/products" [queryParams]="{category: 'gadgets'}">Gadgets</a></li>
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" routerLink="/products">New Arrivals</a></li>
       </ul>
     </div>
     <div>
       <h5 class="label-md text-on-surface mb-4">Company</h5>
       <ul class="space-y-3">
-        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">About Us</a></li>
-        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a></li>
-        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
-        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" routerLink="/info">About Us</a></li>
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" routerLink="/info">Contact</a></li>
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" routerLink="/info">Privacy Policy</a></li>
+        <li><a class="text-sm font-body text-on-surface-variant hover:text-primary transition-colors" routerLink="/info">Terms of Service</a></li>
       </ul>
     </div>
     <div>
       <h5 class="label-md text-on-surface mb-4">Newsletter</h5>
       <p class="text-sm text-on-surface-variant mb-4">Get curated tech updates in your inbox.</p>
       <form class="flex gap-2">
-        <input class="bg-surface-container-high no-line rounded-lg py-2 px-4 text-sm w-full focus:ring-2 focus:ring-primary/20 text-on-surface placeholder:text-outline" placeholder="Email address" type="email"/>
-        <button class="bg-primary text-on-primary p-2 rounded-lg hover:bg-primary-container transition-colors">
-          <span class="material-symbols-outlined">send</span>
+        <input class="bg-surface-container-high no-line rounded-lg py-2 px-3 sm:px-4 text-xs sm:text-sm w-full focus:ring-2 focus:ring-primary/20 text-on-surface placeholder:text-outline" placeholder="Email address" type="email"/>
+        <button class="bg-primary text-on-primary p-2 rounded-lg hover:bg-primary-container transition-colors flex-shrink-0">
+          <span class="material-symbols-outlined text-xl">send</span>
         </button>
       </form>
     </div>
   </div>
-  <div class="max-w-7xl mx-auto px-8 py-6 bg-surface-container">
-    <p class="text-xs font-body text-on-surface-variant opacity-60 text-center">© 2024 Silicon Valley. Atmospheric Precision.</p>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 bg-surface-container">
+    <p class="text-[10px] sm:text-xs font-body text-on-surface-variant opacity-60 text-center">© 2024 Silicon Valley. Atmospheric Precision.</p>
   </div>
 </footer>

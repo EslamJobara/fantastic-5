@@ -359,3 +359,12 @@ select:focus {
   border-color: #0058be !important;
   box-shadow: 0 10px 30px -10px rgba(0, 88, 190, 0.2) !important;
 }
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
