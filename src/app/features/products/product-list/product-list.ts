@@ -51,7 +51,6 @@ export class ProductListComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error loading categories:', error);
         this.isLoadingCategories = false;
         this.cdr.detectChanges();
       }
@@ -62,17 +61,15 @@ export class ProductListComponent implements OnInit {
     this.isLoadingProducts = true;
     this.productService.getProducts().subscribe({
       next: (response) => {
-        this.allProducts = response.data; // Store all products
-        this.products = response.data; // Display all initially
+        this.allProducts = response.data;
+        this.products = response.data;
         this.isLoadingProducts = false;
-        // Apply filters if any exist
         if (this.searchQuery || this.selectedCategory || this.minPrice !== null || this.maxPrice !== null) {
           this.applyFilters();
         }
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error loading products:', error);
         this.isLoadingProducts = false;
         this.cdr.detectChanges();
       }
@@ -82,11 +79,11 @@ export class ProductListComponent implements OnInit {
   filterByCategory(categoryId: string | null) {
     this.selectedCategory = categoryId;
     this.applyFilters();
+    this.cdr.detectChanges();
   }
 
   handleAddToCart(product: any) {
-    console.log('Add to cart:', product);
-    // Add your cart logic here
+    // TODO: Add cart logic here
   }
 
   handleViewDetails(product: Product) {

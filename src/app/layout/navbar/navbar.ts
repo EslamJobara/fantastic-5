@@ -60,7 +60,6 @@ export class Navbar implements OnInit {
   }
 
   onSearch(query: string) {
-    console.log('Search query:', query);
-    // Add your search logic here
+    // TODO: Implement search logic
   }
 }

@@ -95,7 +95,6 @@ export class SearchBar implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Search error:', error);
         this.isSearching = false;
         this.cdr.detectChanges();
       }

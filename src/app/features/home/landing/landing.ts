@@ -119,7 +119,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(() => this.updatePill(0), 100);
       },
       error: (error) => {
-        console.error('Error loading categories:', error);
       }
     });
   }
@@ -131,7 +130,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error loading products:', error);
       }
     });
   }
