@@ -12,15 +12,37 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  name: string;
+  role?: string;
+  fullName: string;
+  userName: string;
+  age: number;
+  phone: string;
   email: string;
   password: string;
 }
 
-export interface AuthResponse {
+export interface LoginResponse {
   message: string;
   data: {
-    token: string;
-    user: User;
+    accessToken: string;
+    refreshToken: string;
+  };
+}
+
+
+export interface RegisterResponse {
+  message: string;
+  data: {
+    role: string;
+    fullName: string;
+    userName: string;
+    age: number;
+    phone: string;
+    email: string;
+    password: string;
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
   };
 }

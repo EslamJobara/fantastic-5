@@ -26,6 +26,14 @@ export interface Category {
   image?: string;
 }
 
+export interface ProductFilters {
+  category?: string;
+  search?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+// API Response Types
 export interface ProductsResponse {
   message: string;
   data: Product[];

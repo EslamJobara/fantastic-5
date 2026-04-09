@@ -3,34 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { User, LoginRequest, RegisterRequest, AuthResponse } from '@core/models';
-
-export interface RegisterRequestExtended {
-  role?: string;
-  fullName: string;
-  userName: string;
-  age: number;
-  phone: string;
-  email: string;
-  password: string;
-}
-
-export interface RegisterResponse {
-  message: string;
-  data: {
-    role: string;
-    fullName: string;
-    userName: string;
-    age: number;
-    phone: string;
-    email: string;
-    password: string;
-    _id: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-  };
-}
+import { User, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '@core/models';
 
 @Injectable({
   providedIn: 'root'
@@ -45,17 +18,18 @@ export class AuthService {
     private router: Router
   ) {}
 
-  login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
+  login(credentials: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
         tap(response => {
-          localStorage.setItem('access_token', response.data.token);
-          this.currentUserSubject.next(response.data.user);
+          localStorage.setItem('access_token', response.data.accessToken);
+          localStorage.setItem('refresh_token', response.data.refreshToken);
+          this.currentUserSubject.next({ loggedIn: true } as any);
         })
       );
   }
 
-  register(data: RegisterRequestExtended): Observable<RegisterResponse> {
+  register(data: RegisterRequest): Observable<RegisterResponse> {
     const requestData = {
       role: 'user',
       ...data
@@ -64,7 +38,7 @@ export class AuthService {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/signUp`, requestData);
   }
 
-  registerAndLogin(data: RegisterRequestExtended): Observable<AuthResponse> {
+  registerAndLogin(data: RegisterRequest): Observable<LoginResponse> {
     return this.register(data).pipe(
       switchMap(() => {
         return this.login({
