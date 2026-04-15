@@ -1,0 +1,298 @@
+<app-blob-background />
+<main class="grow flex items-center justify-center pt-32 pb-20 px-6">
+  <div class="w-full max-w-5xl glass-card rounded-3xl overflow-hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-2">
+      
+      <div class="relative hidden lg:flex flex-col justify-end p-16 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+          @if (activeTab === 'login') {
+            <img 
+              [@fadeScale]
+              class="w-full h-full object-cover" 
+              alt="Modern minimalist workspace with high-end electronic gadgets" 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCncIIxyhOJ65uduB4yZvI73eD98R1QKokjY5iBY6WrJLMVb9VbP8IVpfJmE3BWLPpKJFhSplyBYHx0rqkfOXZIyjuW60gLJTCiPVDonxq0bUB6yAx91xEqc6hv1QfpLohHy230UV55EIcOTlJQeioGqe3-LJ9Z265T0fGxnPNmBQ-HfdnqUOrB-EUj2xVPtkDiOyLyPMfuFDm7mS4uKCEYJRSGCo1pxM5HT8XvFe3wDbhmOaT6g77ayJrpPJ5c3mxJW36i6pGOZPEU"/>
+          }
+          @if (activeTab === 'register') {
+            <img 
+              [@fadeScale]
+              class="w-full h-full object-cover" 
+              alt="Elegant tech workspace with premium devices" 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWwByWoF_czGMPp8nXiLTU80OLCCidq3mrxVLOqQ7hsmGij0XntunqD0QuhZo0Fb0EC4VPJT99zYrSf18FyuF28UZHiOdTpag-lF_PaipZJ-P2t0qX8PmHZ_-wcNLgAOAkXoVXgmJJIZmx37YIAVSj8jL_hbKTj1OjoqKT2vSieIDsf6ZIrCsjCQo9IJDPV6WmXXUIcJ_eG96ghEdRLHFyGWuP5XmvXfCzq-4zLSJIVgl3gww3zihnPaYEQNS1-0jUz7p42oJP1kSq"/>
+          }
+          <div class="absolute inset-0 bg-linear-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
+        </div>
+        <div class="relative z-10">
+          @if (activeTab === 'login') {
+            <div [@fadeScale]>
+              <div class="inline-flex px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold tracking-[0.2em] rounded-full uppercase mb-6">
+                Archive Vol. 01
+              </div>
+              <h1 class="font-headline text-5xl font-black text-white leading-tight tracking-tighter mb-4">
+                The Liquid<br/>
+                <span class="text-blue-400">Experience.</span>
+              </h1>
+              <p class="text-slate-300 text-sm leading-relaxed max-w-sm font-medium">
+                Enter the curated gallery where technology meets fluid aesthetics. A workspace redefined.
+              </p>
+            </div>
+          }
+          @if (activeTab === 'register') {
+            <div [@fadeScale]>
+              <div class="inline-flex px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold tracking-[0.2em] rounded-full uppercase mb-6">
+                Archive Vol. 02
+              </div>
+              <h1 class="font-headline text-5xl font-black text-white leading-tight tracking-tighter mb-4">
+                Join The<br/>
+                <span class="text-blue-400">Collection.</span>
+              </h1>
+              <p class="text-slate-300 text-sm leading-relaxed max-w-sm font-medium">
+                Become part of our exclusive community where precision meets design excellence.
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="p-10 md:p-14 lg:p-20 flex flex-col">
+        
+        <div class="mb-12">
+          <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
+            {{ activeTab === 'login' ? 'Welcome Back' : 'Create Account' }}
+          </h2>
+          <p class="text-on-surface-variant font-medium text-sm">
+            {{ activeTab === 'login' ? 'Access your curated dashboard.' : 'Join our curated community of tech enthusiasts.' }}
+          </p>
+        </div>
+
+        <div class="flex p-1.5 bg-white/30 backdrop-blur-md rounded-2xl mb-10 border border-white/40">
+          <button 
+            type="button"
+            (click)="switchTab('login')"
+            [class.bg-white]="activeTab === 'login'"
+            [class.shadow-sm]="activeTab === 'login'"
+            [class.text-primary]="activeTab === 'login'"
+            [class.text-on-surface-variant]="activeTab !== 'login'"
+            class="flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all">
+            Login
+          </button>
+          <button 
+            type="button"
+            (click)="switchTab('register')"
+            [class.bg-white]="activeTab === 'register'"
+            [class.shadow-sm]="activeTab === 'register'"
+            [class.text-primary]="activeTab === 'register'"
+            [class.text-on-surface-variant]="activeTab !== 'register'"
+            class="flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all">
+            Register
+          </button>
+        </div>
+
+        @if (activeTab === 'login') {
+          <form [@fadeScale] [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          
+          @if (errorMessage) {
+            <div class="p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-600 text-sm">
+              {{ errorMessage }}
+            </div>
+          }
+          
+          <div class="space-y-2">
+            <label class="label-md text-on-surface-variant ml-1">Email Identity</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">alternate_email</span>
+              <input 
+                formControlName="email"
+                class="w-full pl-12 pr-4 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                [class.border-red-500]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                placeholder="curator@vitrine.io" 
+                type="email"/>
+            </div>
+            @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+              <p class="text-xs text-red-500 ml-1">{{ getLoginError('email') }}</p>
+            }
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex justify-between items-center px-1">
+              <label class="label-md text-on-surface-variant">Access Code</label>
+              <a class="label-md text-primary hover:text-primary/80 transition-colors" href="#">Reset Link</a>
+            </div>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">fingerprint</span>
+              <input 
+                formControlName="password"
+                class="w-full pl-12 pr-12 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                [class.border-red-500]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                placeholder="••••••••" 
+                [type]="showPassword ? 'text' : 'password'"/>
+              <button 
+                (click)="togglePasswordVisibility()"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors" 
+                type="button">
+                <span class="material-symbols-outlined text-xl">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+              <p class="text-xs text-red-500 ml-1">{{ getLoginError('password') }}</p>
+            }
+          </div>
+
+          <button 
+            [disabled]="isLoading"
+            class="w-full py-5 liquid-gradient text-white rounded-2xl font-black text-sm tracking-widest uppercase shadow-primary hover:shadow-primary-lg transition-all active:scale-[0.98] duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
+            type="submit">
+            {{ isLoading ? 'Loading...' : 'Login' }}
+          </button>
+        </form>
+        }
+
+        @if (activeTab === 'register') {
+          <form [@fadeScale] [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          
+          @if (errorMessage) {
+            <div class="p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-600 text-sm">
+              {{ errorMessage }}
+            </div>
+          }
+          
+          <div class="space-y-2">
+            <label class="label-md text-on-surface-variant ml-1">Full Name</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">person</span>
+              <input 
+                formControlName="fullName"
+                class="w-full pl-12 pr-4 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                [class.border-red-500]="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched"
+                placeholder="John Doe" 
+                type="text"/>
+            </div>
+            @if (registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched) {
+              <p class="text-xs text-red-500 ml-1">{{ getRegisterError('fullName') }}</p>
+            }
+          </div>
+
+          <div class="space-y-2">
+            <label class="label-md text-on-surface-variant ml-1">Username</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">badge</span>
+              <input 
+                formControlName="userName"
+                class="w-full pl-12 pr-4 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                [class.border-red-500]="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched"
+                placeholder="john_doe" 
+                type="text"/>
+            </div>
+            @if (registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched) {
+              <p class="text-xs text-red-500 ml-1">{{ getRegisterError('userName') }}</p>
+            }
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="label-md text-on-surface-variant ml-1">Age</label>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">cake</span>
+                <input 
+                  formControlName="age"
+                  class="w-full pl-12 pr-4 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                  [class.border-red-500]="registerForm.get('age')?.invalid && registerForm.get('age')?.touched"
+                  placeholder="25" 
+                  type="number"
+                  min="13"
+                  max="120"/>
+              </div>
+              @if (registerForm.get('age')?.invalid && registerForm.get('age')?.touched) {
+                <p class="text-xs text-red-500 ml-1">{{ getRegisterError('age') }}</p>
+              }
+            </div>
+
+            <div class="space-y-2">
+              <label class="label-md text-on-surface-variant ml-1">Phone</label>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">phone</span>
+                <input 
+                  formControlName="phone"
+                  class="w-full pl-12 pr-4 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                  [class.border-red-500]="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched"
+                  placeholder="01012345678" 
+                  type="tel"/>
+              </div>
+              @if (registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched) {
+                <p class="text-xs text-red-500 ml-1">{{ getRegisterError('phone') }}</p>
+              }
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="label-md text-on-surface-variant ml-1">Email Identity</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">alternate_email</span>
+              <input 
+                formControlName="email"
+                class="w-full pl-12 pr-4 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                [class.border-red-500]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+                placeholder="curator@vitrine.io" 
+                type="email"/>
+            </div>
+            @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+              <p class="text-xs text-red-500 ml-1">{{ getRegisterError('email') }}</p>
+            }
+          </div>
+
+          <div class="space-y-2">
+            <label class="label-md text-on-surface-variant ml-1">Password</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">fingerprint</span>
+              <input 
+                formControlName="password"
+                class="w-full pl-12 pr-12 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                [class.border-red-500]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+                placeholder="••••••••" 
+                [type]="showPassword ? 'text' : 'password'"/>
+              <button 
+                (click)="togglePasswordVisibility()"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors" 
+                type="button">
+                <span class="material-symbols-outlined text-xl">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+            @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+              <p class="text-xs text-red-500 ml-1">{{ getRegisterError('password') }}</p>
+            }
+          </div>
+
+          <div class="space-y-2">
+            <label class="label-md text-on-surface-variant ml-1">Confirm Password</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">lock</span>
+              <input 
+                formControlName="confirmPassword"
+                class="w-full pl-12 pr-12 py-4 glass-input rounded-2xl focus:ring-0 text-on-surface placeholder:text-outline font-medium" 
+                [class.border-red-500]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+                placeholder="••••••••" 
+                [type]="showConfirmPassword ? 'text' : 'password'"/>
+              <button 
+                (click)="toggleConfirmPasswordVisibility()"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors" 
+                type="button">
+                <span class="material-symbols-outlined text-xl">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+            @if (registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched || registerForm.hasError('passwordMismatch')) {
+              <p class="text-xs text-red-500 ml-1">{{ getRegisterError('confirmPassword') }}</p>
+            }
+          </div>
+
+          <button 
+            [disabled]="isLoading"
+            class="w-full py-5 liquid-gradient text-white rounded-2xl font-black text-sm tracking-widest uppercase shadow-primary hover:shadow-primary-lg transition-all active:scale-[0.98] duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
+            type="submit">
+            {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+          </button>
+        </form>
+        }
+
+      </div>
+    </div>
+  </div>
+</main>

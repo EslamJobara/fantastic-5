@@ -1,0 +1,194 @@
+<app-blob-background />
+<main class="pt-32 pb-20 max-w-7xl mx-auto px-8">
+  <div class="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
+    <div>
+      <p class="text-body-md text-on-surface-variant">Displaying {{ products.length }} Precision Instruments</p>
+    </div>
+    
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
+      <div class="w-full sm:w-96 lg:w-[28rem]">
+        <app-search-bar 
+          placeholder="Search products..." 
+          width="w-full"
+          variant="page"
+          [showDropdown]="false"
+          [searchValue]="searchQuery"
+          (search)="handleSearch($event)">
+        </app-search-bar>
+      </div>
+      
+      <div class="flex items-center gap-4 whitespace-nowrap">
+        <label class="label-md text-outline">Sort By</label>
+        <select 
+          [(ngModel)]="sortBy"
+          (ngModelChange)="onSortChange()"
+          class="bg-transparent no-line text-sm font-bold text-primary focus:ring-0 cursor-pointer">
+          <option value="newest">Newest Arrivals</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col md:flex-row gap-12">
+    <aside class="w-full md:w-64 flex-shrink-0">
+      <div class="glass-card rounded-3xl p-8 space-y-10 sticky top-24">
+        <section>
+          <h3 class="label-md text-outline mb-6">Category</h3>
+          
+          @if (isLoadingCategories) {
+            <div class="flex flex-col justify-center items-center py-8 gap-3">
+              <div class="relative w-12 h-12">
+                <div class="absolute inset-0 border-4 rounded-full" style="border-color: rgba(0, 88, 190, 0.1);"></div>
+                <div class="absolute inset-0 border-4 border-transparent rounded-full animate-spin" style="border-top-color: #0058be;"></div>
+              </div>
+              <p class="text-xs text-on-surface-variant">Loading...</p>
+            </div>
+          } @else {
+            <div class="space-y-3">
+              <label 
+                (click)="filterByCategory(null)"
+                class="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition-colors">
+                <div class="relative w-5 h-5">
+                  <input 
+                    type="radio" 
+                    name="categoryFilter" 
+                    [checked]="selectedCategory === null"
+                    class="appearance-none w-5 h-5 border-2 border-slate-300 rounded checked:border-blue-600 checked:bg-blue-600 cursor-pointer"
+                  />
+                  @if (selectedCategory === null) {
+                    <svg class="absolute top-1 left-1 w-3 h-3 text-white pointer-events-none" 
+                      fill="currentColor" 
+                      viewBox="0 0 12 12">
+                      <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                  }
+                </div>
+                <span class="text-sm select-none"
+                      [class.text-slate-900]="selectedCategory === null"
+                      [class.font-semibold]="selectedCategory === null"
+                      [class.text-slate-600]="selectedCategory !== null">All Products</span>
+              </label>
+              
+              @for (category of categories; track category._id) {
+                <label 
+                  (click)="filterByCategory(category._id)"
+                  class="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition-colors">
+                  <div class="relative w-5 h-5">
+                    <input 
+                      type="radio" 
+                      name="categoryFilter" 
+                      [checked]="selectedCategory === category._id"
+                      class="appearance-none w-5 h-5 border-2 border-slate-300 rounded checked:border-blue-600 checked:bg-blue-600 cursor-pointer"
+                    />
+                    @if (selectedCategory === category._id) {
+                      <svg class="absolute top-1 left-1 w-3 h-3 text-white pointer-events-none" 
+                        fill="currentColor" 
+                        viewBox="0 0 12 12">
+                        <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </svg>
+                    }
+                  </div>
+                  <span class="text-sm select-none"
+                        [class.text-slate-900]="selectedCategory === category._id"
+                        [class.font-semibold]="selectedCategory === category._id"
+                        [class.text-slate-600]="selectedCategory !== category._id">{{ category.name }}</span>
+                </label>
+              }
+            </div>
+          }
+        </section>
+
+        <section>
+          <h3 class="label-md text-outline mb-6">Price Range</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="text-xs text-on-surface-variant mb-2 block">Min Price (EGP)</label>
+              <input 
+                type="number" 
+                [(ngModel)]="minPrice"
+                (ngModelChange)="onPriceFilterChange()"
+                placeholder="0"
+                min="0"
+                class="w-full glass-card rounded-lg px-4 py-2 text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 transition-all no-line"
+              />
+            </div>
+            <div>
+              <label class="text-xs text-on-surface-variant mb-2 block">Max Price (EGP)</label>
+              <input 
+                type="number" 
+                [(ngModel)]="maxPrice"
+                (ngModelChange)="onPriceFilterChange()"
+                placeholder="No limit"
+                min="0"
+                class="w-full glass-card rounded-lg px-4 py-2 text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 transition-all no-line"
+              />
+            </div>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <div class="flex-1">
+      <div class="glass-card rounded-3xl p-8 lg:p-10">
+        @if (isLoadingProducts) {
+          <div class="flex flex-col justify-center items-center py-20 gap-4">
+            <div class="relative w-16 h-16">
+              <div class="absolute inset-0 border-4 rounded-full" style="border-color: rgba(0, 88, 190, 0.1);"></div>
+              <div class="absolute inset-0 border-4 border-transparent rounded-full animate-spin" style="border-top-color: #0058be;"></div>
+            </div>
+            <p class="text-on-surface-variant text-sm font-medium">Loading products...</p>
+          </div>
+        } @else if (products.length === 0) {
+          <div class="flex flex-col justify-center items-center py-20">
+            <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4">inventory_2</span>
+            <p class="text-on-surface-variant text-lg">No products found</p>
+          </div>
+        } @else {
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+            @for (product of paginatedProducts; track product._id) {
+              <app-product-card 
+                [product]="product"
+                [showActions]="true"
+                [isAddingToCart]="addingToCartMap[product._id]"
+                [addToCartSuccess]="addToCartSuccessMap[product._id]"
+                [addToCartError]="addToCartErrorMap[product._id]"
+                (addToCart)="handleAddToCart($event)"
+                (viewDetails)="handleViewDetails($event)">
+              </app-product-card>
+            }
+          </div>
+        }
+      </div>
+
+      @if (!isLoadingProducts && products.length > 0 && totalPages > 1) {
+      <div class="mt-20 flex justify-center items-center gap-4">
+        <button
+          (click)="prevPage()"
+          [disabled]="currentPage === 1"
+          class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all tonal-shift disabled:opacity-50 disabled:cursor-not-allowed">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <div class="flex items-center gap-2">
+          @for (page of pageNumbers; track page) {
+            <button
+              (click)="goToPage(page)"
+              [class]="currentPage === page
+                ? 'w-12 h-12 flex items-center justify-center rounded-full bg-primary text-on-primary font-bold shadow-primary'
+                : 'w-12 h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high font-bold transition-all tonal-shift'">
+              {{ page }}
+            </button>
+          }
+        </div>
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all tonal-shift disabled:opacity-50 disabled:cursor-not-allowed">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+</main>

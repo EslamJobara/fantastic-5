@@ -1,0 +1,76 @@
+<nav class="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-xl border-b border-white/20 shadow-xl">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <div class="flex items-center gap-4 lg:gap-12">
+      <a class="text-xl font-bold tracking-tighter text-on-surface" routerLink="/">Silicon Valley</a>
+      <div class="hidden md:flex items-center gap-8">
+        <a class="font-body tracking-tight text-on-surface-variant hover:text-on-surface tonal-shift px-3 py-2 rounded-lg transition-colors"
+          routerLink="/" routerLinkActive="text-primary font-semibold"
+          [routerLinkActiveOptions]="{exact: true}">Home</a>
+        <a class="font-body tracking-tight text-on-surface-variant hover:text-on-surface tonal-shift px-3 py-2 rounded-lg transition-colors"
+          routerLink="/products" routerLinkActive="text-primary font-semibold">Products</a>
+        <a class="font-body tracking-tight text-on-surface-variant hover:text-on-surface tonal-shift px-3 py-2 rounded-lg transition-colors"
+          routerLink="/info" routerLinkActive="text-primary font-semibold">Info</a>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 sm:gap-4 lg:gap-6 mobile-menu-container">
+      @if (showSearchBar) {
+        <div class="hidden lg:block w-80">
+          <app-search-bar placeholder="Search products..." width="w-full" variant="navbar" (search)="onSearch($event)">
+          </app-search-bar>
+        </div>
+      }
+      <div class="flex items-center gap-2">
+        <button class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95"
+          routerLink="/cart">
+          <span class="material-symbols-outlined text-on-surface-variant">shopping_cart</span>
+        </button>
+
+        <div class="relative user-menu-container">
+          @if (!isLoggedIn) {
+            <button class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95"
+              routerLink="/auth/login">
+              <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+            </button>
+          }
+
+          @if (isLoggedIn) {
+            <button (click)="toggleUserMenu($event)"
+              class="p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95">
+              <span class="material-symbols-outlined text-primary">account_circle</span>
+            </button>
+          }
+
+          @if (isLoggedIn && showUserMenu) {
+            <div class="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-xl border border-white/40 rounded-2xl shadow-xl overflow-hidden z-50">
+              <a routerLink="/orders" (click)="toggleUserMenu($event)"
+                class="w-full px-4 py-3 text-left text-sm font-medium text-on-surface hover:bg-surface-container transition-colors flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary">receipt_long</span>
+                <span>Orders</span>
+              </a>
+
+              <button (click)="logout()"
+                class="w-full px-4 py-3 text-left text-sm font-medium text-on-surface hover:bg-surface-container transition-colors flex items-center gap-3">
+                <span class="material-symbols-outlined text-error">logout</span>
+                <span>Sign Out</span>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+      <button
+        (click)="toggleMobileMenu($event)"
+        class="md:hidden p-2 tonal-shift rounded-lg transition-all duration-300 ease-in-out active:scale-95">
+        <span class="material-symbols-outlined text-on-surface-variant">{{ showMobileMenu ? 'close' : 'menu' }}</span>
+      </button>
+    </div>
+  </div>
+  @if (showMobileMenu) {
+    <div class="md:hidden border-t border-white/30 bg-white/90 backdrop-blur-xl px-4 py-4">
+      <div class="flex flex-col gap-2">
+        <a routerLink="/" (click)="toggleMobileMenu($event)" class="font-body px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface tonal-shift">Home</a>
+        <a routerLink="/products" (click)="toggleMobileMenu($event)" class="font-body px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface tonal-shift">Products</a>
+        <a routerLink="/info" (click)="toggleMobileMenu($event)" class="font-body px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface tonal-shift">Info</a>
+      </div>
+    </div>
+  }
+</nav>

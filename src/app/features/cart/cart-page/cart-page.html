@@ -1,0 +1,167 @@
+<app-blob-background />
+<main class="pt-32 pb-20 px-8 max-w-7xl mx-auto">
+  <div class="mb-12">
+    <h1 class="text-display-md text-on-surface mb-2">Shopping Cart</h1>
+    <p class="text-body-md text-on-surface-variant">Review your items before precision-engineered delivery.</p>
+  </div>
+
+  @if (isLoadingCart) {
+    <div class="glass-card p-16 rounded-2xl text-center">
+      <div class="relative w-14 h-14 mx-auto mb-4">
+        <div class="absolute inset-0 border-4 rounded-full" style="border-color: rgba(0, 88, 190, 0.1);"></div>
+        <div class="absolute inset-0 border-4 border-transparent rounded-full animate-spin" style="border-top-color: #0058be;"></div>
+      </div>
+      <p class="text-body-md text-on-surface-variant">Loading your cart...</p>
+    </div>
+  }
+
+  @if (!isLoadingCart && !hasItems) {
+    <div class="glass-card p-16 rounded-2xl text-center">
+      <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4 block">shopping_cart</span>
+      <h2 class="text-title-lg text-on-surface mb-2">Your cart is empty</h2>
+      <p class="text-body-md text-on-surface-variant mb-8">Start adding some amazing products!</p>
+      <a routerLink="/products" class="inline-flex items-center gap-2 liquid-gradient text-white px-8 py-4 rounded-2xl font-bold">
+        Browse Products
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+  }
+
+  @if (!isLoadingCart && hasItems) {
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <div class="lg:col-span-8 space-y-6">
+        @for (item of cart.items; track item.id + '-' + $index) {
+          <div class="group relative glass-card p-6 rounded-xl flex flex-col md:flex-row gap-8 transition-all duration-300 hover:shadow-lg">
+            <div class="w-full md:w-48 h-48 rounded-lg overflow-hidden bg-white/60 flex items-center justify-center border border-white/50">
+              <img 
+                [src]="item.image" 
+                [alt]="item.name"
+                class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700" 
+              />
+            </div>
+            <div class="flex-1 flex flex-col justify-between py-2">
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="title-lg text-on-surface">{{ item.name }}</h3>
+                  <p class="text-body-sm text-on-surface-variant mt-1">{{ item.description }}</p>
+                </div>
+                <span class="title-lg text-primary">EGP{{ item.price.toFixed(2) }}</span>
+              </div>
+              <div class="flex items-center justify-between mt-6">
+                <div class="flex items-center bg-white/40 border border-white/60 rounded-full p-1">
+                  <button 
+                    (click)="decreaseQuantity(item)"
+                    [disabled]="item.quantity <= 1"
+                    class="w-8 h-8 flex items-center justify-center tonal-shift rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span class="material-symbols-outlined text-sm">remove</span>
+                  </button>
+                  <span class="px-4 font-medium text-on-surface">{{ item.quantity }}</span>
+                  <button 
+                    (click)="increaseQuantity(item)"
+                    class="w-8 h-8 flex items-center justify-center tonal-shift rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-sm">add</span>
+                  </button>
+                </div>
+                <button 
+                  (click)="promptRemoveItem(item)"
+                  class="flex items-center gap-2 text-on-surface-variant hover:text-error transition-colors text-sm font-medium">
+                  <span class="material-symbols-outlined text-lg">delete</span>Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <aside class="lg:col-span-4 sticky top-32">
+        <div class="glass-card p-8 rounded-2xl shadow-lg">
+          <h2 class="text-title-lg text-on-surface mb-8">Order Summary</h2>
+          <div class="space-y-4 mb-8">
+            <div class="flex justify-between text-on-surface-variant">
+              <span class="font-medium">Subtotal</span>
+              <span>EGP{{ cart.subtotal.toFixed(2) }}</span>
+            </div>
+            <div class="flex justify-between text-on-surface-variant">
+              <span class="font-medium">Shipping</span>
+              @if (cart.shipping === 0) {
+                <span class="label-md text-tertiary">Free</span>
+              } @else {
+                <span>EGP{{ cart.shipping.toFixed(2) }}</span>
+              }
+            </div>
+            <div class="flex justify-between text-on-surface-variant">
+              <span class="font-medium">Tax</span>
+              <span>EGP{{ cart.tax.toFixed(2) }}</span>
+            </div>
+            <div class="h-px bg-white/40 my-4"></div>
+            <div class="flex justify-between items-baseline">
+              <span class="title-md text-on-surface">Total Price</span>
+              <span class="text-3xl font-extrabold tracking-tighter text-on-surface">EGP{{ cart.total.toFixed(2) }}</span>
+            </div>
+          </div>
+          <button 
+            (click)="proceedToCheckout()"
+            class="w-full liquid-gradient text-white rounded-2xl py-5 text-lg font-black tracking-tight shadow-primary hover:shadow-primary-lg transition-all flex items-center justify-center gap-2">
+            Proceed to Checkout
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+          <div class="mt-6 flex items-center justify-center gap-4 text-xs text-on-surface-variant">
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+              Secure Transaction
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+              Free Premium Shipping
+            </div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  }
+
+  @if (pendingRemoveItem) {
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] flex items-center justify-center p-4">
+      <div class="glass-card w-full max-w-md rounded-2xl p-6 border border-white/30">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-title-md text-on-surface mb-2">Remove item?</h3>
+            <p class="text-sm text-on-surface-variant">
+              {{ pendingRemoveItem.name }} will be removed from your cart.
+            </p>
+          </div>
+          <button
+            (click)="cancelRemoveItem()"
+            class="w-9 h-9 rounded-full tonal-shift flex items-center justify-center text-on-surface-variant hover:text-on-surface">
+            <span class="material-symbols-outlined text-lg">close</span>
+          </button>
+        </div>
+
+        @if (removeError) {
+          <p class="text-sm text-error mt-4">{{ removeError }}</p>
+        }
+
+        <div class="mt-6 flex items-center justify-end gap-3">
+          <button
+            (click)="cancelRemoveItem()"
+            [disabled]="isRemovingItem"
+            class="px-5 py-2.5 rounded-xl bg-white/50 text-on-surface font-medium border border-white/50 disabled:opacity-60 disabled:cursor-not-allowed">
+            Cancel
+          </button>
+          <button
+            (click)="confirmRemoveItem()"
+            [disabled]="isRemovingItem"
+            class="px-5 py-2.5 rounded-xl bg-error text-white font-semibold shadow-md disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2">
+            @if (isRemovingItem) {
+              <span class="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+              Removing...
+            } @else {
+              Remove
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</main>

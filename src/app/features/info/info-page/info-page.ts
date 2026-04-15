@@ -1,0 +1,64 @@
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-info-page',
+  standalone: false,
+  templateUrl: './info-page.html',
+  styleUrl: './info-page.css',
+})
+export class InfoPage {
+  groupPhoto = 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80';
+
+  techStack = [
+    { name: 'MongoDB', icon: 'database', color: 'text-green-600' },
+    { name: 'Express', icon: 'deployed_code', color: 'text-gray-700' },
+    { name: 'Angular', icon: 'change_history', color: 'text-red-600' },
+    { name: 'Node.js', icon: 'nodejs', color: 'text-green-500' },
+    { name: 'TypeScript', icon: 'terminal', color: 'text-blue-600' },
+  ];
+
+  team = [
+    {
+      name: 'Eslam Jobara',
+      role: 'Customer Storefront Frontend Engineer',
+      image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
+      github: '#',
+      linkedin: '#'
+    },
+    {
+      name: 'Ziad Refaay',
+      role: 'Admin Dashboard Frontend Engineer',
+      image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
+      github: '#',
+      linkedin: '#'
+    },
+    {
+      name: 'Marawan Abd El-Hakeem',
+      role: 'Backend System Architect',
+      image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
+      github: '#',
+      linkedin: '#'
+    },
+    {
+      name: 'Mustafa Magdy',
+      role: 'UI/UX Designer',
+      image: 'https://scontent.fcai19-2.fna.fbcdn.net/v/t39.30808-6/475482574_9515800908470358_1258999011266720386_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=r4XzeoOiGkwQ7kNvwFWfvut&_nc_oc=Adp1tYkZZqTRA0pZcCdXaz79PljCbTVqnbj7hok3FWoXyJiHQ3znLI7I4YQKevz10Ic&_nc_zt=23&_nc_ht=scontent.fcai19-2.fna&_nc_gid=g1d7X0V6KmxoerIxc3ZvoA&_nc_ss=7a3a8&oh=00_Af1mnMqW-LO2090gENDpJjGlr_vgvGFQRpfb_j3JrHKn_Q&oe=69DD0B02',
+      github: '#',
+      linkedin: '#'
+    },
+    {
+      name: 'Saleh Mahmoud',
+      role: 'Product Details Page',
+      image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80',
+      github: '#',
+      linkedin: '#'
+    },
+  ];
+
+  scrollToElement(elementId: string): void {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    }
+  }
+}
