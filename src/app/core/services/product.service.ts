@@ -26,7 +26,9 @@ export class ProductService {
     return this.http.get<ProductResponse>(`${this.apiUrl}/getProductById/${productId}`).pipe(
       map(response => ({
         ...response,
-        data: this.enrichProduct(response.data)
+        data: Array.isArray(response.data)
+          ? response.data.map(product => this.enrichProduct(product))
+          : this.enrichProduct(response.data)
       }))
     );
   }

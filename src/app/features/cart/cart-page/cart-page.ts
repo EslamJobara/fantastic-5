@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from '../../../core/services/cart.service';
@@ -18,25 +18,37 @@ export class CartPageComponent implements OnInit, OnDestroy {
     shipping: 0,
     total: 0
   };
-  
-  promoCode = '';
-  isLoadingPromo = false;
-  promoError = '';
-  
+  isLoadingCart = true;
+  pendingRemoveItem: CartItem | null = null;
+  isRemovingItem = false;
+  removeError = '';
+
   private destroy$ = new Subject<void>();
 
   constructor(
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    // الاشتراك في تحديثات السلة
     this.cartService.cart$
       .pipe(takeUntil(this.destroy$))
       .subscribe(cart => {
         this.cart = cart;
+        this.cdr.detectChanges();
       });
+
+    this.cartService.getMyCart().subscribe({
+      next: () => {
+        this.isLoadingCart = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isLoadingCart = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -44,63 +56,51 @@ export class CartPageComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-   * زيادة كمية المنتج
-   */
   increaseQuantity(item: CartItem): void {
-    this.cartService.updateQuantity(item.id, item.quantity + 1).subscribe({
+    this.cartService.updateQuantity(item, item.quantity + 1).subscribe({
       error: (error) => console.error('Failed to update quantity', error)
     });
   }
 
-  /**
-   * تقليل كمية المنتج
-   */
   decreaseQuantity(item: CartItem): void {
     if (item.quantity > 1) {
-      this.cartService.updateQuantity(item.id, item.quantity - 1).subscribe({
+      this.cartService.updateQuantity(item, item.quantity - 1).subscribe({
         error: (error) => console.error('Failed to update quantity', error)
       });
     }
   }
 
-  /**
-   * حذف منتج من السلة
-   */
-  removeItem(item: CartItem): void {
-    if (confirm(`Remove ${item.name} from cart?`)) {
-      this.cartService.removeItem(item.id).subscribe({
-        error: (error) => console.error('Failed to remove item', error)
-      });
-    }
+  promptRemoveItem(item: CartItem): void {
+    this.pendingRemoveItem = item;
+    this.removeError = '';
   }
 
-  /**
-   * تطبيق كود الخصم
-   */
-  applyPromoCode(): void {
-    if (!this.promoCode.trim()) {
+  cancelRemoveItem(): void {
+    this.pendingRemoveItem = null;
+    this.isRemovingItem = false;
+    this.removeError = '';
+  }
+
+  confirmRemoveItem(): void {
+    if (!this.pendingRemoveItem || this.isRemovingItem) {
       return;
     }
 
-    this.isLoadingPromo = true;
-    this.promoError = '';
-
-    this.cartService.applyPromoCode(this.promoCode).subscribe({
+    this.isRemovingItem = true;
+    this.removeError = '';
+    this.cartService.removeItem(this.pendingRemoveItem).subscribe({
       next: () => {
-        this.promoCode = '';
-        this.isLoadingPromo = false;
+        this.cancelRemoveItem();
+        this.cdr.detectChanges();
       },
       error: (error) => {
-        this.promoError = error.error?.message || 'Invalid promo code';
-        this.isLoadingPromo = false;
+        this.isRemovingItem = false;
+        this.removeError = error?.error?.message || 'Failed to remove item';
+        this.cdr.detectChanges();
       }
     });
   }
 
-  /**
-   * الانتقال لصفحة الدفع
-   */
   proceedToCheckout(): void {
     if (this.cart.items.length === 0) {
       alert('Your cart is empty');
@@ -109,9 +109,6 @@ export class CartPageComponent implements OnInit, OnDestroy {
     this.router.navigate(['/checkout']);
   }
 
-  /**
-   * التحقق من وجود منتجات في السلة
-   */
   get hasItems(): boolean {
     return this.cart.items.length > 0;
   }

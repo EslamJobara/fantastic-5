@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ElementRef, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { Product as ApiProduct, Category } from '@core/models';
@@ -11,6 +12,7 @@ export interface HeroSlide {
   titleGradient: string;
   description: string;
   primaryButton: string;
+  primaryLink?: string;
   secondaryButton?: string;
   image: string;
   imageAlt: string;
@@ -40,7 +42,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       titleGradient: 'Pro M3.',
       description: 'Engineered for curators who demand atmospheric precision. 24-hour battery life encased in aerospace-grade titanium.',
       primaryButton: 'Shop Zenith',
-      secondaryButton: 'Specifications',
+      primaryLink: '/products/69d81a7dcaf394a614f441c6',
       image: '/pics/lap.png',
       imageAlt: 'Zenith Pro M3 Laptop',
       imageClass: 'w-full'
@@ -52,6 +54,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       titleGradient: 'Ultra X.',
       description: 'Experience atmospheric silence with industry-leading active noise cancellation and spatial acoustic drivers.',
       primaryButton: 'Explore Sound',
+      primaryLink: '/products/69d81acfcaf394a614f441e7',
       image: '/pics/headphone.png',
       imageAlt: 'Sonic Ultra X Headphones',
       imageClass: 'w-3/4'
@@ -63,6 +66,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       titleGradient: 'Watch.',
       description: 'The ultimate companion for the modern professional. Seamlessly syncing your digital life with sapphire-glass elegance.',
       primaryButton: 'Pre-order Now',
+      primaryLink: '/products/69d81afecaf394a614f441f2',
       image: '/pics/watch.png',
       imageAlt: 'Curator Watch II',
       imageClass: 'w-2/3'
@@ -82,7 +86,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private productService: ProductService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private router: Router
   ) {}
 
   ngAfterViewInit() {
@@ -153,6 +158,10 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       this.cardsVisible = true;
       this.cdr.detectChanges();
     }, 200);
+  }
+
+  goToProduct(product: ApiProduct): void {
+    this.router.navigate(['/products', product._id]);
   }
 
   get trackTransform(): string {

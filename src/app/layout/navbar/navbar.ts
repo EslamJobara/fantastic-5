@@ -13,6 +13,7 @@ export class Navbar implements OnInit {
   showSearchBar = true;
   isLoggedIn = false;
   showUserMenu = false;
+  showMobileMenu = false;
 
   constructor(
     private router: Router,
@@ -21,16 +22,15 @@ export class Navbar implements OnInit {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
-        // Hide search bar on products page
         this.showSearchBar = !event.url.includes('/products');
+        this.showMobileMenu = false;
+        this.showUserMenu = false;
       });
   }
 
   ngOnInit() {
-    // Check login status
     this.isLoggedIn = this.authService.isLoggedIn();
     
-    // Subscribe to auth changes
     this.authService.currentUser$.subscribe(user => {
       this.isLoggedIn = !!user || this.authService.isLoggedIn();
     });
@@ -40,10 +40,13 @@ export class Navbar implements OnInit {
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const userMenuContainer = target.closest('.user-menu-container');
+    const mobileMenuContainer = target.closest('.mobile-menu-container');
     
-    // لو الضغطة مش جوا الـ user menu container، قفل الـ menu
     if (!userMenuContainer && this.showUserMenu) {
       this.showUserMenu = false;
+    }
+    if (!mobileMenuContainer && this.showMobileMenu) {
+      this.showMobileMenu = false;
     }
   }
 
@@ -57,9 +60,16 @@ export class Navbar implements OnInit {
   logout() {
     this.authService.logout();
     this.showUserMenu = false;
+    this.showMobileMenu = false;
+  }
+
+  toggleMobileMenu(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.showMobileMenu = !this.showMobileMenu;
   }
 
   onSearch(query: string) {
-    // TODO: Implement search logic
   }
 }

@@ -1,14 +1,14 @@
 <app-blob-background />
 <main class="pt-20">
-  <section class="relative h-[85vh] overflow-hidden">
+  <section class="relative min-h-[100svh] lg:h-[85vh] overflow-hidden">
     <button 
       (click)="moveSlide(-1)" 
-      class="absolute left-8 top-1/2 -translate-y-1/2 z-40 w-12 h-12 flex items-center justify-center rounded-full glass-card text-on-surface hover:scale-110 shadow-ambient transition-all active:scale-95">
+      class="hidden md:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-40 w-10 h-10 lg:w-12 lg:h-12 items-center justify-center rounded-full glass-card text-on-surface hover:scale-110 shadow-ambient transition-all active:scale-95">
       <span class="material-symbols-outlined text-2xl leading-none">chevron_left</span>
     </button>
     <button 
       (click)="moveSlide(1)" 
-      class="absolute right-8 top-1/2 -translate-y-1/2 z-40 w-12 h-12 flex items-center justify-center rounded-full glass-card text-on-surface hover:scale-110 shadow-ambient transition-all active:scale-95">
+      class="hidden md:flex absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-40 w-10 h-10 lg:w-12 lg:h-12 items-center justify-center rounded-full glass-card text-on-surface hover:scale-110 shadow-ambient transition-all active:scale-95">
       <span class="material-symbols-outlined text-2xl leading-none">chevron_right</span>
     </button>
 
@@ -19,23 +19,25 @@
          (transitionend)="onTransitionEnd($event)">
 
       <div class="min-w-full h-full flex items-center" aria-hidden="true">
-        <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
-          <div class="lg:col-span-5 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center pointer-events-auto py-16 lg:py-0">
+          <div class="lg:col-span-5 z-10 text-center lg:text-left">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest mb-8"
                  [class]="heroSlides[heroSlides.length - 1].badgeClass">
               {{ heroSlides[heroSlides.length - 1].badge }}
             </div>
-            <h2 class="text-[5.5rem] lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">
+            <h2 class="text-5xl sm:text-6xl lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-6 lg:mb-8 leading-[0.95]">
               {{ heroSlides[heroSlides.length - 1].title }}<br/>
               <span class="text-transparent bg-clip-text bg-gradient-to-r" 
                     [class]="getTitleGradientClass(heroSlides.length - 1)">
                 {{ heroSlides[heroSlides.length - 1].titleGradient }}
               </span>
             </h2>
-            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">
+            <p class="text-base sm:text-lg lg:text-xl text-on-surface-variant max-w-md mx-auto lg:mx-0 mb-8 lg:mb-10 leading-relaxed font-medium">
               {{ heroSlides[heroSlides.length - 1].description }}
             </p>
-            <button class="btn-amber">{{ heroSlides[heroSlides.length - 1].primaryButton }}</button>
+            <a class="btn-amber inline-flex" [routerLink]="heroSlides[heroSlides.length - 1].primaryLink || '/products'">
+              {{ heroSlides[heroSlides.length - 1].primaryButton }}
+            </a>
           </div>
           <div class="lg:col-span-7 relative flex justify-center">
             <img [class]="'relative z-10 h-auto object-contain ' + (heroSlides[heroSlides.length - 1].imageClass || '')"
@@ -47,8 +49,8 @@
 
       @for (slide of heroSlides; track $index) {
         <div class="min-w-full h-full flex items-center">
-          <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
-            <div class="lg:col-span-5 z-10">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center pointer-events-auto py-16 lg:py-0">
+            <div class="lg:col-span-5 z-10 text-center lg:text-left">
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest mb-8"
                    [class]="slide.badgeClass">
                 @if (slide.hasAnimation) {
@@ -59,17 +61,19 @@
                 }
                 {{ slide.badge }}
               </div>
-              <h1 class="text-[5.5rem] lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">
+              <h1 class="text-5xl sm:text-6xl lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-6 lg:mb-8 leading-[0.95]">
                 {{ slide.title }}<br/>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r" [class]="getTitleGradientClass($index)">
                   {{ slide.titleGradient }}
                 </span>
               </h1>
-              <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">
+              <p class="text-base sm:text-lg lg:text-xl text-on-surface-variant max-w-md mx-auto lg:mx-0 mb-8 lg:mb-10 leading-relaxed font-medium">
                 {{ slide.description }}
               </p>
-              <div class="flex flex-wrap gap-4">
-                <button class="btn-amber">{{ slide.primaryButton }}</button>
+              <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+                <a class="btn-amber inline-flex" [routerLink]="slide.primaryLink || '/products'">
+                  {{ slide.primaryButton }}
+                </a>
                 @if (slide.secondaryButton) {
                   <button class="bg-surface-container-high text-on-surface px-10 py-4 rounded-lg font-bold ghost-border hover:bg-surface-container-highest transition-all active:scale-95">
                     {{ slide.secondaryButton }}
@@ -90,8 +94,8 @@
       }
 
       <div class="min-w-full h-full flex items-center" aria-hidden="true">
-        <div class="max-w-7xl mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center pointer-events-auto">
-          <div class="lg:col-span-5 z-10">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center pointer-events-auto py-16 lg:py-0">
+            <div class="lg:col-span-5 z-10 text-center lg:text-left">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest mb-8"
                  [class]="heroSlides[0].badgeClass">
               @if (heroSlides[0].hasAnimation) {
@@ -102,17 +106,19 @@
               }
               {{ heroSlides[0].badge }}
             </div>
-            <h1 class="text-[5.5rem] lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-8 leading-[0.9]">
+            <h1 class="text-5xl sm:text-6xl lg:text-[6.5rem] font-black tracking-tight text-on-surface mb-6 lg:mb-8 leading-[0.95]">
               {{ heroSlides[0].title }}<br/>
               <span class="text-transparent bg-clip-text bg-gradient-to-r" [class]="getTitleGradientClass(0)">
                 {{ heroSlides[0].titleGradient }}
               </span>
             </h1>
-            <p class="text-xl text-on-surface-variant max-w-md mb-10 leading-relaxed font-medium">
+            <p class="text-base sm:text-lg lg:text-xl text-on-surface-variant max-w-md mx-auto lg:mx-0 mb-8 lg:mb-10 leading-relaxed font-medium">
               {{ heroSlides[0].description }}
             </p>
-            <div class="flex flex-wrap gap-4">
-              <button class="btn-amber">{{ heroSlides[0].primaryButton }}</button>
+            <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+              <a class="btn-amber inline-flex" [routerLink]="heroSlides[0].primaryLink || '/products'">
+                {{ heroSlides[0].primaryButton }}
+              </a>
               @if (heroSlides[0].secondaryButton) {
                 <button class="bg-surface-container-high text-on-surface px-10 py-4 rounded-lg font-bold ghost-border hover:bg-surface-container-highest transition-all active:scale-95">
                   {{ heroSlides[0].secondaryButton }}
@@ -130,7 +136,7 @@
       </div>
     </div>
 
-    <div class="absolute bottom-12 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 bg-white/70 backdrop-blur-md border border-white/60 px-5 py-3 rounded-full shadow-ambient">
+    <div class="absolute bottom-6 md:bottom-12 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 bg-white/70 backdrop-blur-md border border-white/60 px-4 md:px-5 py-2.5 md:py-3 rounded-full shadow-ambient">
       @for (slide of [0, 1, 2]; track $index) {
         <button 
           (click)="goToSlide($index)"
@@ -142,14 +148,14 @@
     </div>
   </section>
 
-  <section class="py-32">
-    <div class="max-w-7xl mx-auto px-8">
+  <section class="py-20 lg:py-32">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div>
           <span class="text-primary font-black uppercase tracking-[0.3em] text-xs block mb-4">Complementary Items</span>
           <h2 class="text-3xl font-black font-headline tracking-tighter">Explore the lineup.</h2>
         </div>
-        <div class="relative inline-flex items-center bg-white shadow-ambient rounded-full p-1.5 w-fit">
+        <div class="relative inline-flex items-center bg-white shadow-ambient rounded-full p-1.5 w-fit overflow-x-auto max-w-full">
           <div class="absolute top-1.5 bottom-1.5 rounded-full bg-slate-900 transition-all duration-300 ease-out pointer-events-none"
                [style.width.px]="pillWidth"
                [style.left.px]="pillOffset"></div>
@@ -180,22 +186,30 @@
            [class.opacity-0]="!cardsVisible"
            [class.-translate-y-2]="!cardsVisible">
         @for (product of filteredProducts; track product._id) {
-          <app-product-card [product]="product"></app-product-card>
+          <app-product-card
+            [product]="product"
+            (viewDetails)="goToProduct($event)"></app-product-card>
         }
       </div>
+      @if (cardsVisible && filteredProducts.length === 0) {
+        <div class="mt-8 glass-card rounded-2xl p-8 text-center">
+          <p class="text-on-surface font-bold">No products found in this filter.</p>
+          <p class="text-sm text-on-surface-variant mt-2">Try another category or choose All.</p>
+        </div>
+      }
     </div>
   </section>
 
-  <section class="py-24">
-    <div class="max-w-7xl mx-auto px-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 grid-rows-2 gap-6 h-[600px]">
-        <div class="md:col-span-2 md:row-span-2 bg-slate-900 rounded-[2.5rem] p-12 relative overflow-hidden text-white flex flex-col justify-end group">
+  <section class="py-20 lg:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6 md:h-[600px]">
+        <div class="md:col-span-2 md:row-span-2 bg-slate-900 rounded-[2.5rem] p-8 lg:p-12 relative overflow-hidden text-white flex flex-col justify-end group min-h-[380px] md:min-h-0">
           <img class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-[2s]" alt="Creative Station" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWwByWoF_czGMPp8nXiLTU80OLCCidq3mrxVLOqQ7hsmGij0XntunqD0QuhZo0Fb0EC4VPJT99zYrSf18FyuF28UZHiOdTpag-lF_PaipZJ-P2t0qX8PmHZ_-wcNLgAOAkXoVXgmJJIZmx37YIAVSj8jL_hbKTj1OjoqKT2vSieIDsf6ZIrCsjCQo9IJDPV6WmXXUIcJ_eG96ghEdRLHFyGWuP5XmvXfCzq-4zLSJIVgl3gww3zihnPaYEQNS1-0jUz7p42oJP1kSq"/>
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
           <div class="relative z-10">
-            <h3 class="text-4xl font-bold mb-4 tracking-tighter leading-tight">The Ultimate <br/>Creative Station.</h3>
+            <h3 class="text-3xl lg:text-4xl font-bold mb-4 tracking-tighter leading-tight">The Ultimate <br/>Creative Station.</h3>
             <p class="text-slate-300 mb-6 max-w-sm">Bring your curation to life with industry-leading color accuracy and performance.</p>
-            <button class="bg-white text-slate-900 px-6 py-3 rounded-full font-bold hover:bg-primary hover:text-white transition-all active:scale-95">Explore Bundles</button>
+            <a routerLink="/products" class="inline-flex bg-white text-slate-900 px-6 py-3 rounded-full font-bold hover:bg-primary hover:text-white transition-all active:scale-95">Explore Bundles</a>
           </div>
         </div>
 
@@ -214,7 +228,7 @@
     </div>
   </section>
 
-  <section class="px-8 pb-24">
+  <section class="px-4 sm:px-6 lg:px-8 pb-20 lg:pb-24">
     <div class="max-w-7xl mx-auto relative">
       <div class="absolute inset-0 bg-primary rounded-[2.5rem] blur-[2px] opacity-10"></div>
       <div class="glass-card rounded-[2.5rem] p-12 lg:p-20 text-center relative overflow-hidden">

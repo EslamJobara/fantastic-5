@@ -18,10 +18,8 @@
     }
   </button>
   
-  <!-- Search Results Dropdown -->
   @if (showDropdown && showResults && searchResults.length > 0) {
     <div class="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-ambient overflow-hidden z-50 border border-outline/20">
-      <!-- Results List -->
       @for (product of searchResults; track product._id) {
         <div 
           (click)="goToProduct(product._id)"
@@ -39,7 +37,6 @@
         </div>
       }
       
-      <!-- View All Button -->
       <button 
         (click)="viewAllResults()"
         class="w-full p-4 text-center text-sm font-bold text-primary hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
@@ -49,7 +46,6 @@
     </div>
   }
   
-  <!-- Backdrop to close results -->
   @if (showDropdown && showResults) {
     <div 
       (click)="closeResults()"

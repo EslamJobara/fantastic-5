@@ -1,9 +1,8 @@
 <app-blob-background />
-<main class="flex-grow flex items-center justify-center pt-32 pb-20 px-6">
+<main class="grow flex items-center justify-center pt-32 pb-20 px-6">
   <div class="w-full max-w-5xl glass-card rounded-3xl overflow-hidden">
     <div class="grid grid-cols-1 lg:grid-cols-2">
       
-      <!-- Image Side -->
       <div class="relative hidden lg:flex flex-col justify-end p-16 overflow-hidden">
         <div class="absolute inset-0 z-0">
           @if (activeTab === 'login') {
@@ -20,7 +19,7 @@
               alt="Elegant tech workspace with premium devices" 
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWwByWoF_czGMPp8nXiLTU80OLCCidq3mrxVLOqQ7hsmGij0XntunqD0QuhZo0Fb0EC4VPJT99zYrSf18FyuF28UZHiOdTpag-lF_PaipZJ-P2t0qX8PmHZ_-wcNLgAOAkXoVXgmJJIZmx37YIAVSj8jL_hbKTj1OjoqKT2vSieIDsf6ZIrCsjCQo9IJDPV6WmXXUIcJ_eG96ghEdRLHFyGWuP5XmvXfCzq-4zLSJIVgl3gww3zihnPaYEQNS1-0jUz7p42oJP1kSq"/>
           }
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
+          <div class="absolute inset-0 bg-linear-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
         </div>
         <div class="relative z-10">
           @if (activeTab === 'login') {
@@ -54,7 +53,6 @@
         </div>
       </div>
 
-      <!-- Form Side -->
       <div class="p-10 md:p-14 lg:p-20 flex flex-col">
         
         <div class="mb-12">
@@ -66,7 +64,6 @@
           </p>
         </div>
 
-        <!-- Tab Switcher -->
         <div class="flex p-1.5 bg-white/30 backdrop-blur-md rounded-2xl mb-10 border border-white/40">
           <button 
             type="button"
@@ -90,7 +87,6 @@
           </button>
         </div>
 
-        <!-- Login Form -->
         @if (activeTab === 'login') {
           <form [@fadeScale] [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
           
@@ -150,7 +146,6 @@
         </form>
         }
 
-        <!-- Register Form -->
         @if (activeTab === 'register') {
           <form [@fadeScale] [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
           

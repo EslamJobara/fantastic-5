@@ -5,8 +5,17 @@
     <p class="text-body-md text-on-surface-variant">Review your items before precision-engineered delivery.</p>
   </div>
 
-  <!-- Empty Cart State -->
-  @if (!hasItems) {
+  @if (isLoadingCart) {
+    <div class="glass-card p-16 rounded-2xl text-center">
+      <div class="relative w-14 h-14 mx-auto mb-4">
+        <div class="absolute inset-0 border-4 rounded-full" style="border-color: rgba(0, 88, 190, 0.1);"></div>
+        <div class="absolute inset-0 border-4 border-transparent rounded-full animate-spin" style="border-top-color: #0058be;"></div>
+      </div>
+      <p class="text-body-md text-on-surface-variant">Loading your cart...</p>
+    </div>
+  }
+
+  @if (!isLoadingCart && !hasItems) {
     <div class="glass-card p-16 rounded-2xl text-center">
       <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4 block">shopping_cart</span>
       <h2 class="text-title-lg text-on-surface mb-2">Your cart is empty</h2>
@@ -18,12 +27,10 @@
     </div>
   }
 
-  <!-- Cart with Items -->
-  @if (hasItems) {
+  @if (!isLoadingCart && hasItems) {
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-      <!-- Shopping Cart List -->
       <div class="lg:col-span-8 space-y-6">
-        @for (item of cart.items; track item.id) {
+        @for (item of cart.items; track item.id + '-' + $index) {
           <div class="group relative glass-card p-6 rounded-xl flex flex-col md:flex-row gap-8 transition-all duration-300 hover:shadow-lg">
             <div class="w-full md:w-48 h-48 rounded-lg overflow-hidden bg-white/60 flex items-center justify-center border border-white/50">
               <img 
@@ -56,7 +63,7 @@
                   </button>
                 </div>
                 <button 
-                  (click)="removeItem(item)"
+                  (click)="promptRemoveItem(item)"
                   class="flex items-center gap-2 text-on-surface-variant hover:text-error transition-colors text-sm font-medium">
                   <span class="material-symbols-outlined text-lg">delete</span>Remove
                 </button>
@@ -66,7 +73,6 @@
         }
       </div>
 
-      <!-- Order Summary Sidebar -->
       <aside class="lg:col-span-4 sticky top-32">
         <div class="glass-card p-8 rounded-2xl shadow-lg">
           <h2 class="text-title-lg text-on-surface mb-8">Order Summary</h2>
@@ -111,27 +117,51 @@
           </div>
         </div>
 
-        <!-- Promo Code -->
-        <div class="mt-6 p-6 glass-card rounded-xl">
-          <label class="label-md text-on-surface-variant mb-3 block">Promo Code</label>
-          @if (promoError) {
-            <p class="text-xs text-red-500 mb-2">{{ promoError }}</p>
-          }
-          <div class="flex gap-2">
-            <input 
-              [(ngModel)]="promoCode"
-              class="flex-1 bg-white/40 border border-white/50 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary/20 transition-all text-on-surface placeholder:text-outline" 
-              placeholder="Enter code" 
-              type="text"/>
-            <button 
-              (click)="applyPromoCode()"
-              [disabled]="isLoadingPromo || !promoCode.trim()"
-              class="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed">
-              {{ isLoadingPromo ? 'Applying...' : 'Apply' }}
-            </button>
-          </div>
-        </div>
       </aside>
+    </div>
+  }
+
+  @if (pendingRemoveItem) {
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] flex items-center justify-center p-4">
+      <div class="glass-card w-full max-w-md rounded-2xl p-6 border border-white/30">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-title-md text-on-surface mb-2">Remove item?</h3>
+            <p class="text-sm text-on-surface-variant">
+              {{ pendingRemoveItem.name }} will be removed from your cart.
+            </p>
+          </div>
+          <button
+            (click)="cancelRemoveItem()"
+            class="w-9 h-9 rounded-full tonal-shift flex items-center justify-center text-on-surface-variant hover:text-on-surface">
+            <span class="material-symbols-outlined text-lg">close</span>
+          </button>
+        </div>
+
+        @if (removeError) {
+          <p class="text-sm text-error mt-4">{{ removeError }}</p>
+        }
+
+        <div class="mt-6 flex items-center justify-end gap-3">
+          <button
+            (click)="cancelRemoveItem()"
+            [disabled]="isRemovingItem"
+            class="px-5 py-2.5 rounded-xl bg-white/50 text-on-surface font-medium border border-white/50 disabled:opacity-60 disabled:cursor-not-allowed">
+            Cancel
+          </button>
+          <button
+            (click)="confirmRemoveItem()"
+            [disabled]="isRemovingItem"
+            class="px-5 py-2.5 rounded-xl bg-error text-white font-semibold shadow-md disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2">
+            @if (isRemovingItem) {
+              <span class="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+              Removing...
+            } @else {
+              Remove
+            }
+          </button>
+        </div>
+      </div>
     </div>
   }
 </main>

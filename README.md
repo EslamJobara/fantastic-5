@@ -1,59 +1,71 @@
-# EcommerceApp
+# Fantastic 5 - E-commerce App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+A modern, responsive e-commerce web application built to provide a seamless shopping experience. It features dynamic product rendering, state management, and a clean user interface.
 
-## Development server
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Angular](https://img.shields.io/badge/Angular-21-dd0031?logo=angular)
+![Tailwind](https://img.shields.io/badge/TailwindCSS-4-38bdf8?logo=tailwindcss)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
+## 2. Tech Stack
+
+*   **Frontend:** Angular 21, TypeScript
+*   **Styling:** Tailwind CSS 4, PostCSS
+*   **Testing:** Vitest
+*   **Reactive Programming:** RxJS
+
+---
+
+## 3. Key Features
+
+*   🚀 **Fast & Responsive UI** powered by modern Angular and Tailwind CSS.
+*   🛒 **Product Catalog** with dynamic rendering and component-based architecture.
+*   ⚡ **Optimized Performance** using Angular's latest build system.
+*   🧪 **Unit Testing** integrated seamlessly with Vitest.
+
+---
+
+## 4. Getting Started
+
+Follow these steps to get the project up and running locally:
+
+1.  **Clone the repo:** `git clone <your-repo-url>`
+2.  **Install dependencies:** `npm install`
+3.  **Run the app:** `npm start`
+4.  **Open in Browser:** Navigate to `http://localhost:4200/`
+
+---
+
+## 5. Screenshots / Demo
+
+*(Add a screenshot or GIF of the Fantastic 5 application here)*
+
+**[Live Demo](#)** *(Replace with your actual deployment link when ready)*
+
+---
+
+## 6. Project Structure
+
+```text
+src/
+ ├── app/          # Angular Components, Services, and Routing
+ ├── assets/       # Static files like images and icons
+ └── index.html    # Main HTML entry point
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 7. API Reference
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+*(If this client app connects to a custom backend, list the main endpoints here)*
+*   `GET /api/products` - Fetch all products.
+*   `GET /api/products/:id` - Fetch details of a specific product.
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 8. Contributing & License
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+*   **Contributing:** We welcome pull requests! Please ensure your code follows the existing style and all tests pass (`npm test`).
+*   **License:** This project is licensed under the **MIT** License.

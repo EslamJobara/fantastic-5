@@ -18,7 +18,7 @@ export class SearchBar implements OnInit, OnDestroy {
   @Input() placeholder: string = 'Search...';
   @Input() width: string = 'w-64';
   @Input() variant: 'navbar' | 'page' = 'navbar';
-  @Input() showDropdown: boolean = true; // Control dropdown visibility
+  @Input() showDropdown: boolean = true;
   @Input() set searchValue(value: string) {
     this._searchValue = value;
   }
@@ -42,10 +42,9 @@ export class SearchBar implements OnInit, OnDestroy {
   ) {}
   
   ngOnInit() {
-    // Setup debounced search
     this.searchSubscription = this.searchSubject.pipe(
-      debounceTime(1000), // Wait 1 second after user stops typing
-      distinctUntilChanged() // Only emit if value changed
+      debounceTime(1000),
+      distinctUntilChanged()
     ).subscribe(searchTerm => {
       this.performSearch(searchTerm);
     });
@@ -56,7 +55,6 @@ export class SearchBar implements OnInit, OnDestroy {
   }
   
   onInputChange() {
-    // Emit search event immediately for page variant without dropdown
     if (!this.showDropdown) {
       this.search.emit(this.searchValue);
       return;
@@ -83,13 +81,11 @@ export class SearchBar implements OnInit, OnDestroy {
     
     this.productService.getProducts().subscribe({
       next: (response) => {
-        // Filter products by search term (name or description)
         const filtered = response.data.filter(product => 
           product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           product.description.toLowerCase().includes(searchTerm.toLowerCase())
         );
         
-        // Take only first 3 results
         this.searchResults = filtered.slice(0, 3);
         this.showResults = true;
         this.isSearching = false;

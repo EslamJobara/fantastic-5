@@ -1,12 +1,10 @@
 <app-blob-background />
 <main class="pt-32 pb-24 px-8 max-w-5xl mx-auto">
-  <!-- Header Section -->
   <header class="mb-12">
     <h1 class="text-display-md text-on-surface mb-2">Order History</h1>
     <p class="text-body-md text-on-surface-variant">Review your curated collection of past acquisitions.</p>
   </header>
 
-  <!-- Loading State -->
   @if (isLoading) {
     <div class="flex flex-col items-center justify-center py-20">
       <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
@@ -14,7 +12,6 @@
     </div>
   }
 
-  <!-- Error State -->
   @if (error && !isLoading) {
     <div class="glass-card p-12 rounded-2xl text-center">
       <span class="material-symbols-outlined text-6xl text-red-500 mb-4 block">error</span>
@@ -23,7 +20,6 @@
     </div>
   }
 
-  <!-- Empty State -->
   @if (!isLoading && !error && !hasOrders) {
     <div class="glass-card p-16 rounded-2xl text-center">
       <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4 block">shopping_bag</span>
@@ -36,12 +32,10 @@
     </div>
   }
 
-  <!-- Orders List -->
   @if (!isLoading && !error && hasOrders) {
     <div class="space-y-6">
       @for (order of orders; track order.id) {
         <div class="glass-card rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg">
-          <!-- Order Summary -->
           <div class="p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div class="space-y-1">
               <span class="label-md text-on-surface-variant">Order ID</span>
@@ -87,7 +81,6 @@
             </div>
           </div>
 
-          <!-- Expanded Items -->
           @if (isExpanded(order.id) && order.items.length > 0) {
             <div class="bg-white/40 border-t border-white/20 p-8 space-y-6">
               @for (item of order.items; track item.id) {

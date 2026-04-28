@@ -42,13 +42,11 @@ export class AuthPageComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    // إنشاء Login Form
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6), this.passwordStrengthValidator]]
     });
 
-    // إنشاء Register Form
     this.registerForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       userName: ['', [Validators.required, Validators.minLength(3)]],
@@ -63,7 +61,6 @@ export class AuthPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // قراءة الـ route لتحديد الـ tab
     this.route.url.subscribe(segments => {
       const lastSegment = segments[segments.length - 1]?.path;
       if (lastSegment === 'register') {
@@ -78,7 +75,6 @@ export class AuthPageComponent implements OnInit {
     this.activeTab = tab;
     this.errorMessage = '';
     
-    // تحديث الـ URL
     this.router.navigate(['/auth', tab]);
   }
 
@@ -134,7 +130,6 @@ export class AuthPageComponent implements OnInit {
 
     const { fullName, userName, age, phone, email, password } = this.registerForm.value;
 
-    // استخدام registerAndLogin عشان نعمل login تلقائي بعد التسجيل
     this.authService.registerAndLogin({ 
       fullName, 
       userName, 
@@ -158,7 +153,6 @@ export class AuthPageComponent implements OnInit {
     });
   }
 
-  // Validator للتأكد من تطابق الباسوورد
   private passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
@@ -169,7 +163,6 @@ export class AuthPageComponent implements OnInit {
     return null;
   }
 
-  // Validator لقوة الباسوورد (Capital Letter + Special Character)
   private passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     
@@ -177,10 +170,8 @@ export class AuthPageComponent implements OnInit {
       return null;
     }
 
-    // التحقق من وجود حرف كبير
     const hasUpperCase = /[A-Z]/.test(value);
     
-    // التحقق من وجود special character
     const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value);
 
     const passwordValid = hasUpperCase && hasSpecialChar;
@@ -197,7 +188,6 @@ export class AuthPageComponent implements OnInit {
     return null;
   }
 
-  // Helper methods للـ validation errors
   getLoginError(field: string): string {
     const control = this.loginForm.get(field);
     if (control?.hasError('required')) return 'This field is required';

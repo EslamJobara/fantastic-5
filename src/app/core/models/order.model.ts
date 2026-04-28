@@ -1,9 +1,15 @@
 export interface OrderItem {
+  _id?: string | boolean;
   product: {
     _id: string;
     name: string;
     price: number;
-    defaultImg: string;
+    defaultImg?: string;
+    variations?: {
+      _id?: string;
+      colorName?: string;
+      defaultImage?: string;
+    }[];
   };
   quantity: number;
   variationId?: string;

@@ -10,7 +10,6 @@ export const authGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // لو مش مسجل دخول، نوديه على صفحة اللوجن
   router.navigate(['/auth/login'], { 
     queryParams: { returnUrl: state.url } 
   });

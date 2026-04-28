@@ -1,7 +1,6 @@
 <app-blob-background />
 <main class="pt-28 pb-24">
 
-  <!-- Product Details -->
   <section class="max-w-screen-xl mx-auto px-8 pb-24">
     <div *ngIf="isLoading" class="flex flex-col justify-center items-center py-20 gap-4">
       <div class="relative w-16 h-16">
@@ -37,7 +36,7 @@
           <div class="mb-4">
             <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-primary/20">
               <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-              {{ product.category }}
+              {{ categoryName }}
             </span>
           </div>
 
@@ -52,7 +51,6 @@
           <p class="text-on-surface-variant font-medium mb-6">{{ product.description }}</p>
 
           <div class="space-y-8 mb-10">
-            <!-- Color Selection -->
             <div *ngIf="product.variations && product.variations.length > 0">
               <label class="text-sm font-bold text-on-surface mb-3 block">Select Color</label>
               <div class="flex flex-wrap gap-3">
@@ -92,11 +90,16 @@
           </div>
 
           <div class="grid grid-cols-2 gap-4 mb-10">
-            <button class="btn-primary py-5 rounded-2xl flex items-center justify-center gap-3 font-black uppercase tracking-widest text-sm">
+            <button
+              (click)="addToCart()"
+              [disabled]="isAddingToCart || getCurrentStock() === 0"
+              class="btn-primary py-5 rounded-2xl flex items-center justify-center gap-3 font-black uppercase tracking-widest text-sm disabled:opacity-60 disabled:cursor-not-allowed">
               <span class="material-symbols-outlined text-xl">shopping_cart</span>
-              Add to Cart
+              {{ isAddingToCart ? 'Adding...' : 'Add to Cart' }}
             </button>
           </div>
+          <p *ngIf="addToCartSuccess" class="text-sm text-green-600 font-medium -mt-6 mb-6">Added to cart successfully.</p>
+          <p *ngIf="addToCartError" class="text-sm text-error font-medium -mt-6 mb-6">{{ addToCartError }}</p>
 
           <div class="pt-8 border-t border-white/30 flex gap-8">
             <div class="flex items-center gap-3">

@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
+import { CategoryService } from '../../../core/services/category.service';
+import { CartService } from '../../../core/services/cart.service';
 import { Product, ProductResponse, ProductVariation } from '@core/models';
 
 @Component({
@@ -18,15 +20,24 @@ export class ProductDetailsComponent implements OnInit {
   selectedVariation: ProductVariation | null = null;
   relatedProducts: Product[] = [];
   quantity: number = 1;
+  categoryName = '';
+  isAddingToCart = false;
+  addToCartError: string | null = null;
+  addToCartSuccess = false;
+  private categoriesMap: Record<string, string> = {};
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
+    private categoryService: CategoryService,
+    private cartService: CartService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.loadCategories();
+
     this.route.paramMap.subscribe(params => {
       this.isLoading = true;
       this.cdr.markForCheck();
@@ -35,23 +46,17 @@ export class ProductDetailsComponent implements OnInit {
       if (id) {
         this.productService.getProductById(id).subscribe({
           next: (response) => {
-            console.log('Product response:', response);
             if (response && response.data) {
-              // Backend returns array, get first item
               const productData = Array.isArray(response.data) ? response.data[0] : response.data;
               
               if (productData) {
                 this.product = productData as Product;
-                console.log('Product loaded:', this.product);
+                this.categoryName = this.resolveCategoryName(this.product.category);
                 
-                // Select default variation
                 if (this.product.variations && this.product.variations.length > 0) {
                   this.selectedVariation = this.product.variations.find(v => v.isDefault) || this.product.variations[0];
                   this.selectedImage = this.selectedVariation.defaultImage;
-                  console.log('Selected variation:', this.selectedVariation);
-                  console.log('Selected image:', this.selectedImage);
                 } else {
-                  // Fallback if no variations
                   this.selectedImage = this.product.defaultImg || '';
                 }
                 
@@ -80,7 +85,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   goToProduct(productId: string) {
-    this.router.navigate(['/product', productId]);
+    this.router.navigate(['/products', productId]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -110,7 +115,7 @@ export class ProductDetailsComponent implements OnInit {
   selectVariation(variation: ProductVariation) {
     this.selectedVariation = variation;
     this.selectedImage = variation.defaultImage;
-    this.quantity = 1; // Reset quantity when changing variation
+    this.quantity = 1;
     this.cdr.markForCheck();
     this.cdr.detectChanges();
   }
@@ -122,7 +127,7 @@ export class ProductDetailsComponent implements OnInit {
   getCurrentImages(): string[] {
     if (this.selectedVariation) {
       const images = [this.selectedVariation.defaultImage, ...this.selectedVariation.variationImgs];
-      return images.filter(img => img); // Remove empty strings
+      return images.filter(img => img);
     }
     return this.product?.images || [];
   }
@@ -141,5 +146,49 @@ export class ProductDetailsComponent implements OnInit {
       },
       error: (err) => console.error('Failed to load related products', err)
     });
+  }
+
+  addToCart(): void {
+    if (!this.product || this.quantity < 1 || this.isAddingToCart) {
+      return;
+    }
+
+    this.isAddingToCart = true;
+    this.addToCartError = null;
+    this.addToCartSuccess = false;
+
+    this.cartService.addToCart(this.product._id, this.quantity, this.selectedVariation?._id).subscribe({
+      next: () => {
+        this.addToCartSuccess = true;
+        this.isAddingToCart = false;
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        this.addToCartError = error?.error?.message || 'Failed to add item to cart';
+        this.isAddingToCart = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  private loadCategories(): void {
+    this.categoryService.getAllCategories().subscribe({
+      next: (response) => {
+        this.categoriesMap = response.data.reduce((acc, category) => {
+          acc[category._id] = category.name;
+          return acc;
+        }, {} as Record<string, string>);
+
+        if (this.product) {
+          this.categoryName = this.resolveCategoryName(this.product.category);
+          this.cdr.markForCheck();
+        }
+      },
+      error: () => {}
+    });
+  }
+
+  private resolveCategoryName(categoryId: string): string {
+    return this.categoriesMap[categoryId] || categoryId;
   }
 }

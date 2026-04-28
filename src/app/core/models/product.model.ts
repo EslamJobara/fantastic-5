@@ -1,4 +1,5 @@
 export interface ProductVariation {
+  _id?: string;
   colorName: string;
   colorValue: string;
   defaultImage: string;
@@ -20,7 +21,6 @@ export interface Product {
   deleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
-  // Computed properties for backward compatibility
   defaultImg?: string;
   images?: string[];
 }
@@ -39,7 +39,7 @@ export interface ProductsResponse {
 
 export interface ProductResponse {
   message: string;
-  data: Product;
+  data: Product | Product[];
 }
 
 export interface CategoriesResponse {
@@ -54,13 +54,11 @@ export interface ProductFilters {
   maxPrice?: number;
 }
 
-// Helper function to get default image from variations
 export function getProductDefaultImage(product: Product): string {
   const defaultVariation = product.variations?.find(v => v.isDefault);
   return defaultVariation?.defaultImage || product.variations?.[0]?.defaultImage || 'https://via.placeholder.com/300?text=No+Image';
 }
 
-// Helper function to get all images from variations
 export function getProductImages(product: Product): string[] {
   if (!product.variations || product.variations.length === 0) {
     return [];

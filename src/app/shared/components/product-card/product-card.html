@@ -5,28 +5,24 @@
          [alt]="product?.name" 
          [src]="product?.defaultImg"
          (error)="$event.target.src='https://via.placeholder.com/400x500?text=No+Image'"/>
-    <button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-      <span class="material-symbols-outlined text-slate-900 text-xl">favorite</span>
-    </button>
   </div>
   
-  <!-- Name and Price -->
   <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
     <h3 class="text-lg font-black tracking-tight group-hover:text-primary transition-colors flex-1 line-clamp-1">{{ product?.name }}</h3>
     <p class="text-primary font-black whitespace-nowrap">EGP {{ product?.price }}</p>
   </div>
   
-  <!-- Product Description -->
   <p class="text-xs text-slate-500 line-clamp-2 mb-4">{{ product?.description }}</p>
   
-  <!-- CTA Buttons -->
   @if (showActions) {
     <div class="flex gap-3">
       @if (showAddToCart) {
-        <button (click)="onAddToCart(); $event.stopPropagation()"
-          class="flex-1 bg-white/80 backdrop-blur border border-slate-200 glass-card rounded-xl hover:border-primary hover:text-primary hover:bg-white hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 py-3 active:scale-95">
+        <button
+          (click)="onAddToCart(); $event.stopPropagation()"
+          [disabled]="isAddingToCart"
+          class="flex-1 bg-white/80 backdrop-blur border border-slate-200 glass-card rounded-xl hover:border-primary hover:text-primary hover:bg-white hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 py-3 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed">
           <span class="material-symbols-outlined text-base">add_shopping_cart</span>
-          <span class="text-sm font-semibold">{{ addToCartLabel }}</span>
+          <span class="text-sm font-semibold">{{ isAddingToCart ? 'Adding...' : addToCartLabel }}</span>
         </button>
       }
       @if (showViewDetails) {
@@ -36,5 +32,11 @@
         </button>
       }
     </div>
+    @if (addToCartSuccess) {
+      <p class="text-sm text-green-600 font-medium mt-3">Added to cart successfully.</p>
+    }
+    @if (addToCartError) {
+      <p class="text-sm text-error font-medium mt-3">{{ addToCartError }}</p>
+    }
   }
 </div>
