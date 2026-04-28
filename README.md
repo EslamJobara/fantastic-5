@@ -49,15 +49,7 @@ src/
 
 ---
 
-## 6. API Reference
-
-*(If this client app connects to a custom backend, list the main endpoints here)*
-*   `GET /api/products` - Fetch all products.
-*   `GET /api/products/:id` - Fetch details of a specific product.
-
----
-
-## 7. Contributing & License
+## 6. Contributing & License
 
 *   **Contributing:** We welcome pull requests! Please ensure your code follows the existing style and all tests pass (`npm test`).
 *   **License:** This project is licensed under the **MIT** License.
