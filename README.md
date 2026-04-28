@@ -1,6 +1,8 @@
-# Fantastic 5 - E-commerce App
+# Silicon Valley
 
 A modern, responsive e-commerce web application built to provide a seamless shopping experience. It features dynamic product rendering, state management, and a clean user interface.
+
+**[Live Demo](https://silicon-valley-fawn.vercel.app)**
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Angular](https://img.shields.io/badge/Angular-21-dd0031?logo=angular)
