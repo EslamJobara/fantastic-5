@@ -38,15 +38,7 @@ Follow these steps to get the project up and running locally:
 
 ---
 
-## 5. Screenshots / Demo
-
-*(Add a screenshot or GIF of the Fantastic 5 application here)*
-
-**[Live Demo](#)** *(Replace with your actual deployment link when ready)*
-
----
-
-## 6. Project Structure
+## 5. Project Structure
 
 ```text
 src/
@@ -57,7 +49,7 @@ src/
 
 ---
 
-## 7. API Reference
+## 6. API Reference
 
 *(If this client app connects to a custom backend, list the main endpoints here)*
 *   `GET /api/products` - Fetch all products.
@@ -65,7 +57,7 @@ src/
 
 ---
 
-## 8. Contributing & License
+## 7. Contributing & License
 
 *   **Contributing:** We welcome pull requests! Please ensure your code follows the existing style and all tests pass (`npm test`).
 *   **License:** This project is licensed under the **MIT** License.
