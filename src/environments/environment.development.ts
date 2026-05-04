@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://e-commerce-a6cz.onrender.com/api'
+  apiUrl: 'https://e-commerce-beige-iota.vercel.app/api'
 };
